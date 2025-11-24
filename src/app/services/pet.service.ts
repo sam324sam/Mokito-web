@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 // modelos
 import { Sprite } from '../models/sprites/sprites.model';
 import { Pet } from '../models/pet/pet.model';
-import { AnimationSprite } from '../models/sprites/animationSprite.model';
+import { AnimationSprite, AnimationType } from '../models/sprites/animationSprite.model';
+import { ReactiveFormsModule } from '@angular/forms';
 @Injectable({ providedIn: 'root' })
 export class PetService {
   private readonly animations = [
@@ -10,16 +11,19 @@ export class PetService {
       name: 'idle',
       baseUrl: 'assets/pet/AnimationStanby/',
       frames: 30,
+      animationType: AnimationType.Loop,
     },
     {
       name: 'tutsitutsi',
       baseUrl: 'assets/pet/tutsitutsi/',
       frames: 20,
+      animationType: AnimationType.Once,
     },
     {
       name: 'grab',
       baseUrl: 'assets/pet/Grab/',
       frames: 11,
+      animationType: AnimationType.Loop,
     },
   ];
 
@@ -29,18 +33,19 @@ export class PetService {
     y: 0,
     width: 32,
     height: 32,
-    animationSprite: [],
+    animationSprite: {},
 
-    currentAnimation: 0,
+    currentAnimation: 'idle',
     currentFrame: 0,
     frameSpeed: 10,
     frameCounter: 0,
 
     timeoutId: null,
   };
-  
+
   pet: Pet = {
-    sprite: this.sprite
+    sprite: this.sprite,
+    isGrab: false,
   };
 
   initPetService(petImg: string) {
@@ -60,13 +65,29 @@ export class PetService {
       }
 
       const animation: AnimationSprite = {
-        name: anim.name,
         frameImg: frames,
+        animationType: anim.animationType,
       };
 
-      this.pet.sprite.animationSprite.push(animation);
+      this.pet.sprite.animationSprite[anim.name] = animation;
     }
+    console.log(this.pet, 'La mascota');
   }
 
-  
+  getMousePos(scale: number, evt: MouseEvent) {
+    const rect = (evt.target as HTMLCanvasElement).getBoundingClientRect();
+
+    return {
+      x: ((evt.clientX - rect.left) / scale) - 15,
+      y: ((evt.clientY - rect.top) / scale) - 15,
+    };
+  }
+
+  movePet(scale: number, event: MouseEvent) {
+    if (!this.pet.isGrab) return;
+
+    const pos = this.getMousePos(scale, event);
+    this.pet.sprite.x = pos.x;
+    this.pet.sprite.y = pos.y;
+  }
 }

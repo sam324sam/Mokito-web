@@ -7,10 +7,10 @@ export interface Sprite {
   height: number;
   // imagen base opcional
   img: HTMLImageElement;
-  animationSprite: AnimationSprite[];
+  animationSprite: Record<string, AnimationSprite>;
 
   // índice de animación
-  currentAnimation: number;
+  currentAnimation: string;
   // frame actual
   currentFrame: number;
   // velocidad

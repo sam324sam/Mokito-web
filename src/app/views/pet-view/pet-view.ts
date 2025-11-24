@@ -21,13 +21,35 @@ export class PetView implements AfterViewInit {
     petService.initPetService('assets/pet/pet.png');
   }
 
+  // Para los eventos del boton
+  pressTimer: number | null = null;
+  isLongPress = false;
+  LONG_PRESS = 500;
+
   onCanvasClickUp(event: MouseEvent) {
-    this.spriteService.changesAnimationClick(event, 1);
+    if (this.pressTimer) clearTimeout(this.pressTimer);
+    // volver al tutsitutsi
+    this.petService.pet.isGrab = false;
+    this.spriteService.changesAnimationClick(event, 'tutsitutsi');
     
   }
 
+  // iniciar timer para ver si se pasa x tiempo para agarrar
   onCanvasClickDown(event: MouseEvent) {
-    this.spriteService.changesAnimationClick(event, 2);
+    this.isLongPress = false;
+
+    this.pressTimer = globalThis.setTimeout(() => {
+      this.isLongPress = true;
+      this.spriteService.changesAnimationClick(event, 'grab');
+      this.petService.pet.isGrab = true;
+    }, this.LONG_PRESS);
+  }
+
+  // Al mover el mouse
+  onMouseMove(event: MouseEvent) {
+    if (this.petService.pet.isGrab) {
+      this.petService.movePet(this.spriteService.getScale(), event);
+    }
   }
 
   ngAfterViewInit(): void {

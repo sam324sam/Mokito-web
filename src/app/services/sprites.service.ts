@@ -10,7 +10,7 @@ export class SpriteService {
   private readonly sprites: Sprite[] = [];
   private animationId: number | null = null;
   private scaleSprite: number = 2;
-  private readonly referenceWidth: number = 100;
+  private readonly referenceWidth: number = 120;
 
   // sacado de la web para que esto no explote
   fps: number = 60;
@@ -85,7 +85,7 @@ export class SpriteService {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     for (const sprite of this.sprites) {
-      // avanzar animación
+      // avanzar animacion
       this.updateAnimation(sprite);
 
       // obtener el frame actual
@@ -136,7 +136,7 @@ export class SpriteService {
   }
 
   // para los click dentro del canva
-  changesAnimationClick(event: MouseEvent, animationId: number, endAnimationId: number = 0) {
+  changesAnimationClick(event: MouseEvent, animationId: string, endAnimationId: string = 'idle') {
     if (!this.canvas) return;
 
     const rect = this.canvas.getBoundingClientRect();
@@ -162,12 +162,14 @@ export class SpriteService {
         // Calcular cuánto durará
         const duration = this.getAnimationDuration(sprite);
 
-        // Volver automaticamente a otra animacion (idle por defecto)
-        sprite.timeoutId = setTimeout(() => {
-          sprite.currentAnimation = endAnimationId;
-          sprite.currentFrame = 0;
-          sprite.timeoutId = null;
-        }, duration * 1000);
+        // Volver automaticamente a otra animacion (idle por defecto) y ve el tipo para ejecutar mas o menos de una vez
+        if (sprite.animationSprite[animationId].animationType == 'once') {
+          sprite.timeoutId = setTimeout(() => {
+            sprite.currentAnimation = endAnimationId;
+            sprite.currentFrame = 0;
+            sprite.timeoutId = null;
+          }, duration * 1000);
+        }
       }
     }
   }
