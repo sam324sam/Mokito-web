@@ -11,6 +11,7 @@ import{ PetIaService } from '../../services/petIa.service';
   imports: [],
   templateUrl: './pet-view.html',
   styleUrl: './pet-view.scss',
+  standalone: true
 })
 export class PetView implements AfterViewInit {
   @ViewChild('canvas', { static: true }) canvasRef!: ElementRef<HTMLCanvasElement>;
