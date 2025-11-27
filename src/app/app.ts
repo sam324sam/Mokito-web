@@ -1,10 +1,11 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { PetView } from './views/pet-view/pet-view';
+import { Header } from './component/header/header';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, PetView],
+  imports: [RouterOutlet, PetView, Header],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
