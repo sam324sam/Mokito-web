@@ -5,6 +5,12 @@ on:
     branches:
       - main
 
+# Permisos
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 jobs:
   build-and-deploy:
     name: Build and deploy
@@ -24,11 +30,12 @@ jobs:
         run: npm ci
 
       - name: Build Angular (production)
-        run: npm run build -- --configuration production
+        run: npm run build -- --configuration production --base-href=/tamagotchi-web/
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: dist/tamagotchi-web/browser
+          branch: gh-pages
           clean: true
-
+          token: ${{ secrets.GITHUB_TOKEN }}

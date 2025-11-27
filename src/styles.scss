@@ -5,6 +5,27 @@
   font-style: normal;
 }
 
+// Cursor
+* {
+  cursor: url("/assets/cursor/cursor.png") 16 16, auto;
+}
+
+button, 
+a, 
+[role="button"],
+select,
+option,
+input[type="button"],
+input[type="submit"],
+.clickable {
+  cursor: url("/assets/cursor/cursor-pointer.png") 16 16, pointer !important;
+}
+
+.draggable,
+[draggable="true"] {
+  cursor: url("/assets/cursor/cursor-grab.png") 16 16, grab !important;
+}
+
 body{
   font-family: 'Minecraftia', sans-serif;
 }

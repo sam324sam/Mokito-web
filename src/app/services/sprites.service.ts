@@ -108,7 +108,7 @@ export class SpriteService {
       // Aplicar tinte si existe color
       if (sprite.color) {
         this.ctx.globalCompositeOperation = 'source-atop';
-        this.ctx.fillStyle = sprite.color;
+        this.ctx.fillStyle = sprite.color.color;
         this.ctx.fillRect(x, y, w, h); // <-- AHORA coincide con la imagen
         this.ctx.globalCompositeOperation = 'source-over';
       }

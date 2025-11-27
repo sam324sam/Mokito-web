@@ -26,12 +26,12 @@ export class PetView implements AfterViewInit {
 
   onCanvasClickDown(event: MouseEvent) {
     this.petService.handlePressDown(event);
-    this.cursorService.setCursor("assets/cursor/cursor-grab.png")
+    this.cursorService.setCanvasCursor("assets/cursor/cursor-grab.png")
   }
 
   onCanvasClickUp(event: MouseEvent) {
     this.petService.handlePressUp(event);
-    this.cursorService.setDefaultCursor();
+    this.cursorService.resetCanvasCursor();
   }
 
   onMouseMove(event: MouseEvent) {
@@ -45,8 +45,6 @@ export class PetView implements AfterViewInit {
     this.canvas.height = this.canvas.offsetHeight;
     this.spriteService.init(this.canvas);
 
-    // Iniciar el cursor
-    this.cursorService.init();
     // inicializar la IA para que se mueva
     this.petIaService.init(this.spriteService.getCanvas())
     // Ahora centrar sí funciona porque width/height son correctos

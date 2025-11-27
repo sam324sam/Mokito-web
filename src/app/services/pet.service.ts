@@ -10,18 +10,18 @@ import { SpriteService } from './sprites.service';
 @Injectable({ providedIn: 'root' })
 export class PetService {
   // tonos muy suaves para no afectar casi nada al negro
-  private readonly colors = [
-    'rgba(80, 120, 255, 0.25)', // azul suave
-    'rgba(255, 80, 80, 0.25)', // rojo suave
-    'rgba(80, 255, 150, 0.25)', // verde suave
-    'rgba(255, 230, 80, 0.25)', // amarillo suave
-    'rgba(255, 150, 80, 0.25)', // naranja suave
-    'rgba(180, 80, 255, 0.25)', // morado suave
-    'rgba(255, 255, 255, 0.15)', // blanco suave
-    'rgba(120, 120, 120, 0.15)', // gris suave
+  readonly colors = [
+    { name: 'azul suave', color: 'rgba(80, 120, 255, 0.25)' },
+    { name: 'rojo suave', color: 'rgba(255, 80, 80, 0.25)' },
+    { name: 'verde suave', color: 'rgba(80, 255, 150, 0.25)' },
+    { name: 'amarillo suave', color: 'rgba(255, 230, 80, 0.25)' },
+    { name: 'naranja suave', color: 'rgba(255, 150, 80, 0.25)' },
+    { name: 'morado suave', color: 'rgba(180, 80, 255, 0.25)' },
+    { name: 'blanco suave', color: 'rgba(255, 255, 255, 0.15)' },
+    { name: 'gris suave', color: 'rgba(120, 120, 120, 0.15)' },
   ];
 
-  private readonly animations = [
+  readonly animations = [
     {
       name: 'idle',
       baseUrl: 'assets/pet/AnimationStanby/',
@@ -67,7 +67,7 @@ export class PetService {
   ];
 
   sprite: Sprite = {
-    color: this.colors[1],
+    color: this.colors[7],
     img: new Image(),
     x: 0,
     y: 0,
@@ -87,7 +87,7 @@ export class PetService {
   pet: Pet = {
     sprite: this.sprite,
     isGrab: false,
-    blockMove: false
+    blockMove: false,
   };
 
   private pressTimer: any = null;
@@ -163,9 +163,9 @@ export class PetService {
     this.spriteService.changesAnimationClick(event, 'tutsitutsi');
     // desactivar movimiento hasta que tutsi tutsi se acabe
     this.pet.blockMove = true;
-    setTimeout(() =>{
+    setTimeout(() => {
       this.pet.blockMove = false;
-    }, this.spriteService.getAnimationDuration(this.pet.sprite))
+    }, this.spriteService.getAnimationDuration(this.pet.sprite));
   }
 
   handleMouseMove(event: MouseEvent) {

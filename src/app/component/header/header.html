@@ -2,9 +2,17 @@
   <h1 class="text-xl font-semibold select-none">Tamagotchi Web</h1>
 
   <nav class="flex gap-4 items-center">
-    <a href="#"
-       class="hover:scale-110 transition-transform duration-200">
+    <a
+      href="#"
+      class="hover:scale-110 transition-transform duration-200"
+      (click)="toggleConfiguration($event)"
+      >
       <img src="assets/icon/configuration.png" alt="Config" class="w-16 h-16 select-none" />
     </a>
   </nav>
 </header>
+<app-configuration-modal
+  [isOpenConfiguration]="isOpenConfiguration"
+  (toggleConfiguration)="handleModalToggle($event)"
+>
+</app-configuration-modal>
