@@ -1,6 +1,7 @@
 import { AnimationSprite } from './animationSprite.model';
 
 export interface Sprite {
+  color: string;
   x: number;
   y: number;
   width: number;

@@ -3,6 +3,8 @@ import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 // Service
 import { SpriteService } from '../../services/sprites.service';
 import { PetService } from '../../services/pet.service';
+import { CursorService } from '../../services/cursor.service';
+import{ PetIaService } from '../../services/petIa.service';
 
 @Component({
   selector: 'app-pet-view',
@@ -16,15 +18,19 @@ export class PetView implements AfterViewInit {
 
   constructor(
     private readonly spriteService: SpriteService,
-    private readonly petService: PetService
+    private readonly petService: PetService,
+    private readonly cursorService: CursorService,
+    private readonly petIaService: PetIaService
   ) {}
 
   onCanvasClickDown(event: MouseEvent) {
     this.petService.handlePressDown(event);
+    this.cursorService.setCursor("assets/cursor/cursor-grab.png")
   }
 
   onCanvasClickUp(event: MouseEvent) {
     this.petService.handlePressUp(event);
+    this.cursorService.setDefaultCursor();
   }
 
   onMouseMove(event: MouseEvent) {
@@ -37,6 +43,11 @@ export class PetView implements AfterViewInit {
     this.canvas.width = this.canvas.offsetWidth;
     this.canvas.height = this.canvas.offsetHeight;
     this.spriteService.init(this.canvas);
+
+    // Iniciar el cursor
+    this.cursorService.init();
+    // inicializar la IA para que se mueva
+    this.petIaService.init(this.spriteService.getCanvas())
     // Ahora centrar sí funciona porque width/height son correctos
     // Ahora que init ha terminado, ya puedes centrar correctamente
     this.centerPet();

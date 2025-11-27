@@ -11,8 +11,8 @@ export class SpriteService {
   private ctx!: CanvasRenderingContext2D;
   private readonly sprites: Sprite[] = [];
   private animationId: number | null = null;
-  private scaleSprite: number = 2;
-  private readonly referenceWidth: number = 120;
+  private scaleSprite: number = 1;
+  private readonly referenceWidth: number = 200;
 
   // sacado de la web para que esto no explote
   fps: number = 60;
@@ -87,24 +87,31 @@ export class SpriteService {
 
   update() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    // para la ia de la pet
 
     for (const sprite of this.sprites) {
-      // avanzar animacion
       this.updateAnimation(sprite);
 
-      // obtener el frame actual
       const frame = sprite.animationSprite[sprite.currentAnimation].frameImg[sprite.currentFrame];
 
-      // Limitar con el tamaño del canvas
       this.limitToCanvas(sprite);
-      // dibujar frame actual
-      this.ctx.drawImage(
-        frame,
-        sprite.x * this.scaleSprite,
-        sprite.y * this.scaleSprite,
-        sprite.width * this.scaleSprite,
-        sprite.height * this.scaleSprite
-      );
+
+      // Calcular coordenadas y tamaño escalado una sola vez
+      const x = sprite.x * this.scaleSprite;
+      const y = sprite.y * this.scaleSprite;
+      const w = sprite.width * this.scaleSprite;
+      const h = sprite.height * this.scaleSprite;
+
+      // Dibujar sprite
+      this.ctx.drawImage(frame, x, y, w, h);
+
+      // Aplicar tinte si existe color
+      if (sprite.color) {
+        this.ctx.globalCompositeOperation = 'source-atop';
+        this.ctx.fillStyle = sprite.color;
+        this.ctx.fillRect(x, y, w, h); // <-- AHORA coincide con la imagen
+        this.ctx.globalCompositeOperation = 'source-over';
+      }
     }
   }
 
@@ -153,12 +160,23 @@ export class SpriteService {
     return this.canvas;
   }
 
+  // Duracion de la animacion en segundos
   getAnimationDuration(sprite: Sprite): number {
     const totalFrames = sprite.animationSprite[sprite.currentAnimation].frameImg.length;
     const frameSpeed = sprite.frameSpeed;
     const fps = this.fps;
     // segundos (Luego paso a mili o alkgo)
     return (totalFrames * frameSpeed) / fps;
+  }
+  // Duracion de la animacion en frames
+  getAnimationDurationFrames(sprite: Sprite, animationName: string): number {
+    const anim = sprite.animationSprite[animationName];
+    if (!anim) return 0;
+
+    const totalFrames = anim.frameImg.length;
+    const frameSpeed = sprite.frameSpeed;
+    // frames
+    return totalFrames * frameSpeed;
   }
 
   // para los click dentro del canva
@@ -177,7 +195,6 @@ export class SpriteService {
 
       // collisionService debe trabajar en coordenadas internas
       if (this.collisionService.isPointInsideSprite(sprite, x, y)) {
-
         // Cambiar a la animacion clickeada
         sprite.currentAnimation = animationId;
         sprite.currentFrame = 0;

@@ -9,6 +9,18 @@ import { SpriteService } from './sprites.service';
 
 @Injectable({ providedIn: 'root' })
 export class PetService {
+  // tonos muy suaves para no afectar casi nada al negro
+  private readonly colors = [
+    'rgba(80, 120, 255, 0.25)', // azul suave
+    'rgba(255, 80, 80, 0.25)', // rojo suave
+    'rgba(80, 255, 150, 0.25)', // verde suave
+    'rgba(255, 230, 80, 0.25)', // amarillo suave
+    'rgba(255, 150, 80, 0.25)', // naranja suave
+    'rgba(180, 80, 255, 0.25)', // morado suave
+    'rgba(255, 255, 255, 0.15)', // blanco suave
+    'rgba(120, 120, 120, 0.15)', // gris suave
+  ];
+
   private readonly animations = [
     {
       name: 'idle',
@@ -28,9 +40,34 @@ export class PetService {
       frames: 11,
       animationType: AnimationType.Loop,
     },
+    {
+      name: 'right',
+      baseUrl: 'assets/pet/Right/',
+      frames: 12,
+      animationType: AnimationType.Once,
+    },
+    {
+      name: 'left',
+      baseUrl: 'assets/pet/Left/',
+      frames: 12,
+      animationType: AnimationType.Once,
+    },
+    {
+      name: 'up',
+      baseUrl: 'assets/pet/Up/',
+      frames: 12,
+      animationType: AnimationType.Once,
+    },
+    {
+      name: 'down',
+      baseUrl: 'assets/pet/Down/',
+      frames: 12,
+      animationType: AnimationType.Once,
+    },
   ];
 
   sprite: Sprite = {
+    color: this.colors[1],
     img: new Image(),
     x: 0,
     y: 0,
@@ -50,10 +87,11 @@ export class PetService {
   pet: Pet = {
     sprite: this.sprite,
     isGrab: false,
+    blockMove: false
   };
 
   private pressTimer: any = null;
-  private readonly LONG_PRESS = 500;
+  private readonly LONG_PRESS = 250;
   private pointerOffsetX = 0;
   private pointerOffsetY = 0;
 
@@ -105,10 +143,8 @@ export class PetService {
     const my = (event.clientY - rect.top) / scale;
     // no iniciar timer si no esta sobre la mascota
     if (!this.collisionService.isPointInsideSprite(this.pet.sprite, mx, my)) {
-      
       return;
     }
-
     this.clearPressTimer();
     this.pressTimer = setTimeout(() => {
       this.pet.isGrab = true;
@@ -125,6 +161,11 @@ export class PetService {
     this.pet.isGrab = false;
 
     this.spriteService.changesAnimationClick(event, 'tutsitutsi');
+    // desactivar movimiento hasta que tutsi tutsi se acabe
+    this.pet.blockMove = true;
+    setTimeout(() =>{
+      this.pet.blockMove = false;
+    }, this.spriteService.getAnimationDuration(this.pet.sprite))
   }
 
   handleMouseMove(event: MouseEvent) {
@@ -149,5 +190,25 @@ export class PetService {
       clearTimeout(this.pressTimer);
       this.pressTimer = null;
     }
+  }
+
+  // Para el manejo de las animaciones dentro del petService para el movimiento
+  setAnimation(name: string) {
+    // si la animacion no existe no hacer nada
+    if (!this.sprite.animationSprite[name]) return;
+
+    // si ya está en esa animación → no volver a setear
+    if (this.sprite.currentAnimation === name) return;
+
+    // Cambiar ahora
+    this.sprite.currentAnimation = name;
+
+    // Forzar el cambio de animacion
+    this.sprite.currentFrame = 0;
+    this.sprite.frameCounter = 0;
+  }
+
+  getAnimationDuration(animationName: string): number {
+    return this.spriteService.getAnimationDurationFrames(this.pet.sprite, animationName);
   }
 }
