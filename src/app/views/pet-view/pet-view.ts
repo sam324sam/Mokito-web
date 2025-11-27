@@ -4,7 +4,7 @@ import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { SpriteService } from '../../services/sprites.service';
 import { PetService } from '../../services/pet.service';
 import { CursorService } from '../../services/cursor.service';
-import{ PetIaService } from '../../services/petIa.service';
+import{ PetIaService } from '../../services/pet-ia.service';
 
 @Component({
   selector: 'app-pet-view',

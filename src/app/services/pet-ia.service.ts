@@ -9,13 +9,13 @@ export class PetIaService {
 
   private moving = false;
   private direction: 'left' | 'right' | 'up' | 'down' | 'idle' = 'idle';
-  private speed = 1;
+  private readonly speed = 1;
 
   private targetDistance = 0;
   private movedDistance = 0;
 
   private lastDecisionTime = 0;
-  private decisionCooldown = 1000 * 2.5;
+  private readonly decisionCooldown = 1000 * 2.5;
 
   constructor(
     private readonly petService: PetService,
