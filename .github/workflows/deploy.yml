@@ -24,11 +24,11 @@ jobs:
         run: npm ci
 
       - name: Build Angular (production)
-        run: npm run build -- --configuration production --output-path=dist
+        run: npm run build -- --configuration production
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: dist/tamagotchi-web/
+          folder: dist/tamagotchi-web/browser
           clean: true
 
