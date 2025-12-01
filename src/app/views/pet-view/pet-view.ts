@@ -5,14 +5,14 @@ import { GameLoopService } from '../../services/game-loop.service';
 import { SpriteService } from '../../services/sprites.service';
 import { PetService } from '../../services/pet.service';
 import { CursorService } from '../../services/cursor.service';
-import{ PetIaService } from '../../services/pet-ia.service';
+import { PetIaService } from '../../services/pet-ia.service';
 
 @Component({
   selector: 'app-pet-view',
   imports: [],
   templateUrl: './pet-view.html',
   styleUrl: './pet-view.scss',
-  standalone: true
+  standalone: true,
 })
 export class PetView implements AfterViewInit {
   @ViewChild('canvas', { static: true }) canvasRef!: ElementRef<HTMLCanvasElement>;
@@ -23,12 +23,12 @@ export class PetView implements AfterViewInit {
     private readonly petService: PetService,
     private readonly cursorService: CursorService,
     private readonly petIaService: PetIaService,
-    private readonly gameLoopService: GameLoopService,
+    private readonly gameLoopService: GameLoopService
   ) {}
 
   onCanvasClickDown(event: MouseEvent) {
     this.petService.handlePressDown(event);
-    this.cursorService.setCanvasCursor("assets/cursor/cursor-grab.png")
+    this.cursorService.setCanvasCursor('assets/cursor/cursor-grab.png');
   }
 
   onCanvasClickUp(event: MouseEvent) {
@@ -40,21 +40,25 @@ export class PetView implements AfterViewInit {
     this.petService.handleMouseMove(event);
   }
 
-  ngAfterViewInit(): void {
+  ngAfterViewInit() {
     this.canvas = document.getElementById('home-canvas') as HTMLCanvasElement;
-    // Asegurar que el canvas tenga el tamaño visual real del DOM
+
     this.canvas.width = this.canvas.offsetWidth;
     this.canvas.height = this.canvas.offsetHeight;
-    this.spriteService.init(this.canvas);
 
-    // inicializar la IA para que se mueva
-    this.petIaService.init(this.spriteService.getCanvas())
-    // Ahora centrar sí funciona porque width/height son correctos
-    // Ahora que init ha terminado, ya puedes centrar correctamente
+    this.spriteService.init(this.canvas);
+    this.petIaService.init(this.spriteService.getCanvas());
+
+    // Esperar a que el Pet
+    this.petService.initPetService(this.spriteService.getScale());
+    // Centrar la mascota
     this.centerPet();
-    this.petService.initPetService('assets/pet/pet.png', this.spriteService.getScale());
-    this.spriteService.addSprite(this.petService.sprite);
-    this.gameLoopService.start()
+
+    // Añadir sprite al motor
+    this.spriteService.addSprite(this.petService.pet.sprite);
+
+    // iniciar loop al final
+    this.gameLoopService.start();
   }
 
   private centerPet() {
@@ -62,16 +66,18 @@ export class PetView implements AfterViewInit {
     const canvasHeight = this.canvas.height;
     const scale = this.spriteService.getScale();
 
-    this.petService.sprite.x = (canvasWidth - this.petService.sprite.width * scale) / (2 * scale);
-    this.petService.sprite.y = (canvasHeight - this.petService.sprite.height * scale) / (2 * scale);
+    this.petService.pet.sprite.x =
+      (canvasWidth - this.petService.pet.sprite.width * scale) / (2 * scale);
+    this.petService.pet.sprite.y =
+      (canvasHeight - this.petService.pet.sprite.height * scale) / (2 * scale);
 
     console.log(
       'Canvas:',
       canvasWidth,
       canvasHeight,
       'Pet:',
-      this.petService.sprite.x,
-      this.petService.sprite.y,
+      this.petService.pet.sprite.x,
+      this.petService.pet.sprite.y,
       'Scale:',
       scale
     );

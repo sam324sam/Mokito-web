@@ -4,7 +4,7 @@ import { Sprite } from '../models/sprites/sprites.model';
 // servicios
 @Injectable({ providedIn: 'root' })
 export class CollisionService {
-
+// Modificar la condicion no va bien
   isPointInsideSprite(sprite: Sprite, x: number, y: number): boolean {
     const sx = sprite.x;
     const sy = sprite.y;

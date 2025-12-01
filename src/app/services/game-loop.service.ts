@@ -5,7 +5,7 @@ import { PetService } from './pet.service';
 import { SpriteService } from './sprites.service';
 import { AnimationService } from './animation.service';
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GameLoopService {
   private lastTime = 0;
@@ -37,7 +37,8 @@ export class GameLoopService {
   }
 
   private update(delta: number) {
-    this.animationService.update();
+    this.animationService.update(delta);
+    this.petService.update();
   }
 
   private render() {

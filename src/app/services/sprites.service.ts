@@ -77,6 +77,7 @@ export class SpriteService {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     for (const sprite of this.sprites) {
       const frame = this.animationService.getFrame(sprite);
+      if (!frame) return;
 
       this.limitToCanvas(sprite);
 

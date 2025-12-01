@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 // modelos
 import { Sprite } from '../models/sprites/sprites.model';
-// Servicios que usen los loops
-
+import { AnimationSet } from '../models/sprites/animation-set.model';
+import { AnimationSprite } from '../models/sprites/animationSprite.model';
+import { Pet } from '../models/pet/pet.model';
 
 @Injectable({
   providedIn: 'root',
@@ -18,26 +19,24 @@ export class AnimationService {
     this.sprites = this.sprites.filter((s) => s !== sprite);
   }
 
-  update() {
+  update(deltaTime: number) {
     for (const sprite of this.sprites) {
       const anim = sprite.animationSprite[sprite.currentAnimation];
       if (!anim) continue;
 
-      sprite.frameCounter++;
+      // deltaTime está en ms
+      sprite.frameCounter += deltaTime;
 
+      // frameSpeed también debe estar en ms por frame
       if (sprite.frameCounter >= sprite.frameSpeed) {
-        sprite.frameCounter = 0;
-
+        sprite.frameCounter -= sprite.frameSpeed; // no =0 para no perder exceso
         sprite.currentFrame++;
 
         const totalFrames = anim.frameImg.length;
-
         if (sprite.currentFrame >= totalFrames) {
           if (anim.animationType === 'loop') {
-            // Repetir la animacion
             sprite.currentFrame = 0;
           } else if (anim.animationType === 'once') {
-            // Animación de una sola vez volver a idle
             sprite.currentAnimation = 'idle';
             sprite.currentFrame = 0;
           }
@@ -48,14 +47,20 @@ export class AnimationService {
 
   getFrame(sprite: Sprite) {
     const animation = sprite.animationSprite[sprite.currentAnimation];
-    return animation.frameImg[sprite.currentFrame];
+
+    // Si la animación aún no existe o no tiene frames, evitar error
+    if (!animation?.frameImg || animation.frameImg.length === 0) {
+      return null;
+    }
+
+    return animation.frameImg[sprite.currentFrame] ?? animation.frameImg[0];
   }
 
   // Duracion de la animacion en segundos
   getAnimationDuration(sprite: Sprite): number {
     const frames = sprite.animationSprite[sprite.currentAnimation].frameImg.length;
     // total de ticks
-    return frames * sprite.frameSpeed; 
+    return frames * sprite.frameSpeed;
   }
 
   // Duracion de la animacion en frames
@@ -67,5 +72,27 @@ export class AnimationService {
     const frameSpeed = sprite.frameSpeed;
     // frames
     return totalFrames * frameSpeed;
+  }
+
+  // para las animaciones que se asiugnn arriba
+  loadAnimations(pet: Pet, animations: AnimationSet[]) {
+    for (const anim of animations) {
+      const frames: HTMLImageElement[] = [];
+
+      for (let i = 0; i < anim.frames; i++) {
+        const frameImg = new Image();
+        frameImg.src = `${anim.baseUrl}pixil-frame-${i}.png`;
+        frames.push(frameImg);
+      }
+
+      const animation: AnimationSprite = {
+        frameImg: frames,
+        animationType: anim.animationType,
+      };
+
+      pet.sprite.animationSprite[anim.name] = animation;
+    }
+    console.log(pet, 'La mascota');
+    return pet;
   }
 }

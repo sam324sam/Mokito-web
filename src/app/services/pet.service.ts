@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 // modelos
-import { Sprite } from '../models/sprites/sprites.model';
 import { Pet } from '../models/pet/pet.model';
-import { AnimationSprite, AnimationType } from '../models/sprites/animationSprite.model';
+import { AnimationSprite } from '../models/sprites/animationSprite.model';
+import { AnimationSet } from '../models/sprites/animation-set.model';
 // Servicios
 import { CollisionService } from './collision.service';
 import { SpriteService } from './sprites.service';
 import { AnimationService } from './animation.service';
+import { DataService } from './data.service';
+import { PetIaService } from './pet-ia.service';
 
 @Injectable({ providedIn: 'root' })
 export class PetService {
-  // tonos muy suaves para no afectar casi nada al negro
   readonly colors = [
     { name: 'azul suave', color: 'rgba(80, 120, 255, 0.25)' },
     { name: 'rojo suave', color: 'rgba(255, 80, 80, 0.25)' },
@@ -22,74 +23,9 @@ export class PetService {
     { name: 'gris suave', color: 'rgba(120, 120, 120, 0.15)' },
   ];
 
-  readonly animations = [
-    {
-      name: 'idle',
-      baseUrl: 'assets/pet/AnimationStanby/',
-      frames: 30,
-      animationType: AnimationType.Loop,
-    },
-    {
-      name: 'tutsitutsi',
-      baseUrl: 'assets/pet/tutsitutsi/',
-      frames: 20,
-      animationType: AnimationType.Once,
-    },
-    {
-      name: 'grab',
-      baseUrl: 'assets/pet/Grab/',
-      frames: 11,
-      animationType: AnimationType.Loop,
-    },
-    {
-      name: 'right',
-      baseUrl: 'assets/pet/Right/',
-      frames: 12,
-      animationType: AnimationType.Once,
-    },
-    {
-      name: 'left',
-      baseUrl: 'assets/pet/Left/',
-      frames: 12,
-      animationType: AnimationType.Once,
-    },
-    {
-      name: 'up',
-      baseUrl: 'assets/pet/Up/',
-      frames: 12,
-      animationType: AnimationType.Once,
-    },
-    {
-      name: 'down',
-      baseUrl: 'assets/pet/Down/',
-      frames: 12,
-      animationType: AnimationType.Once,
-    },
-  ];
-
-  sprite: Sprite = {
-    color: this.colors[7],
-    img: new Image(),
-    x: 0,
-    y: 0,
-    width: 32,
-    height: 32,
-    animationSprite: {},
-    scale: 1,
-
-    currentAnimation: 'idle',
-    currentFrame: 0,
-    frameSpeed: 10,
-    frameCounter: 0,
-
-    timeoutId: null,
-  };
-
-  pet: Pet = {
-    sprite: this.sprite,
-    isGrab: false,
-    blockMove: false,
-  };
+  pet: Pet = {} as Pet;
+  animations: AnimationSet[] = [];
+  activeIa: boolean = true;
 
   private pressTimer: any = null;
   private readonly LONG_PRESS = 250;
@@ -99,16 +35,43 @@ export class PetService {
   constructor(
     private readonly collisionService: CollisionService,
     private readonly spriteService: SpriteService,
-    private readonly animationService: AnimationService
+    private readonly animationService: AnimationService,
+    private readonly dataService: DataService,
+    private readonly petIaService: PetIaService
   ) {}
 
-  initPetService(petImg: string, scale: number) {
-    this.sprite.img.src = petImg;
-    this.sprite.scale = scale;
-    this.loadAnimations();
+  update() {
+    if (this.activeIa) {
+      this.petIaService.update(
+        this.pet,
+        // Injeccion de metodos para evitar dependencias circulares solo le paso los metodos que requiere
+        (dir) => this.getAnimationDuration(dir), // funcion que devuelve duracion
+        (dir) => this.setAnimation(dir), // funcion que cambia animacion
+        (dx, dy) => this.movePet(dx, dy)
+      );
+    }
   }
 
-  // para las animaciones que se asiugnn arriba
+  movePet(dx:number, dy: number){
+    this.pet.sprite.x += dx;
+    this.pet.sprite.y += dy;
+  }
+
+  initPetService(scale: number) {
+    this.pet = this.dataService.getPet();
+
+    // la escala que de el sprite service
+    this.pet.sprite.scale = scale;
+
+    // cargar animaciones
+    const animations = this.dataService.getAnimations(this.pet.id);
+    this.animations = animations;
+
+    this.animationService.loadAnimations(this.pet, animations);
+    this.loadAnimations();
+    console.log('pet:', this.pet);
+  }
+
   private loadAnimations() {
     for (const anim of this.animations) {
       const frames: HTMLImageElement[] = [];
@@ -126,12 +89,10 @@ export class PetService {
 
       this.pet.sprite.animationSprite[anim.name] = animation;
     }
-    console.log(this.pet, 'La mascota');
   }
 
   getMousePos(scale: number, evt: MouseEvent) {
     const rect = (evt.target as HTMLCanvasElement).getBoundingClientRect();
-    console.log('Escala del sprite', scale);
     return {
       x: (evt.clientX - rect.left) / scale,
       y: (evt.clientY - rect.top) / scale,
@@ -141,26 +102,21 @@ export class PetService {
   handlePressDown(event: MouseEvent) {
     const scale = this.spriteService.getScale();
     const rect = this.spriteService.getCanvas().getBoundingClientRect();
-    // no iniciar timer si no esta sobre la mascota
+
     if (!this.isPetPresed(event)) {
       return;
     }
+
     this.clearPressTimer();
+
     this.pressTimer = setTimeout(() => {
       this.pet.isGrab = true;
-      // guardar offset relativo para que el sprite no "salte" al puntero
+
       this.pointerOffsetX = event.clientX - rect.left - this.pet.sprite.x * scale;
       this.pointerOffsetY = event.clientY - rect.top - this.pet.sprite.y * scale;
-      if (
-        this.collisionService.isPointInsideSprite(
-          this.pet.sprite,
-          this.pointerOffsetX,
-          this.pointerOffsetY
-        )
-      ) {
-        this.pet.sprite.currentAnimation = 'grab';
-        this.pet.sprite.currentFrame = 0;
-      }
+
+      this.pet.sprite.currentAnimation = 'grab';
+      this.pet.sprite.currentFrame = 0;
     }, this.LONG_PRESS);
   }
 
@@ -175,8 +131,8 @@ export class PetService {
 
     this.pet.sprite.currentAnimation = 'tutsitutsi';
     this.pet.sprite.currentFrame = 0;
-    // desactivar movimiento hasta que tutsi tutsi se acabe
     this.pet.blockMove = true;
+
     setTimeout(() => {
       this.pet.blockMove = false;
     }, this.animationService.getAnimationDuration(this.pet.sprite));
@@ -195,8 +151,11 @@ export class PetService {
     const maxY =
       (canvas.height - this.pet.sprite.height * this.pet.sprite.scale) / this.pet.sprite.scale;
 
-    this.pet.sprite.x = Math.max(0, Math.min(newX, maxX));
-    this.pet.sprite.y = Math.max(0, Math.min(newY, maxY));
+    const clampedX = Math.max(0, Math.min(newX, maxX));
+    const clampedY = Math.max(0, Math.min(newY, maxY));
+
+    this.pet.sprite.x = clampedX;
+    this.pet.sprite.y = clampedY;
   }
 
   clearPressTimer() {
@@ -206,29 +165,21 @@ export class PetService {
     }
   }
 
-  isPetPresed(event: MouseEvent){
-    // pasar a cordenadas del canvas
+  isPetPresed(event: MouseEvent) {
     const scale = this.spriteService.getScale();
     const rect = this.spriteService.getCanvas().getBoundingClientRect();
     const mx = (event.clientX - rect.left) / scale;
     const my = (event.clientY - rect.top) / scale;
     return this.collisionService.isPointInsideSprite(this.pet.sprite, mx, my);
-  }  
+  }
 
-  // Para el manejo de las animaciones dentro del petService para el movimiento
   setAnimation(name: string) {
-    // si la animacion no existe no hacer nada
-    if (!this.sprite.animationSprite[name]) return;
+    if (!this.pet.sprite.animationSprite[name]) return;
+    if (this.pet.sprite.currentAnimation === name) return;
 
-    // si ya está en esa animación → no volver a setear
-    if (this.sprite.currentAnimation === name) return;
-
-    // Cambiar ahora
-    this.sprite.currentAnimation = name;
-
-    // Forzar el cambio de animacion
-    this.sprite.currentFrame = 0;
-    this.sprite.frameCounter = 0;
+    this.pet.sprite.currentAnimation = name;
+    this.pet.sprite.currentFrame = 0;
+    this.pet.sprite.frameCounter = 0;
   }
 
   getAnimationDuration(animationName: string): number {

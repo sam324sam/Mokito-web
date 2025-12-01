@@ -17,4 +17,6 @@ export class Header {
   handleModalToggle(isOpen: boolean) {
     this.isOpenConfiguration = isOpen;
   }
+
+  
 }
