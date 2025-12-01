@@ -1,0 +1,49 @@
+[
+  {
+    "petId": 1,
+    "animations": [
+      {
+        "id": "idle",
+        "baseUrl": "assets/pet/AnimationStanby/",
+        "frames": 30,
+        "animationType": "Loop"
+      },
+      {
+        "id": "tutsitutsi",
+        "baseUrl": "assets/pet/tutsitutsi/",
+        "frames": 20,
+        "animationType": "Once"
+      },
+      {
+        "id": "grab",
+        "baseUrl": "assets/pet/Grab/",
+        "frames": 11,
+        "animationType": "Loop"
+      },
+      {
+        "id": "right",
+        "baseUrl": "assets/pet/Right/",
+        "frames": 12,
+        "animationType": "Once"
+      },
+      {
+        "id": "left",
+        "baseUrl": "assets/pet/Left/",
+        "frames": 12,
+        "animationType": "Once"
+      },
+      {
+        "id": "up",
+        "baseUrl": "assets/pet/Up/",
+        "frames": 12,
+        "animationType": "Once"
+      },
+      {
+        "id": "down",
+        "baseUrl": "assets/pet/Down/",
+        "frames": 12,
+        "animationType": "Once"
+      }
+    ]
+  }
+]
