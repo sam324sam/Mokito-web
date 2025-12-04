@@ -1,28 +1,29 @@
-import { Component } from '@angular/core';
-// Sercicio
+import { Component, effect } from '@angular/core';
 import { PetService } from '../../services/pet.service';
+import { Stats } from '../../models/pet/stats.model';
+
 @Component({
   selector: 'app-stats-bar',
-  imports: [],
   templateUrl: './stats-bar.html',
   styleUrl: './stats-bar.scss',
 })
 export class StatsBar {
-  constructor(private readonly petService: PetService) {}
+  stats: Stats[] = [];
 
-  getStats() {
-    return this.petService.pet.stats;
+  constructor(private readonly petService: PetService) {
+    
+    effect(() => {
+      this.stats = this.petService.statsChanged();
+    });
   }
 
-  // 
   roundStat(porcent: number) {
     return Math.round(porcent);
   }
 
-  // los colores del background
   getColor(porcent: number): string {
-    if (porcent > 70) return '#00ff00'; // verde
-    if (porcent > 40) return '#ffff00'; // amarillo
-    return '#ff0000'; // rojo
+    if (porcent > 70) return '#00ff00';
+    if (porcent > 40) return '#ffff00';
+    return '#ff0000';
   }
 }

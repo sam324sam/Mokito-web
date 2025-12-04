@@ -7,6 +7,7 @@
 
 * {
   cursor: url("/tamagotchi-web/assets/cursor/cursor.png") 16 16, auto;
+  box-sizing: border-box;
 }
 
 button, 
@@ -26,8 +27,10 @@ input[type="submit"],
 }
 
 
-body{
+body, html{
   font-family: 'upheavtt', sans-serif;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 canvas {

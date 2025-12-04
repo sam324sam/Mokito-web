@@ -9,7 +9,7 @@ import { NgClass } from '@angular/common';
   standalone: true,
 })
 export class Header {
-  isOpenHeader: boolean = true;
+  isOpenHeader: boolean = false;
   toggleHeader(event: Event) {
     event.preventDefault(); // Evita que el # cambie la URL
     this.isOpenHeader = !this.isOpenHeader;

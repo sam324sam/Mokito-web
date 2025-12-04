@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 // modelos
 import { Pet } from '../models/pet/pet.model';
 import { AnimationSprite } from '../models/sprites/animationSprite.model';
 import { AnimationSet } from '../models/sprites/animation-set.model';
+import { Stats } from '../models/pet/stats.model';
 // Servicios
 import { CollisionService } from './collision.service';
 import { SpriteService } from './sprites.service';
@@ -24,6 +25,8 @@ export class PetService {
   ];
 
   pet: Pet = {} as Pet;
+  // Para el ui de stats
+  statsChanged = signal<Stats[]>([]);
   animations: AnimationSet[] = [];
   activeIa: boolean = true;
 
@@ -191,17 +194,15 @@ export class PetService {
 
   // Para bajar las estadisticas
   private updateStats(delta: number) {
-    // convertir ms → s
     const dt = delta / 1000;
+
     for (const stat of this.pet.stats) {
       if (stat.active) {
-        // Evitar numeros negativos
-        if (stat.porcent > 0) {
-          stat.porcent -= stat.decay * dt;
-        } else {
-          stat.porcent = 0;
-        }
+        stat.porcent = Math.max(0, stat.porcent - stat.decay * dt);
       }
     }
+
+    // Ntificacion para aplicar los cambios
+    this.statsChanged.set([...this.pet.stats]);
   }
 }

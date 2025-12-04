@@ -52,25 +52,25 @@ export class DataService {
       stats: [
         {
           name: 'hunger',
-          decay: 0.03,
+          decay: 0.103,
           porcent: 100,
           active: true,
         },
         {
           name: 'energy',
-          decay: 0.02,
+          decay: 0.102,
           porcent: 100,
           active: true,
         },
         {
           name: 'happiness',
-          decay: 0.04,
+          decay: 0.104,
           porcent: 100,
           active: true,
         },
         {
           name: 'hygiene',
-          decay: 0.01,
+          decay: 0.101,
           porcent: 100,
           active: true,
         },

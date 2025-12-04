@@ -1,4 +1,4 @@
-<div class="flex flex-col h-full">
+<div class="flex flex-col h-full ">
   <canvas
     #canvas
     id="home-canvas"
@@ -6,8 +6,8 @@
     (mousedown)="onCanvasClickDown($event)"
     (mouseup)="onCanvasClickUp($event)"
     (mousemove)="onMouseMove($event)"
-    class="flex-1 w-full block"
+    class="flex-8 w-full block min-h-[85%]"
   ></canvas>
 
-  <app-stats-bar></app-stats-bar>
+  <app-stats-bar class="flex-1 min-h-[15%] "></app-stats-bar>
 </div>
