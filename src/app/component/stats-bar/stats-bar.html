@@ -1,7 +1,7 @@
-<div class="flex justify-center gap-3 pb-4 overflow-x-hidden h-full w-full ">
+<div class="flex justify-center gap-2 sm:gap-3 p-3 sm:p-4 w-full">
   @for (stat of stats; track $index) {
     <div
-      class="bg-white aspect-square flex flex-col items-center justify-center w-1/6 max-w-[150px] p-[0.5em] pixel-box"
+      class="bg-white aspect-square flex flex-col items-center justify-center p-2 sm:p-3 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 pixel-box"
       [style.background-color]="getColor(stat.porcent)"
     >
       <img
@@ -10,7 +10,9 @@
         class="w-full h-full object-contain"
       />
 
-      <span class="mt-1 text-sm sm:text-base">{{ roundStat(stat.porcent) }}%</span>
+      <span class="mt-1 text-xs sm:text-sm md:text-base font-medium">
+        {{ roundStat(stat.porcent) }}%
+      </span>
     </div>
   }
 </div>
