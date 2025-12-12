@@ -1,8 +1,10 @@
-<div 
+<div
   class="overflow-hidden transition-all duration-300 ease-in-out"
   [ngClass]="isOpenHeader ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'"
 >
-  <header class="text-slate-50 py-6 px-6 flex justify-between items-center cursor-auto bg-slate-700">
+  <header
+    class="text-slate-50 py-6 px-6 flex justify-between items-center cursor-auto bg-slate-700"
+  >
     <h1 class="text-4xl font-semibold select-none">Tamagotchi Web</h1>
 
     <nav class="flex gap-4 items-center">
@@ -17,11 +19,12 @@
   </header>
 </div>
 
-<button class="w-full bg-black flex justify-center relative" (click)="toggleHeader($event)">
+<button class="w-full bg-black flex justify-center relative h-4" (click)="toggleHeader($event)">
   <img
+    
     src="assets/icon/UI/desplegable-button.png"
     alt="Config"
-    class="w-32 h-16 select-none -mb-12 transition-transform duration-300"
+    class="w-32 h-8 select-none -mb-12 transition-transform duration-300 sm:h-16"
   />
 </button>
 

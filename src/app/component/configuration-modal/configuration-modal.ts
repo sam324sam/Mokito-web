@@ -23,10 +23,26 @@ export class ConfigurationModal implements AfterViewInit {
     }, 100);
   }
 
+  // Apartado para los togles de los menus
+  isColorSectionOpen = false;
+  isCheatsSectionOpen = false;
+  isSaveSectionOpen = false;
+
+  toggleColorSection() {
+    this.isColorSectionOpen = !this.isColorSectionOpen;
+  }
+
+  toggleCheatsSection() {
+    this.isCheatsSectionOpen = !this.isCheatsSectionOpen;
+  }
+
+  toggleSaveSection() {
+    this.isSaveSectionOpen = !this.isSaveSectionOpen;
+  }
+
   // seccion del color
   colors: Color[] = [];
   selectedColor: Color = { name: '', color: '' };
-  isColorSectionOpen = false;
 
   selectColor(color: Color) {
     this.selectedColor = color;
@@ -38,18 +54,11 @@ export class ConfigurationModal implements AfterViewInit {
     this.toggleConfiguration.emit(false);
   }
 
-  toggleColorSection() {
-    this.isColorSectionOpen = !this.isColorSectionOpen;
-  }
-
   apply() {
     if (this.selectedColor) {
       console.log('Color aplicado:', this.selectedColor);
-
-      // FORMA CORRECTA: actualizar el sprite mediante el DataService
       this.petService.pet.sprite.color = this.selectedColor;
-
-      this.close();
     }
+    this.close();
   }
 }

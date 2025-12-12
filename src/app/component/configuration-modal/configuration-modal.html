@@ -3,107 +3,165 @@
   class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
   (click)="close()"
   (keydown)="close()"
+  
 >
   <div
-    class="bg-slate-800 text-white p-4 sm:p-6 shadow-xl w-full max-w-md sm:max-w-lg md:max-w-2xl max-h-[90dvh] overflow-y-auto pixel-box"
+    class="bg-slate-800 text-white p-2 sm:p-6 shadow-xl w-full max-w-md sm:max-w-lg md:max-w-2xl max-h-[90dvh] overflow-y-auto pixel-box"
     (click)="$event.stopPropagation()"
     (keydown)="$event.stopPropagation()"
   >
-    <!-- Viñeta desplegable para toda la sección de colores -->
-    <div class="mb-6">
-      <button
-        type="button"
-        class="w-full flex items-center justify-between p-3 sm:p-4 bg-slate-700 rounded-lg hover:bg-slate-600 transition-colors pixel-box mb-3"
-        (click)="toggleColorSection()"
+    <!--Cambiar color -->
+    <button
+      type="button"
+      class="w-full flex items-center justify-between p-3 sm:p-4 bg-slate-700 rounded-lg hover:bg-slate-600 transition-colors mb-1 pixel-box"
+      (click)="toggleColorSection()"
+    >
+      <div class="flex items-center gap-3">
+        <img src="assets/icon/configuration/color.png" alt="" />
+        <span class="text-sm sm:text-base font-medium">Cambiar color</span>
+      </div>
+
+      <svg
+        class="w-5 h-5 transition-transform duration-300"
+        [class.rotate-180]="isColorSectionOpen"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
       >
-        <div class="flex items-center gap-3">
-          @if(selectedColor) {
-          <div
-            class="w-6 h-6 sm:w-8 sm:h-8 rounded pixel-box-s"
-            [style.background-color]="selectedColor.color"
-          ></div>
-          }
-          <span class="text-sm sm:text-base font-medium">Cambiar color</span>
-        </div>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
 
-        <svg
-          class="w-5 h-5 transition-transform duration-300"
-          [class.rotate-180]="isColorSectionOpen"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
-      </button>
+    <!-- Contenido desplegable Cambiar color -->
+    <div
+      class="overflow-hidden transition-all duration-300 ease-in-out mb-2"
+      [class.max-h-0]="!isColorSectionOpen"
+      [class.max-h-[800px]]="isColorSectionOpen"
+      [class.opacity-0]="!isColorSectionOpen"
+      [class.opacity-100]="isColorSectionOpen"
+    >
+      <div class="mb-3 p-4 bg-slate-700/50 rounded-lg text-center pixel-box-s">
+        <div class="block text-xs sm:text-base text-slate-300 mb-1">Selecciona un color:</div>
 
-      <!-- Contenido desplegable -->
-      <div
-        class="overflow-hidden transition-all duration-300 ease-in-out"
-        [class.max-h-0]="!isColorSectionOpen"
-        [class.max-h-[800px]]="isColorSectionOpen"
-        [class.opacity-0]="!isColorSectionOpen"
-        [class.opacity-100]="isColorSectionOpen"
-      >
-        <div class="space-y-4">
-          <div class="block text-sm sm:text-base text-slate-300">Selecciona un color:</div>
+        <!-- Grid de colores -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 mb-2">
+          @for (color of colors; track $index) {
+          <button
+            type="button"
+            class="color-option relative group"
+            [class.selected]="selectedColor === color"
+            (click)="selectColor(color)"
+          >
+            <div
+              class="w-full h-14 sm:h-16 md:h-20 rounded-lg transition-all duration-200 group-hover:scale-105 group-hover:shadow-lg pixel-box-s clickable"
+              [style.background-color]="color.color"
+            ></div>
 
-          <!-- Grid de colores -->
-          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3">
-            @for (color of colors; track $index) {
-            <button
-              type="button"
-              class="color-option relative group"
-              [class.selected]="selectedColor === color"
-              (click)="selectColor(color)"
-            >
-              <div
-                class="w-full h-14 sm:h-16 md:h-20 rounded-lg transition-all duration-200 group-hover:scale-105 group-hover:shadow-lg pixel-box"
-                [style.background-color]="color.color"
-              ></div>
-
-              @if (selectedColor === color) {
-              <img
-                src="assets/icon/check.png"
-                alt="Seleccionado"
-                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 sm:w-8 pointer-events-none drop-shadow-lg"
-              />
-              }
-
-              <span
-                class="text-xs sm:text-sm text-center mt-1 sm:mt-2 block text-slate-400 truncate px-1"
-              >
-                {{ color.name }}
-              </span>
-            </button>
+            @if (selectedColor === color) {
+            <img
+              src="assets/icon/check.png"
+              alt="Seleccionado"
+              class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 sm:w-8 pointer-events-none drop-shadow-lg"
+            />
             }
-          </div>
 
-          <!-- Preview del color seleccionado -->
-          @if(selectedColor) {
-          <div class="p-3 sm:p-4 bg-slate-700 rounded-lg w-full pixel-box">
-            <p class="text-xs sm:text-sm text-slate-300 mb-2 sm:mb-3">Vista previa:</p>
-            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-              <div
-                class="w-full sm:w-1/2 h-12 sm:h-14 rounded-lg border-2 border-slate-600 pixel-box-s"
-                [style.background-color]="selectedColor.color"
-              ></div>
-              <span class="text-base sm:text-lg font-medium w-full sm:w-1/2">{{
-                selectedColor.name
-              }}</span>
-            </div>
-          </div>
+            <span
+              class="text-xs sm:text-sm text-center mt-1 sm:mt-2 block text-slate-400 truncate px-1"
+            >
+              {{ color.name }}
+            </span>
+          </button>
           }
         </div>
+
+        <!-- Preview del color seleccionado -->
+        @if(selectedColor) {
+        <div class="p-2 sm:p-3 bg-slate-700 rounded-lg w-full pixel-box">
+          <p class="text-xs sm:text-sm text-slate-300 mb-2 sm:mb-3 text-center">Vista previa:</p>
+          <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            <div
+              class="w-full sm:w-1/2 h-12 sm:h-14 rounded-lg border-2 border-slate-600 pixel-box-s"
+              [style.background-color]="selectedColor.color"
+            ></div>
+            <span class="text-base sm:text-lg font-medium w-full sm:w-1/2">{{
+              selectedColor.name
+            }}</span>
+          </div>
+        </div>
+        }
       </div>
     </div>
 
-    <!-- Botones fuera de la viñeta -->
+    <!--Guardar mascota -->
+    <button
+      type="button"
+      class="w-full flex items-center justify-between p-3 sm:p-4 bg-slate-700 rounded-lg hover:bg-slate-600 transition-colors mb-1 pixel-box"
+      (click)="toggleSaveSection()"
+    >
+      <div class="flex items-center gap-3">
+        <img src="assets/icon/configuration/data.png" alt="" />
+        <span class="text-sm sm:text-base font-medium">Guardar mascota</span>
+      </div>
+
+      <svg
+        class="w-5 h-5 transition-transform duration-300"
+        [class.rotate-180]="isSaveSectionOpen"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+
+    <!-- Contenido desplegable Guardar mascota -->
+    <div
+      class="overflow-hidden transition-all duration-300 ease-in-out mb-2"
+      [class.max-h-0]="!isSaveSectionOpen"
+      [class.max-h-[200px]]="isSaveSectionOpen"
+      [class.opacity-0]="!isSaveSectionOpen"
+      [class.opacity-100]="isSaveSectionOpen"
+    >
+      <div class="mt-3 p-4 bg-slate-700/50 rounded-lg text-center pixel-box-s">
+        <p class="text-sm sm:text-base text-slate-400">En proceso...</p>
+      </div>
+    </div>
+    <!--  Trucos -->
+    <button
+      type="button"
+      class="w-full flex items-center justify-between p-3 sm:p-4 bg-slate-700 rounded-lg hover:bg-slate-600 mb-1 transition-colors pixel-box"
+      (click)="toggleCheatsSection()"
+    >
+      <div class="flex items-center gap-3">
+        <img src="assets/icon/configuration/cheats.png" alt="" />
+        <span class="text-sm sm:text-base font-medium">Trucos</span>
+      </div>
+
+      <svg
+        class="w-5 h-5 transition-transform duration-300"
+        [class.rotate-180]="isCheatsSectionOpen"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+
+    <!-- Contenido desplegable Trucos -->
+    <div
+      class="overflow-hidden transition-all duration-300 ease-in-out mb-2"
+      [class.max-h-0]="!isCheatsSectionOpen"
+      [class.max-h-[200px]]="isCheatsSectionOpen"
+      [class.opacity-0]="!isCheatsSectionOpen"
+      [class.opacity-100]="isCheatsSectionOpen"
+    >
+      <div class="mb-3 p-4 bg-slate-700/50 rounded-lg text-center pixel-box-s">
+        <p class="text-sm sm:text-base text-slate-400">En proceso...</p>
+      </div>
+    </div>
+
+    <!-- Botones fuera de las viñetas -->
     <div class="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3 w-full">
       <button
         class="pixel-box px-4 py-2 sm:py-2.5 bg-slate-600 rounded-lg hover:bg-slate-500 transition-colors text-sm sm:text-base font-medium w-full sm:w-auto"
