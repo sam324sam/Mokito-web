@@ -10,14 +10,16 @@
     (keydown)="$event.stopPropagation()"
   >
     <!-- Boton X para cerrar -->
-    <div class="flex justify-between sticky top-[-1.5em] z-10 bg-slate-800 px-2 sm:px-6 pt-2 sm:pt-0 p-1.5">
+    <div
+      class="flex justify-between sticky top-[-1.5em] z-10 bg-slate-800 px-2 sm:px-6 pt-2 sm:pt-0 p-1.5"
+    >
       <h2>configuracion</h2>
       <button
         type="button"
         class="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors group pixel-box-s"
         (click)="close()"
       >
-        <img src="assets/icon/configuration/xmark.png" alt="x">
+        <img src="assets/icon/configuration/xmark.png" alt="x" />
       </button>
     </div>
 
@@ -170,7 +172,7 @@
       <div class="mb-3 p-4 bg-slate-700/50 rounded-lg text-center pixel-box-s">
         <ul class="flex flex-col gap-1.5">
           <!-- Modo Dios -->
-          <li class="flex items-center justify-between gap-4 p-1 rounded-md bg-slate-800/60">
+          <li class="flex items-center justify-between gap-4 p-2 rounded-md bg-slate-800/60">
             <label for="godMode" class="text-sm sm:text-base text-slate-200"> Modo dios </label>
             <input
               id="godMode"
@@ -181,12 +183,18 @@
             />
           </li>
 
-          <!-- Vida infinita -->
+          <!-- Bloquear movimiento -->
           <li class="flex items-center justify-between gap-4 p-2 rounded-md bg-slate-800/60">
-            <label for="infiniteLife" class="text-sm sm:text-base text-slate-200">
-              Vida infinita
+            <label for="noMoreMove" class="text-sm sm:text-base text-slate-200">
+              Bloquear movimiento
             </label>
-            <input id="infiniteLife" type="checkbox" class="w-5 h-5 accent-emerald-400" />
+            <input
+              id="noMoreMove"
+              type="checkbox"
+              class="w-5 h-5 accent-emerald-400"
+              [checked]="getNoMoreMove()"
+              (change)="setNoMoreMove($event)"
+            />
           </li>
 
           <!-- Energía infinita -->

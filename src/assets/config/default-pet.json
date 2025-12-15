@@ -2,7 +2,6 @@
   "id": 0,
   "isGrab": false,
   "blockMove": false,
-  "godMode": false,
   "sprite": {
     "colorIndex": 1,
     "x": 0,
@@ -13,6 +12,10 @@
     "currentAnimation": "idle",
     "currentFrame": 0,
     "frameSpeed": 100
+  },
+  "cheats": {
+    "godMode": false,
+    "noMoreMove": false
   },
   "stats": [
     { "name": "hunger", "decay": 0.103, "porcent": 100, "active": true },

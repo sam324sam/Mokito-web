@@ -1,5 +1,5 @@
 <div class="flex flex-col h-full w-full">
-  <div class="flex-1 overflow-hidden ml-2 mr-2">
+  <div class="flex-1 overflow-hidden ml-2 mr-2 sm:pl-8 sm:pr-8 pr-5 pl-5">
     <canvas
       #canvas
       id="home-canvas"
@@ -7,7 +7,7 @@
       (mousedown)="onCanvasClickDown($event)"
       (mouseup)="onCanvasClickUp($event)"
       (mousemove)="onMouseMove($event)"
-      class="w-full  block h-[calc(100vh)]  bg-black pixel-box-pet"
+      class="block  bg-black pixel-box-pet"
     ></canvas>
   </div>
   <app-stats-bar></app-stats-bar>

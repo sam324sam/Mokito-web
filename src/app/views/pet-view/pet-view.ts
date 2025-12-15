@@ -40,7 +40,7 @@ export class PetView implements AfterViewInit, OnDestroy{
   @HostListener('window:resize')
   onResize() {
     // Algun dia esto funcionara
-    this.spriteService.resizeScaleCanvas();
+    this.spriteService.resizeScaleCanvas(this.canvas);
   }
 
   onMouseMove(event: MouseEvent) {

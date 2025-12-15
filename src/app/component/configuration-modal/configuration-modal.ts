@@ -53,16 +53,26 @@ export class ConfigurationModal {
   }
 
   // Apartado de los trucos
+  // God moide
   getGodMode() {
-    return this.petService.pet.godMode;
+    return this.petService.pet.cheats.godMode;
   }
   setGodMode(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
-    this.petService.pet.godMode = checked;
+    this.petService.pet.cheats.godMode = checked;
     if (checked) {
       for (const stat of this.petService.pet.stats) {
         stat.porcent = 100;
       }
     }
+  }
+
+  // Bloquear movimiento
+  getNoMoreMove(){
+    return this.petService.pet.cheats.noMoreMove;
+  }
+  setNoMoreMove(event: Event) {
+    const checked = (event.target as HTMLInputElement).checked;
+    this.petService.pet.cheats.noMoreMove = checked;
   }
 }

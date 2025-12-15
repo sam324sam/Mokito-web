@@ -110,8 +110,12 @@ export class PetService {
     this.pressTimer = setTimeout(() => {
       this.pet.isGrab = true;
 
-      this.pointerOffsetX = event.clientX - rect.left - this.pet.sprite.x * scale;
-      this.pointerOffsetY = event.clientY - rect.top - this.pet.sprite.y * scale;
+      // Calcular offset correctamente
+      const mouseX = (event.clientX - rect.left) / scale;
+      const mouseY = (event.clientY - rect.top) / scale;
+
+      this.pointerOffsetX = mouseX - this.pet.sprite.x;
+      this.pointerOffsetY = mouseY - this.pet.sprite.y;
 
       this.pet.sprite.currentAnimation = 'grab';
       this.pet.sprite.currentFrame = 0;
@@ -145,14 +149,19 @@ export class PetService {
     if (!this.pet.isGrab) return;
 
     const canvas = this.spriteService.getCanvas();
+    const rect = canvas.getBoundingClientRect();
+    const scale = this.spriteService.getScale();
 
-    const newX = (event.offsetX - this.pointerOffsetX) / this.pet.sprite.scale;
-    const newY = (event.offsetY - this.pointerOffsetY) / this.pet.sprite.scale;
+    // Convertir coordenadas del mouse a coordenadas del canvas
+    const mouseX = (event.clientX - rect.left) / scale;
+    const mouseY = (event.clientY - rect.top) / scale;
 
-    const maxX =
-      (canvas.width - this.pet.sprite.width * this.pet.sprite.scale) / this.pet.sprite.scale;
-    const maxY =
-      (canvas.height - this.pet.sprite.height * this.pet.sprite.scale) / this.pet.sprite.scale;
+    const newX = mouseX - this.pointerOffsetX;
+    const newY = mouseY - this.pointerOffsetY;
+
+    // Calcular límites en coordenadas internas
+    const maxX = canvas.width / scale - this.pet.sprite.width;
+    const maxY = canvas.height / scale - this.pet.sprite.height;
 
     const clampedX = Math.max(0, Math.min(newX, maxX));
     const clampedY = Math.max(0, Math.min(newY, maxY));
@@ -170,11 +179,30 @@ export class PetService {
   }
 
   // Cuando es precionada la mascta
-  isPetPresed(event: MouseEvent) {
+  isPetPresed(event: MouseEvent): boolean {
     const scale = this.spriteService.getScale();
-    const rect = this.spriteService.getCanvas().getBoundingClientRect();
+    const canvas = this.spriteService.getCanvas();
+    const rect = canvas.getBoundingClientRect();
+
+    // Convertir coordenadas del mouse a coordenadas del canvas (sin escala)
     const mx = (event.clientX - rect.left) / scale;
     const my = (event.clientY - rect.top) / scale;
+
+    // DEBUG: Descomentar para ver valores en consola
+    console.log('isPetPresed:', {
+      clientX: event.clientX,
+      clientY: event.clientY,
+      rectLeft: rect.left,
+      rectTop: rect.top,
+      scale: scale,
+      mx: mx.toFixed(2),
+      my: my.toFixed(2),
+      petX: this.pet.sprite.x.toFixed(2),
+      petY: this.pet.sprite.y.toFixed(2),
+      petW: this.pet.sprite.width,
+      petH: this.pet.sprite.height,
+    });
+
     return this.collisionService.isPointInsideSprite(this.pet.sprite, mx, my);
   }
 
@@ -194,7 +222,7 @@ export class PetService {
 
   // Para bajar las estadisticas
   private updateStats(delta: number) {
-    if (!this.pet.godMode) {
+    if (!this.pet.cheats.godMode) {
       const dt = delta / 1000;
 
       for (const stat of this.pet.stats) {
@@ -210,7 +238,7 @@ export class PetService {
 
   //Para setear las stats con los porcentajes
   sumMinusStat(statName: string, numberStat: number) {
-    if (!this.pet.godMode) {
+    if (!this.pet.cheats.godMode) {
       const happinessStat = this.pet.stats.find((obj) => obj.name === statName);
       if (happinessStat) {
         happinessStat.porcent = Math.min(100, happinessStat.porcent + numberStat);

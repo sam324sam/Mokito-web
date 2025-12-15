@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 // modelo
 import { Sprite } from '../models/sprites/sprites.model';
 // Servicios
-import { CollisionService } from './collision.service';
 import { AnimationService } from './animation.service';
 
 @Injectable({ providedIn: 'root' })
@@ -12,10 +11,9 @@ export class SpriteService {
   private ctx!: CanvasRenderingContext2D;
   private readonly sprites: Sprite[] = [];
   private scaleSprite: number = 1;
-  private readonly referenceWidth: number = 200;
+  private referenceWidth: number = 300;
 
   constructor(
-    private readonly collisionService: CollisionService,
     private readonly animationService: AnimationService
   ) {}
 
@@ -31,12 +29,11 @@ export class SpriteService {
     this.canvas.style.imageRendering = 'crisp-edges';
     // Desactivar suavizado en el contexto
     this.ctx.imageSmoothingEnabled = false;
-
     // Ajustar tamaño inicial
-    this.resizeScaleCanvas();
+    this.resizeScaleCanvas(canvas);
   }
 
-  resizeScaleCanvas() {
+  resizeScaleCanvas(canvas: HTMLCanvasElement) {
     if (!this.canvas) return;
 
     // Obtener tamaño del contenedor
@@ -44,6 +41,9 @@ export class SpriteService {
 
     // enteros para evitar blurthis.canvas.style.imageRendering = 'pixelated';
     const width = Math.floor(rect.width);
+    if (width <= 500) {
+      this.referenceWidth = 100;
+    }
 
     // Calcular escala
     this.scaleSprite = width / this.referenceWidth;
