@@ -1,13 +1,12 @@
 .console-body {
-    border: 24px solid black;
-    border-image: url('/tamagotchi-web/assets/icon/UI/border-app.png') 6 fill round;
+    border: 48px solid black;
+    border-image: url('/tamagotchi-web/assets/icon/UI/frame-console.png') 16 fill round;
     image-rendering: pixelated;
-    border-radius: 1.6em;
-    background-color: azure;
+    border-radius: 5em;
 }
 
 .console-screen {
-    border: 48px solid black;
+    border: 24px solid black;
     border-image: url('/tamagotchi-web/assets/icon/UI/frame-pet.png') 16 fill round;
     image-rendering: pixelated;
     border-radius: 7em;
@@ -15,14 +14,14 @@
 
 @media (max-width: 550px) {
     .console-body {
-        border: 8px solid black;
+        border: 16px solid black;
         border-radius: 0.5em;
-        border-image: url('/tamagotchi-web/assets/icon/UI/border-app.png') 6 fill round;
+        border-image: url('/tamagotchi-web/assets/icon/UI/frame-console.png') 16 fill round;
         image-rendering: pixelated;
     }
 
     .console-screen {
-        border: 16px solid black;
+        border: 16px solid rgb(0, 0, 0);
         border-radius: 1em;
         border-image: url('/tamagotchi-web/assets/icon/UI/frame-pet.png') 16 fill round;
         image-rendering: pixelated;

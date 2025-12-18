@@ -1,7 +1,7 @@
 <div class="flex justify-center gap-1 w-full">
   @for (stat of stats; track $index) {
     <div
-      class="bg-white aspect-square flex flex-col items-center justify-center p-1 sm:p-3 sm:w-18 sm:h-18 w-10 h-10 pixel-box-s"
+      class="bg-white aspect-square flex flex-col items-center justify-center p-1 sm:p-3 sm:w-18 sm:h-18 w-10 h-10 frame-stat"
       [style.background-color]="getColor(stat.porcent)"
     >
       <img

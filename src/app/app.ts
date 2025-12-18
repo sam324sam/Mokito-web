@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { PetView } from './views/pet-view/pet-view';
 import { Header } from './component/header/header';
 import { StatsBar } from "./component/stats-bar/stats-bar";
@@ -10,6 +10,5 @@ import { StatsBar } from "./component/stats-bar/stats-bar";
   styleUrl: './app.scss',
 })
 export class App{
-  protected readonly title = signal('tamagotchi-web');
 
 }

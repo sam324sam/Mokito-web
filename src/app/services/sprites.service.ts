@@ -34,24 +34,13 @@ export class SpriteService {
   resizeCanvas() {
     const container = this.canvas.parentElement;
     if (!container) return;
-    const containerWidth = container.clientWidth;
-    const containerHeight = container.clientHeight;
 
-    if (container.clientWidth <= 600) {
-      this.spriteScale = 3;
+    console.log('resolucion', container.offsetWidth);
+    if (container.offsetWidth <= 500) {
+      this.spriteScale = 1;
     }
 
-    if (containerWidth === 0 || containerHeight === 0) {
-      requestAnimationFrame(() => this.resizeCanvas());
-      return;
-    }
-
-    const scale = Math.min(containerWidth / this.BASE_WIDTH, containerHeight / this.BASE_HEIGHT);
-
-    this.canvas.style.width = `${this.BASE_WIDTH * scale}px`;
-    this.canvas.style.height = `${this.BASE_HEIGHT * scale}px`;
-
-    // Buffer = tamaño lógico
+    // Buffer = tamaño logico
     this.canvas.width = this.BASE_WIDTH;
     this.canvas.height = this.BASE_HEIGHT;
 

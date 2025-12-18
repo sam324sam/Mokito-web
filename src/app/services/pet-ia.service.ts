@@ -30,7 +30,8 @@ export class PetIaService {
     movePet: (dx: number, dy: number) => void,
     sumMinusStat: (dx: any, dy: any) => void
   ) {
-    if (!pet.sprite && pet.cheats.noMoreMove) return;
+    // No realizar el movimiento si esto se cumple
+    if (!pet.sprite || pet.cheats.noMoreMove) return;
 
     const now = performance.now();
 
