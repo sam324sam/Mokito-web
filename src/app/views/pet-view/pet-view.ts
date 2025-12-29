@@ -13,10 +13,11 @@ import { SpriteService } from '../../services/sprites.service';
 import { PetService } from '../../services/pet.service';
 import { CursorService } from '../../services/cursor.service';
 import { PetIaService } from '../../services/pet-ia.service';
+import { StatsBar } from "../../component/stats-bar/stats-bar";
 
 @Component({
   selector: 'app-pet-view',
-  imports: [],
+  imports: [StatsBar],
   templateUrl: './pet-view.html',
   styleUrl: './pet-view.scss',
   standalone: true,
@@ -26,6 +27,9 @@ export class PetView implements AfterViewInit, OnDestroy {
   canvasRef!: ElementRef<HTMLCanvasElement>;
   canvas!: HTMLCanvasElement;
 
+  // Para las stats
+  isOpenStats: boolean = false;
+
   constructor(
     private readonly spriteService: SpriteService,
     private readonly petService: PetService,
@@ -34,12 +38,12 @@ export class PetView implements AfterViewInit, OnDestroy {
     private readonly gameLoopService: GameLoopService
   ) {}
 
-  onCanvasClickDown(event: MouseEvent) {
+  onCanvasClickDown(event: PointerEvent) {
     this.petService.handlePressDown(event);
     this.cursorService.setCanvasCursor('assets/cursor/cursor-grab.png');
   }
 
-  onCanvasClickUp(event: MouseEvent) {
+  onCanvasClickUp(event: PointerEvent) {
     this.petService.handlePressUp(event);
     this.cursorService.resetCanvasCursor();
   }
@@ -51,7 +55,7 @@ export class PetView implements AfterViewInit, OnDestroy {
     this.centerPet();
   }
 
-  onMouseMove(event: MouseEvent) {
+  onMouseMove(event: PointerEvent) {
     this.petService.handleMouseMove(event);
   }
 
@@ -111,5 +115,9 @@ export class PetView implements AfterViewInit, OnDestroy {
       this.petService.pet.sprite.x,
       this.petService.pet.sprite.y
     );
+  }
+
+  toggleStats(){
+    this.isOpenStats = !this.isOpenStats 
   }
 }

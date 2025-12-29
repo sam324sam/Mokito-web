@@ -1,9 +1,43 @@
-<canvas
-  #canvas
-  id="pet-canvas"
-  tabindex="0"
-  (mousedown)="onCanvasClickDown($event)"
-  (mouseup)="onCanvasClickUp($event)"
-  (mousemove)="onMouseMove($event)"
-  class="w-full h-full"
-></canvas>
+<!-- Contenedor relativo para posicionamiento absoluto -->
+<div class="relative w-full h-full overflow-hidden">
+  <canvas
+    #canvas
+    id="pet-canvas"
+    tabindex="0"
+    (pointerdown)="onCanvasClickDown($event)"
+    (pointerup)="onCanvasClickUp($event)"
+    (pointermove)="onMouseMove($event)"
+    class="w-full h-full"
+  >
+  </canvas>
+
+  <!-- Contenedor absoluto en la parte inferior -->
+  <div class="absolute bottom-0 left-0 right-0 flex flex-col items-center pb-4 pointer-events-none">
+    <!-- Botón con pointer-events habilitado -->
+    <button
+      (click)="toggleStats()"
+      class="rotate-180 bg-transparent border-none p-0 cursor-pointer mb-2 pointer-events-auto transition-transform hover:scale-110 active:scale-95 duration-200 opacity-40 hover:opacity-900"
+    >
+      <img
+        src="/Mokito-web/assets/icon/UI/console/boton-stats.png"
+        alt="boton-stats"
+        class="w-10 h-10 sm:w-20 sm:h-20 drop-shadow-lg clickable"
+      />
+    </button>
+
+    <!-- Stats bar con animación de entrada/salida -->
+    <div
+      class="w-full max-w-sm px-4 pointer-events-auto transition-all duration-300 ease-in-out"
+      [class.max-h-0]="!isOpenStats"
+      [class.max-h-96]="isOpenStats"
+      [class.opacity-0]="!isOpenStats"
+      [class.opacity-100]="isOpenStats"
+      [class.translate-y-4]="!isOpenStats"
+      [class.translate-y-0]="isOpenStats"
+      [class.scale-95]="!isOpenStats"
+      [class.scale-100]="isOpenStats"
+    >
+      <app-stats-bar></app-stats-bar>
+    </div>
+  </div>
+</div>

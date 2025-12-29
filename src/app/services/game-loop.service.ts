@@ -23,7 +23,7 @@ export class GameLoopService {
 
   start() {
     // Evitar el doble loop
-    if (this.running) return;
+    if (this.running) stop();
     this.running = true;
     this.frameId = requestAnimationFrame(this.loop.bind(this));
   }

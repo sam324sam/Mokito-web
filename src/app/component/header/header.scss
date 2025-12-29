@@ -1,5 +1,13 @@
-.console-name{
+.console-name {
     border: 16px solid black;
     border-image: url('/Mokito-web/assets/icon/UI/console/console-name.png') 16 fill round;
     image-rendering: pixelated;
+}
+
+@media (max-width: 550px) {
+    .console-name {
+        border: 8px solid black;
+        border-image: url('/Mokito-web/assets/icon/UI/console/console-name.png') 16 fill round;
+        image-rendering: pixelated;
+    }
 }

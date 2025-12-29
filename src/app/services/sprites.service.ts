@@ -37,7 +37,7 @@ export class SpriteService {
 
     console.log('resolucion', container.offsetWidth);
     if (container.offsetWidth <= 500) {
-      this.spriteScale = 1;
+      this.spriteScale = 2;
     }
 
     this.ctx.imageSmoothingEnabled = false;

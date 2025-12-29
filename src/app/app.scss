@@ -1,12 +1,12 @@
 .console-body {
     border: 16px solid black;
-    border-image: url('/Mokito-web/assets/icon/UI/console/frame-console-blue.png') 16 fill round;
+    border-image: url('/Mokito-web/assets/icon/UI/console/frame-console-purple.png') 16 fill round;
     image-rendering: pixelated;
 }
 
 .console-screen {
     border: 24px solid black;
-    border-image: url('/Mokito-web/assets/icon/UI/console/frame-pet-blue.png') 16 fill round;
+    border-image: url('/Mokito-web/assets/icon/UI/console/frame-pet-purple.png') 16 fill round;
     image-rendering: pixelated;
     border-radius: 7em;
 }
@@ -15,14 +15,14 @@
     .console-body {
         border: 16px solid black;
         border-radius: 0.5em;
-        border-image: url('/Mokito-web/assets/icon/UI/console/frame-console-blue.png') 16 fill round;
+        border-image: url('/Mokito-web/assets/icon/UI/console/frame-console-purple.png') 16 fill round;
         image-rendering: pixelated;
     }
 
     .console-screen {
         border: 16px solid rgb(0, 0, 0);
         border-radius: 1em;
-        border-image: url('/Mokito-web/assets/icon/UI/console/frame-pet-blue.png') 16 fill round;
+        border-image: url('/Mokito-web/assets/icon/UI/console/frame-pet-purple.png') 16 fill round;
         image-rendering: pixelated;
     }
 }

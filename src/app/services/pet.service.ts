@@ -82,7 +82,7 @@ export class PetService {
    * Convierte coordenadas del mouse (CSS) a coordenadas del canvas logico (200x200)
    * Compensa la diferencia entre el tamano visual (CSS) y el buffer interno
    */
-  private getMousePos(evt: MouseEvent): { x: number; y: number } {
+  private getMousePos(evt: PointerEvent): { x: number; y: number } {
     const canvas = this.spriteService.getCanvas();
     const rect = canvas.getBoundingClientRect();
 
@@ -100,7 +100,7 @@ export class PetService {
    * Verifica si el click esta dentro del area del sprite escalado
    * Usa coordenadas del canvas logico para la comparacion
    */
-  private isPetClicked(event: MouseEvent): boolean {
+  private isPetClicked(event: PointerEvent): boolean {
     const mouse = this.getMousePos(event);
     const sprite = this.pet.sprite;
 
@@ -121,7 +121,8 @@ export class PetService {
    * Maneja el evento de presionar el mouse sobre el pet
    * Inicia un timer para detectar presion prolongada (agarre)
    */
-  handlePressDown(event: MouseEvent) {
+  handlePressDown(event: PointerEvent) {
+    event.preventDefault();
     if (!this.isPetClicked(event)) return;
 
     this.clearPressTimer();
@@ -135,7 +136,7 @@ export class PetService {
    * Inicia el modo de agarre del pet
    * Calcula el offset entre el mouse y la posicion del sprite
    */
-  private startGrabbing(event: MouseEvent) {
+  private startGrabbing(event: PointerEvent) {
     this.pet.isGrab = true;
 
     const mouse = this.getMousePos(event);
@@ -143,6 +144,8 @@ export class PetService {
     // Calcular offset para mantener la posicion relativa al agarrar
     this.grabOffsetX = mouse.x - this.pet.sprite.x;
     this.grabOffsetY = mouse.y - this.pet.sprite.y;
+
+    console.log("grabOffsetX", this.grabOffsetX, "grabOffsetY", this.grabOffsetY)
 
     // Cambiar a animacion de agarre
     this.setAnimation('grab');
@@ -152,14 +155,14 @@ export class PetService {
    * Maneja el evento de soltar el mouse
    * Cancela el agarre y ejecuta animacion de respuesta si fue un click corto
    */
-  handlePressUp(event: MouseEvent) {
-    const wasGrabbing = this.pet.isGrab;
+  handlePressUp(event: PointerEvent) {
+    event.preventDefault();
 
     this.clearPressTimer();
     this.pet.isGrab = false;
 
     // Si no era agarre y clickeo sobre el pet, hacer animacion de respuesta
-    if (!wasGrabbing && this.isPetClicked(event)) {
+    if (this.isPetClicked(event)) {
       this.triggerPetResponse();
     }
   }
@@ -186,7 +189,7 @@ export class PetService {
    * Maneja el movimiento del mouse mientras se agarra el pet
    * Actualiza la posicion del sprite siguiendo el cursor
    */
-  handleMouseMove(event: MouseEvent) {
+  handleMouseMove(event: PointerEvent) {
     if (!this.pet.isGrab) return;
 
     const mouse = this.getMousePos(event);
@@ -195,19 +198,9 @@ export class PetService {
     let newX = mouse.x - this.grabOffsetX;
     let newY = mouse.y - this.grabOffsetY;
 
-    // Los limites deben considerar el tamano ESCALADO del sprite
-    // porque aunque sprite.x esta en coordenadas logicas 200x200,
-    // el sprite se DIBUJA ocupando (width * spriteScale) pixeles
-    const scaledWidth = this.pet.sprite.width * this.spriteService.spriteScale;
-    const scaledHeight = this.pet.sprite.height * this.spriteService.spriteScale;
-
-    // Limite maximo: donde empieza el sprite + su tamano escalado = borde del canvas
-    const maxX = this.BASE_WIDTH - scaledWidth;
-    const maxY = this.BASE_HEIGHT - scaledHeight;
-
     // Aplicar limites para que no se salga del canvas
-    this.pet.sprite.x = Math.max(0, Math.min(newX, maxX));
-    this.pet.sprite.y = Math.max(0, Math.min(newY, maxY));
+    this.pet.sprite.x = Math.max(0, newX);
+    this.pet.sprite.y = Math.max(0, newY);
   }
 
   /**
