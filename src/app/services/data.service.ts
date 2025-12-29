@@ -7,12 +7,12 @@ import { AnimationType } from '../models/sprites/animationSprite.model';
 // Json de datos
 import petDefault from '../../assets/config/default-pet.json';
 import animationsPet from '../../assets/config/animations-pet.json';
-import colorsJson from '../../assets/config/color-pet.json'
+import colorsJson from '../../assets/config/color-pet.json';
 
 @Injectable({ providedIn: 'root' })
 export class DataService {
   // Colores predefinidos
-  colors: Color[] = {} as Color[]
+  colors: Color[] = {} as Color[];
 
   pet: Pet = {} as Pet;
   animationsCache: Record<number, AnimationSet[]> = {};
@@ -21,11 +21,16 @@ export class DataService {
     this.initData();
   }
 
-  // Inicializa los datos directamente sin JSON
+  /**
+   * Inicializa los datos directamente sin JSON
+   */
   initData() {
     this.loadFromJson();
   }
 
+  /**
+   * Cargar los datos del json por defecto
+   */
   private loadFromJson() {
     // Cargar los colores
     this.colors = [...colorsJson.colors];
@@ -59,11 +64,13 @@ export class DataService {
     return this.pet;
   }
 
-  getColors(): Color[]{
+  getColors(): Color[] {
     return this.colors;
   }
 
-  // Devuelve las animaciones de la mascota
+  /**
+   * Devuelve las animaciones de la mascota
+   */
   getAnimations(petId: number): AnimationSet[] {
     return this.animationsCache[petId] || [];
   }

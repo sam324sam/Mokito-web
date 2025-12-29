@@ -1,13 +1,13 @@
 <div class="flex justify-center gap-1 w-full">
   @for (stat of stats; track $index) {
     <div
-      class="bg-white aspect-square flex flex-col items-center justify-center p-1 sm:p-3 sm:w-16 sm:h-16 w-10 h-10 frame-stat"
+      class="bg-white aspect-square flex flex-col items-center justify-center p-0 frame-stat"
       [style.background-color]="getColor(stat.porcent)"
     >
       <img
         [src]="'/Mokito-web/assets/icon/stats/' + stat.name + '.png'"
         [alt]="stat.name"
-        class="w-full h-full object-contain"
+        class="sm:w-10 sm:h-10 w-5 h-5 object-contain"
       />
 
       <span class="text-xs sm:text-sm md:text-base font-medium">

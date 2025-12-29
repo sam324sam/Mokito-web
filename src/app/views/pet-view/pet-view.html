@@ -13,7 +13,7 @@
 
   <!-- Contenedor absoluto en la parte inferior -->
   <div class="absolute bottom-0 left-0 right-0 flex flex-col items-center pb-4 pointer-events-none">
-    <!-- Botón con pointer-events habilitado -->
+    <!-- Boton con pointer-events habilitado -->
     <button
       (click)="toggleStats()"
       class="rotate-180 bg-transparent border-none p-0 cursor-pointer mb-2 pointer-events-auto transition-transform hover:scale-110 active:scale-95 duration-200 opacity-40 hover:opacity-900"
@@ -25,7 +25,7 @@
       />
     </button>
 
-    <!-- Stats bar con animación de entrada/salida -->
+    <!-- Stats bar con animacion de entrada/salida -->
     <div
       class="w-full max-w-sm px-4 pointer-events-auto transition-all duration-300 ease-in-out"
       [class.max-h-0]="!isOpenStats"
