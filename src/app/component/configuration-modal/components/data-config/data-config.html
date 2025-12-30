@@ -1,0 +1,11 @@
+<div
+  class="overflow-hidden transition-all duration-300 ease-in-out mb-2"
+  [class.max-h-0]="!isSaveSectionOpen"
+  [class.max-h-[200px]]="isSaveSectionOpen"
+  [class.opacity-0]="!isSaveSectionOpen"
+  [class.opacity-100]="isSaveSectionOpen"
+>
+  <div class="mt-3 p-4 bg-slate-700/50 rounded-lg text-center pixel-box-s">
+    <p class="text-sm sm:text-base text-slate-400">En proceso...</p>
+  </div>
+</div>

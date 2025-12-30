@@ -1,21 +1,43 @@
 {
   "animations": [
     {
-      "name": "idle",
-      "baseUrl": "assets/pet/AnimationStanby/",
-      "frames": 30,
+      "name": "default",
+      "baseUrl": "assets/pet/default/",
+      "frames": 1,
       "animationType": "loop"
     },
+
     {
       "name": "tutsitutsi",
       "baseUrl": "assets/pet/tutsitutsi/",
       "frames": 20,
       "animationType": "once"
     },
+
     { "name": "grab", "baseUrl": "assets/pet/Grab/", "frames": 11, "animationType": "loop" },
     { "name": "right", "baseUrl": "assets/pet/Right/", "frames": 12, "animationType": "once" },
     { "name": "left", "baseUrl": "assets/pet/Left/", "frames": 12, "animationType": "once" },
     { "name": "up", "baseUrl": "assets/pet/Up/", "frames": 12, "animationType": "once" },
-    { "name": "down", "baseUrl": "assets/pet/Down/", "frames": 12, "animationType": "once" }
+    { "name": "down", "baseUrl": "assets/pet/Down/", "frames": 12, "animationType": "once" },
+
+    {
+      "name": "happiness100",
+      "baseUrl": "assets/pet/happiness100/",
+      "frames": 30,
+      "animationType": "loop"
+    },
+
+    {
+      "name": "happiness65",
+      "baseUrl": "assets/pet/happiness65/",
+      "frames": 21,
+      "animationType": "loop"
+    },
+    {
+      "name": "happiness15",
+      "baseUrl": "assets/pet/happiness15/",
+      "frames": 21,
+      "animationType": "loop"
+    }
   ]
 }

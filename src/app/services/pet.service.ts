@@ -39,6 +39,19 @@ export class PetService {
   ) {}
 
   /**
+   * Inicializa el servicio del pet
+   * Carga datos, colores y animaciones
+   */
+  initPetService() {
+    this.pet = this.dataService.getPet();
+    this.colors = this.dataService.getColors();
+
+    this.animations = this.dataService.getAnimations(this.pet.id);
+    this.animationService.loadAnimations(this.pet, this.animations);
+    this.setIdleAnimation('default');
+  }
+
+  /**
    * Actualiza el estado del pet cada frame
    * Ejecuta la IA y actualiza las estadisticas
    */
@@ -49,7 +62,9 @@ export class PetService {
         (dir) => this.getAnimationDuration(dir),
         (dir) => this.setAnimation(dir),
         (dx, dy) => this.movePet(dx, dy),
-        (dx, dy) => this.sumMinusStat(dx, dy)
+        (dx, dy) => this.sumMinusStat(dx, dy),
+        (dir) => this.getStatPet(dir),
+        (dir) => this.setIdleAnimation(dir)
       );
     }
     this.updateStats(delta);
@@ -64,18 +79,6 @@ export class PetService {
       this.pet.sprite.x += dx;
       this.pet.sprite.y += dy;
     }
-  }
-
-  /**
-   * Inicializa el servicio del pet
-   * Carga datos, colores y animaciones
-   */
-  initPetService() {
-    this.pet = this.dataService.getPet();
-    this.colors = this.dataService.getColors();
-
-    this.animations = this.dataService.getAnimations(this.pet.id);
-    this.animationService.loadAnimations(this.pet, this.animations);
   }
 
   /**
@@ -145,7 +148,7 @@ export class PetService {
     this.grabOffsetX = mouse.x - this.pet.sprite.x;
     this.grabOffsetY = mouse.y - this.pet.sprite.y;
 
-    console.log("grabOffsetX", this.grabOffsetX, "grabOffsetY", this.grabOffsetY)
+    console.log('grabOffsetX', this.grabOffsetX, 'grabOffsetY', this.grabOffsetY);
 
     // Cambiar a animacion de agarre
     this.setAnimation('grab');
@@ -228,6 +231,28 @@ export class PetService {
   }
 
   /**
+   * Setear la animacion del idle para los estados
+   */
+  setIdleAnimation(animationName: string) {
+    let animation = this.pet.sprite.animationSprite[animationName];
+    if (!animation) {
+      console.log(
+        'Animacion idle no encotrada con nombre',
+        animationName,
+        'Array de animaciones',
+        this.animations,
+        'Colocando animacion idle default'
+      );
+      this.pet.sprite.animationSprite['idle'] = this.pet.sprite.animationSprite['default'];
+      return;
+    }
+    this.pet.sprite.animationSprite['idle'] = animation;
+    if (!this.pet.sprite.animationSprite['idle']) {
+      this.setAnimation('idle');
+    }
+  }
+
+  /**
    * Obtiene la duracion en ms de una animacion especifica
    */
   getAnimationDuration(animationName: string): number {
@@ -259,9 +284,13 @@ export class PetService {
   sumMinusStat(statName: string, value: number) {
     if (this.pet.cheats.godMode) return;
 
-    const stat = this.pet.stats.find((s) => s.name === statName);
+    const stat: Stats | null = this.getStatPet(statName);
     if (stat) {
       stat.porcent = Math.min(100, Math.max(0, stat.porcent + value));
     }
+  }
+
+  getStatPet(statName: string): Stats | null {
+    return this.pet.stats.find((s) => s.name === statName) || null;
   }
 }

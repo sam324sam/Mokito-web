@@ -46,64 +46,7 @@
     </button>
 
     <!-- Contenido desplegable Cambiar color -->
-    <div
-      class="overflow-hidden transition-all duration-300 ease-in-out mb-2"
-      [class.max-h-0]="!isColorSectionOpen"
-      [class.max-h-[800px]]="isColorSectionOpen"
-      [class.opacity-0]="!isColorSectionOpen"
-      [class.opacity-100]="isColorSectionOpen"
-    >
-      <div class="mb-3 p-4 bg-slate-700/50 rounded-lg text-center pixel-box-s">
-        <div class="block text-xs sm:text-base text-slate-300 mb-1">Selecciona un color:</div>
-
-        <!-- Grid de colores -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 mb-2">
-          @for (color of colors; track $index) {
-          <button
-            type="button"
-            class="color-option relative group"
-            [class.selected]="selectedColor === color"
-            (click)="selectColor(color)"
-          >
-            <div
-              class="w-full h-14 sm:h-16 md:h-20 rounded-lg transition-all duration-200 group-hover:scale-105 group-hover:shadow-lg pixel-box-s clickable"
-              [style.background-color]="color.color"
-            ></div>
-
-            @if (selectedColor === color) {
-            <img
-              src="assets/icon/check.png"
-              alt="Seleccionado"
-              class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 sm:w-8 pointer-events-none drop-shadow-lg"
-            />
-            }
-
-            <span
-              class="text-xs sm:text-sm text-center mt-1 sm:mt-2 block text-slate-400 truncate px-1"
-            >
-              {{ color.name }}
-            </span>
-          </button>
-          }
-        </div>
-
-        <!-- Preview del color seleccionado -->
-        @if(selectedColor) {
-        <div class="p-2 sm:p-3 bg-slate-700 rounded-lg w-full pixel-box">
-          <p class="text-xs sm:text-sm text-slate-300 mb-2 sm:mb-3 text-center">Vista previa:</p>
-          <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-            <div
-              class="w-full sm:w-1/2 h-12 sm:h-14 rounded-lg border-2 border-slate-600 pixel-box-s"
-              [style.background-color]="selectedColor.color"
-            ></div>
-            <span class="text-base sm:text-lg font-medium w-full sm:w-1/2">{{
-              selectedColor.name
-            }}</span>
-          </div>
-        </div>
-        }
-      </div>
-    </div>
+    <app-color-selector [isColorSectionOpen]="isColorSectionOpen"></app-color-selector>
 
     <!--Guardar mascota -->
     <button
@@ -128,17 +71,7 @@
     </button>
 
     <!-- Contenido desplegable Guardar mascota -->
-    <div
-      class="overflow-hidden transition-all duration-300 ease-in-out mb-2"
-      [class.max-h-0]="!isSaveSectionOpen"
-      [class.max-h-[200px]]="isSaveSectionOpen"
-      [class.opacity-0]="!isSaveSectionOpen"
-      [class.opacity-100]="isSaveSectionOpen"
-    >
-      <div class="mt-3 p-4 bg-slate-700/50 rounded-lg text-center pixel-box-s">
-        <p class="text-sm sm:text-base text-slate-400">En proceso...</p>
-      </div>
-    </div>
+    <app-data-config [isSaveSectionOpen]="isSaveSectionOpen"></app-data-config>
     <!--  Trucos -->
     <button
       type="button"
@@ -162,51 +95,7 @@
     </button>
 
     <!-- Contenido desplegable Trucos -->
-    <div
-      class="overflow-hidden transition-all duration-300 ease-in-out mb-2"
-      [class.max-h-0]="!isCheatsSectionOpen"
-      [class.max-h-[200px]]="isCheatsSectionOpen"
-      [class.opacity-0]="!isCheatsSectionOpen"
-      [class.opacity-100]="isCheatsSectionOpen"
-    >
-      <div class="mb-3 p-4 bg-slate-700/50 rounded-lg text-center pixel-box-s">
-        <ul class="flex flex-col gap-1.5">
-          <!-- Modo Dios -->
-          <li class="flex items-center justify-between gap-4 p-2 rounded-md bg-slate-800/60">
-            <label for="godMode" class="text-sm sm:text-base text-slate-200"> Modo dios </label>
-            <input
-              id="godMode"
-              type="checkbox"
-              class="w-5 h-5 accent-sky-400"
-              [checked]="getGodMode()"
-              (change)="setGodMode($event)"
-            />
-          </li>
-
-          <!-- Bloquear movimiento -->
-          <li class="flex items-center justify-between gap-4 p-2 rounded-md bg-slate-800/60">
-            <label for="noMoreMove" class="text-sm sm:text-base text-slate-200">
-              Bloquear movimiento
-            </label>
-            <input
-              id="noMoreMove"
-              type="checkbox"
-              class="w-5 h-5 accent-emerald-400"
-              [checked]="getNoMoreMove()"
-              (change)="setNoMoreMove($event)"
-            />
-          </li>
-
-          <!-- Energía infinita -->
-          <li class="flex items-center justify-between gap-4 p-2 rounded-md bg-slate-800/60">
-            <label for="infiniteEnergy" class="text-sm sm:text-base text-slate-200">
-              Energía infinita
-            </label>
-            <input id="infiniteEnergy" type="checkbox" class="w-5 h-5 accent-violet-400" />
-          </li>
-        </ul>
-      </div>
-    </div>
+    <app-cheats [isCheatsSectionOpen]="isCheatsSectionOpen"></app-cheats>
   </div>
 </div>
 }

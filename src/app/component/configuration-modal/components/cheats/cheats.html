@@ -1,0 +1,45 @@
+<div
+      class="overflow-hidden transition-all duration-300 ease-in-out mb-2"
+      [class.max-h-0]="!isCheatsSectionOpen"
+      [class.max-h-[200px]]="isCheatsSectionOpen"
+      [class.opacity-0]="!isCheatsSectionOpen"
+      [class.opacity-100]="isCheatsSectionOpen"
+    >
+      <div class="mb-3 p-4 bg-slate-700/50 rounded-lg text-center pixel-box-s">
+        <ul class="flex flex-col gap-1.5">
+          <!-- Modo Dios -->
+          <li class="flex items-center justify-between gap-4 p-2 rounded-md bg-slate-800/60">
+            <label for="godMode" class="text-sm sm:text-base text-slate-200"> Modo dios </label>
+            <input
+              id="godMode"
+              type="checkbox"
+              class="w-5 h-5 accent-sky-400"
+              [checked]="getGodMode()"
+              (change)="setGodMode($event)"
+            />
+          </li>
+
+          <!-- Bloquear movimiento -->
+          <li class="flex items-center justify-between gap-4 p-2 rounded-md bg-slate-800/60">
+            <label for="noMoreMove" class="text-sm sm:text-base text-slate-200">
+              Bloquear movimiento
+            </label>
+            <input
+              id="noMoreMove"
+              type="checkbox"
+              class="w-5 h-5 accent-emerald-400"
+              [checked]="getNoMoreMove()"
+              (change)="setNoMoreMove($event)"
+            />
+          </li>
+
+          <!-- Energía infinita -->
+          <li class="flex items-center justify-between gap-4 p-2 rounded-md bg-slate-800/60">
+            <label for="infiniteEnergy" class="text-sm sm:text-base text-slate-200">
+              Energía infinita
+            </label>
+            <input id="infiniteEnergy" type="checkbox" class="w-5 h-5 accent-violet-400" />
+          </li>
+        </ul>
+      </div>
+    </div>
