@@ -48,6 +48,30 @@
     <!-- Contenido desplegable Cambiar color -->
     <app-color-selector [isColorSectionOpen]="isColorSectionOpen"></app-color-selector>
 
+    <!--Configuracion de Ui consola -->
+    <button
+      type="button"
+      class="w-full flex items-center justify-between p-3 sm:p-4 bg-slate-700 rounded-lg hover:bg-slate-600 transition-colors mb-1 pixel-box"
+      (click)="toggleUserUiSection()"
+    >
+      <div class="flex items-center gap-3">
+        <img src="assets/icon/configuration/Ui-config.png" alt="Ui" />
+        <span class="text-sm sm:text-base font-medium">Confugurar estilo de la consola</span>
+      </div>
+
+      <svg
+        class="w-5 h-5 transition-transform duration-300"
+        [class.rotate-180]="isUserUiSectionOpen"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+
+    <app-user-ui-config [isUserUiSectionOpen]="isUserUiSectionOpen"></app-user-ui-config>
+
     <!--Guardar mascota -->
     <button
       type="button"
@@ -55,7 +79,7 @@
       (click)="toggleSaveSection()"
     >
       <div class="flex items-center gap-3">
-        <img src="assets/icon/configuration/data.png" alt="" />
+        <img src="assets/icon/configuration/data.png" alt="data" />
         <span class="text-sm sm:text-base font-medium">Guardar mascota</span>
       </div>
 
@@ -72,6 +96,7 @@
 
     <!-- Contenido desplegable Guardar mascota -->
     <app-data-config [isSaveSectionOpen]="isSaveSectionOpen"></app-data-config>
+
     <!--  Trucos -->
     <button
       type="button"

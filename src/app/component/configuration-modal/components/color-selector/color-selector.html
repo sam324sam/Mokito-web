@@ -13,7 +13,7 @@
       @for (color of colors; track $index) {
       <button
         type="button"
-        class="color-option relative group"
+        class="color-option relative"
         [class.selected]="selectedColor === color"
         (click)="selectColor(color)"
       >
@@ -24,7 +24,7 @@
 
         @if (selectedColor === color) {
         <img
-          src="assets/icon/check.png"
+          src="assets/icon/configuration/check.png"
           alt="Seleccionado"
           class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 sm:w-8 pointer-events-none drop-shadow-lg"
         />

@@ -1,0 +1,95 @@
+<div
+  class="overflow-hidden transition-all duration-300 ease-in-out mb-2"
+  [class.max-h-0]="!isUserUiSectionOpen"
+  [class.max-h-[1000px]]="isUserUiSectionOpen"
+  [class.opacity-0]="!isUserUiSectionOpen"
+  [class.opacity-100]="isUserUiSectionOpen"
+>
+  <div class="mb-3 p-4 bg-slate-700/50 rounded-lg text-center pixel-box-s">
+    <!-- Pantalla -->
+    <div class="block text-xs sm:text-base text-slate-300 mb-2">Pantalla de la consola</div>
+    <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 sm:gap-3 mb-2">
+      @for (color of aviableColors; track $index) {
+      <button
+        type="button"
+        class="relative w-16"
+        [class.selected]="colorScreenSelected === color"
+        (click)="setConsoleScreenColor(color)"
+      >
+        <img
+          [src]="'/Mokito-web/assets/icon/UI/console/' + color + '/frame-pet.png'"
+          [alt]="'frame-' + color"
+          class="w-full h-auto"
+        />
+
+        @if (colorScreenSelected === color) {
+        <img
+          src="assets/icon/configuration/check.png"
+          alt="Seleccionado"
+          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 sm:w-5 md:w-6 pointer-events-none drop-shadow-lg"
+        />
+        }
+      </button>
+      }
+    </div>
+
+    <!-- Cuerpo -->
+    <div class="block text-xs sm:text-base text-slate-300 mb-2">Cuerpo de la consola</div>
+    <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 sm:gap-3 mb-2">
+      @for (color of aviableColors; track $index) {
+      <button
+        type="button"
+        class="relative w-16"
+        [class.selected]="colorBodySelected === color"
+        (click)="setConsoleBodyColor(color)"
+      >
+        <img
+          [src]="'/Mokito-web/assets/icon/UI/console/' + color + '/frame-console.png'"
+          [alt]="'frame-' + color"
+          class="w-full h-auto"
+        />
+
+        @if (colorBodySelected === color) {
+        <img
+          src="assets/icon/configuration/check.png"
+          alt="Seleccionado"
+          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 sm:w-5 md:w-6 pointer-events-none drop-shadow-lg"
+        />
+        }
+      </button>
+      }
+    </div>
+
+    <div class="block text-xs sm:text-base text-slate-300 mb-2">Vista previa</div>
+    <div class="console-body">
+      <!-- Dentro de la consola -->
+      <div class="console-frame sm:flex w-full h-full gap-2 p-1">
+        <header
+          class="text-[black] py-2 px-5 flex justify-between items-center cursor-auto sm:flex sm:flex-col gap-10"
+        >
+          <h1 class="text-[0.5em] font-semibold select-none text-center console-name">
+            Mokito <br />
+            web
+          </h1>
+
+          <nav class="flex gap-4 items-center">
+            <img
+              src="assets/icon/configuration.png"
+              alt="Config"
+              class="select-none sm:w-16 sm:h-16"
+            />
+          </nav>
+        </header>
+
+        <!-- contenido de la pet o del inicio -->
+        <div class="flex flex-1 flex-col justify-center gap-3">
+          <div
+            class="console-screen flex sm:w-full sm:h-full w-[90%] ml-auto mr-auto sm:ml-0 sm:mr-0 p-1 justify-center"
+          >
+            <img src="favicon.ico" alt="Mokito" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
