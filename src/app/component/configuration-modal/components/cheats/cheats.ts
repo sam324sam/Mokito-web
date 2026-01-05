@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, effect, Input } from '@angular/core';
 import { PetService } from '../../../../services/pet.service';
+import { Stats } from '../../../../models/pet/stats.model';
 
 @Component({
   selector: 'app-cheats',
@@ -9,8 +10,17 @@ import { PetService } from '../../../../services/pet.service';
 })
 export class Cheats {
   @Input() isCheatsSectionOpen: boolean = false;
+  energia: any;
+  hambre: any;
+  felicidad: any;
+  fuerza: any;
+  stats: Stats[] = [];
 
-  constructor(private readonly petService: PetService) {}
+  constructor(private readonly petService: PetService) {
+    effect(() => {
+      this.stats = this.petService.statsChanged();
+    });
+  }
 
   // Apartado de los trucos
   // God moide
@@ -20,11 +30,6 @@ export class Cheats {
   setGodMode(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
     this.petService.pet.cheats.godMode = checked;
-    if (checked) {
-      for (const stat of this.petService.pet.stats) {
-        stat.porcent = 100;
-      }
-    }
   }
 
   // Bloquear movimiento
@@ -34,5 +39,14 @@ export class Cheats {
   setNoMoreMove(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
     this.petService.pet.cheats.noMoreMove = checked;
+  }
+
+  // apartado de las stats
+  roundStat(porcent: number) {
+    return Math.round(porcent);
+  }
+
+  getManipulateStats() {
+    this.stats = this.petService.statsChanged();
   }
 }

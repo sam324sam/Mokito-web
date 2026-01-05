@@ -13,10 +13,9 @@ export class PetIaService {
   private direction: Direction | 'idle' = 'idle';
   // pixeles por frame
   private readonly speed = 1;
-
+  // Para el movimiento
   private targetDistance = 0;
   private movedDistance = 0;
-
   private lastDecisionTime = 0;
   private readonly decisionCooldown = 2500;
 
@@ -38,7 +37,7 @@ export class PetIaService {
     getStatPet: (dir: any) => Stats | null,
     setIdleAnimation: (dir: string) => void
   ) {
-    this.moveProcess(pet, getAnimationDuration, setAnimation, movePet, sumMinusStat);
+    this.moveProcess(pet, getAnimationDuration, setAnimation, movePet, sumMinusStat, getStatPet);
     this.statsProcess(setIdleAnimation, getStatPet);
   }
 
@@ -76,7 +75,8 @@ export class PetIaService {
     getAnimationDuration: (dir: string) => number,
     setAnimation: (dir: string) => void,
     movePet: (dx: number, dy: number) => void,
-    sumMinusStat: (dx: any, dy: any) => void
+    sumMinusStat: (dx: any, dy: any) => void,
+    getStatPet: (dir: any) => Stats | null
   ) {
     // No realizar el movimiento si esto se cumple
     if (!pet.sprite || pet.cheats.noMoreMove) return;
@@ -86,7 +86,7 @@ export class PetIaService {
     // Solo tomar decisiones si no esta agarrada ni bloqueada
     if (now - this.lastDecisionTime > this.decisionCooldown && !pet.isGrab && !pet.blockMove) {
       this.lastDecisionTime = now;
-      this.startMovementFromAnimationDuration(pet, getAnimationDuration, setAnimation);
+      this.startMovementFromAnimationDuration(pet, getAnimationDuration, setAnimation, getStatPet);
     }
 
     // Si esta agarrada o bloqueada, detener el movimiento actual
@@ -216,9 +216,10 @@ export class PetIaService {
   private startMovementFromAnimationDuration(
     pet: Pet,
     getAnimationDuration: (dir: string) => number,
-    setAnimation: (dir: string) => void
+    setAnimation: (dir: string) => void,
+    getStatPet: (dir: any) => Stats | null
   ) {
-    if (Math.random() < 0.5) {
+    if (Math.random() < this.decisionMove(getStatPet)) {
       // Decidio no moverse
       return;
     }
@@ -242,5 +243,23 @@ export class PetIaService {
       }
     }
     //No se encontro ninguna direccion valida
+  }
+
+  /**
+   * Funcion para calcular la descion de moverse segun stats como la energia
+   */
+  private decisionMove(getStatPet: (dir: any) => Stats | null): number {
+    let probability: number = 0;
+    const happiness: Stats | null = getStatPet('energy');
+    if (happiness) {
+      if (happiness.porcent > 65) {
+        probability = 0.5;
+      } else if (happiness.porcent <= 65 && happiness.porcent >= 15) {
+        probability = 0.3;
+      } else {
+        probability = 0.1;
+      }
+    }
+    return probability;
   }
 }
