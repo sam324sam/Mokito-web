@@ -11,6 +11,8 @@ export class PetIaService {
 
   private moving = false;
   private direction: Direction | 'idle' = 'idle';
+  private lastDirection: Direction | null = null;
+
   // pixeles por frame
   private readonly speed = 1;
   // Para el movimiento
@@ -159,12 +161,14 @@ export class PetIaService {
     this.direction = 'idle';
   }
 
+  /**Verifica si se puede realizar el recorrido completo */
   private canMoveFullAnimation(pet: Pet, direction: Direction): boolean {
     const sprite = pet.sprite;
     if (!sprite) return false;
 
-    let dx = 0,
-      dy = 0;
+    let dx = 0;
+    let dy = 0;
+
     switch (direction) {
       case 'left':
         dx = -this.speed;
@@ -180,20 +184,22 @@ export class PetIaService {
         break;
     }
 
-    // Calcular la posicion final despues de moverse la distancia completa
-    const finalX = sprite.x + dx * this.targetDistance;
-    const finalY = sprite.y + dy * this.targetDistance;
+    let testX = sprite.x;
+    let testY = sprite.y;
 
-    // Verificar solo la posicion final en lugar de cada pixel
-    const canMove = !this.collisionService.checkCollision(
-      finalX,
-      finalY,
-      sprite.width,
-      sprite.height,
-      this.canvas
-    );
+    // Simulamos el recorrido pixel a pixel
+    for (let i = 0; i < this.targetDistance; i++) {
+      testX += dx;
+      testY += dy;
 
-    return canMove;
+      if (
+        this.collisionService.checkCollision(testX, testY, sprite.width, sprite.height, this.canvas)
+      ) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   private shuffleArray<T>(array: T[]): T[] {
@@ -219,13 +225,18 @@ export class PetIaService {
     setAnimation: (dir: string) => void,
     getStatPet: (dir: any) => Stats | null
   ) {
-    if (Math.random() < this.decisionMove(getStatPet)) {
-      // Decidio no moverse
+    // para ver si toma la decicion de moverse
+    if (Math.random() > this.decisionMove(getStatPet)) {
       return;
     }
 
     const directions: Direction[] = ['left', 'right', 'up', 'down'];
-    const shuffledDirections = this.shuffleArray(directions);
+    // Para que no pueda tomar la misma direccion dos veces seguidas
+    const filteredDirections = this.lastDirection
+      ? directions.filter((d) => d !== this.lastDirection)
+      : directions;
+
+    const shuffledDirections = this.shuffleArray(filteredDirections);
 
     for (const dir of shuffledDirections) {
       const animDurationMs = getAnimationDuration(dir);
@@ -237,6 +248,7 @@ export class PetIaService {
       // ver a veces falla
       if (this.canMoveFullAnimation(pet, dir)) {
         this.direction = dir;
+        this.lastDirection = dir;
         this.moving = true;
         setAnimation(dir);
         return;
@@ -246,20 +258,34 @@ export class PetIaService {
   }
 
   /**
-   * Funcion para calcular la descion de moverse segun stats como la energia
+   * Calcula la probabilidad de moverse segun la energia y felicidad de la mascota
+   * Devuelve un numero entre 0 y 1 que indica la probabilidad de moverse (nunca es 1 perobueno)
    */
   private decisionMove(getStatPet: (dir: any) => Stats | null): number {
-    let probability: number = 0;
-    const happiness: Stats | null = getStatPet('energy');
-    if (happiness) {
-      if (happiness.porcent > 65) {
-        probability = 0.5;
-      } else if (happiness.porcent <= 65 && happiness.porcent >= 15) {
-        probability = 0.3;
-      } else {
-        probability = 0.1;
-      }
+    const energy: Stats | null = getStatPet('energy');
+    const happiness: Stats | null = getStatPet('happiness');
+
+    // valores por defecto si no existen stats
+    let energyFactor = 0.6;
+    let happinessFactor = 0.6;
+
+    if (energy) {
+      const p = energy.porcent;
+      if (p > 65) energyFactor = 0.8; // mucha energia
+      else if (p >= 15) energyFactor = 0.5; // energia media
+      else energyFactor = 0.1; // poca energia
     }
+
+    if (happiness) {
+      const p = happiness.porcent;
+      if (p > 65) happinessFactor = 0.8; // muy feliz
+      else if (p >= 15) happinessFactor = 0.5; // felicidad media
+      else happinessFactor = 0.2; // triste
+    }
+
+    // se revisa la energia y felicidad y se divide en dos para tomar a amabas en cuenta
+    const probability = (energyFactor + happinessFactor) / 2;
+
     return probability;
   }
 }
