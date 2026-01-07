@@ -1,4 +1,4 @@
-import { AnimationSprite } from './animationSprite.model';
+import { AnimationSprite } from './animation-sprite.model';
 import { Color } from './color.model';
 
 export interface Sprite {

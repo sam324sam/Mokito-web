@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Pet } from '../models/pet/pet.model';
 import { Color } from '../models/sprites/color.model';
 import { AnimationSet } from '../models/sprites/animation-set.model';
-import { AnimationType } from '../models/sprites/animationSprite.model';
+import { AnimationType } from '../models/sprites/animation-sprite.model';
 // Json de datos
 import petDefault from '../../assets/config/default-pet.json';
 import animationsPet from '../../assets/config/animations-pet.json';

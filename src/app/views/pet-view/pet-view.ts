@@ -14,6 +14,7 @@ import { PetService } from '../../services/pet.service';
 import { CursorService } from '../../services/cursor.service';
 import { PetIaService } from '../../services/pet-ia.service';
 import { StatsBar } from "../../component/stats-bar/stats-bar";
+import { ParticleService } from '../../services/particle.service';
 
 @Component({
   selector: 'app-pet-view',
@@ -35,7 +36,8 @@ export class PetView implements AfterViewInit, OnDestroy {
     private readonly petService: PetService,
     private readonly cursorService: CursorService,
     private readonly petIaService: PetIaService,
-    private readonly gameLoopService: GameLoopService
+    private readonly gameLoopService: GameLoopService,
+    private readonly particleService: ParticleService
   ) {}
 
   onCanvasClickDown(event: PointerEvent) {
@@ -82,6 +84,7 @@ export class PetView implements AfterViewInit, OnDestroy {
     this.canvas = document.getElementById('pet-canvas') as HTMLCanvasElement;
 
     this.spriteService.init(this.canvas);
+    this.particleService.init(this.canvas, this.spriteService.spriteScale);
     this.canvas.width = this.canvas.offsetWidth;
     this.canvas.height = this.canvas.offsetHeight;
     this.petIaService.init(this.spriteService.getCanvas());

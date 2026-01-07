@@ -1,4 +1,4 @@
-import { AnimationType } from "./animationSprite.model";
+import { AnimationType } from "./animation-sprite.model";
 
 // El name esta en el record
 export interface AnimationSet {

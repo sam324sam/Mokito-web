@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
+// Modelos
 import { Sprite } from '../models/sprites/sprites.model';
+// Servicios
 import { AnimationService } from './animation.service';
 
 @Injectable({ providedIn: 'root' })

@@ -9,6 +9,7 @@ import { SpriteService } from './sprites.service';
 import { AnimationService } from './animation.service';
 import { DataService } from './data.service';
 import { PetIaService } from './pet-ia.service';
+import { ParticleService } from './particle.service';
 
 @Injectable({ providedIn: 'root' })
 export class PetService {
@@ -35,7 +36,8 @@ export class PetService {
     private readonly spriteService: SpriteService,
     private readonly animationService: AnimationService,
     private readonly dataService: DataService,
-    private readonly petIaService: PetIaService
+    private readonly petIaService: PetIaService,
+    private readonly particleService: ParticleService
   ) {}
 
   /**
@@ -183,6 +185,8 @@ export class PetService {
 
     // Desbloquear cuando termine la animacion
     const duration = this.animationService.getAnimationDuration(this.pet.sprite);
+    // Poner el sistema particulas
+    this.emitHappyParticles();
     setTimeout(() => {
       this.pet.blockMove = false;
     }, duration);
@@ -292,5 +296,22 @@ export class PetService {
 
   getStatPet(statName: string): Stats | null {
     return this.pet.stats.find((s) => s.name === statName) || null;
+  }
+
+  private emitHappyParticles() {
+    const sprite = this.pet.sprite;
+    const scale = this.spriteService.spriteScale;
+
+    const centerX = sprite.x + (sprite.width * scale) / 2;
+    const centerY = sprite.y + (sprite.height * scale) / 2;
+
+    const colors: Color[] = [
+      { name: 'yellow', color: 'rgb(255, 235, 59)' },
+      { name: 'pink', color: 'rgb(255, 105, 180)' },
+      { name: 'lightGreen', color: 'rgb(139, 195, 74)' },
+      { name: 'lightBlue', color: 'rgb(3, 169, 244)' },
+    ];
+
+    this.particleService.emitExplosion(centerX, centerY, 10, colors, 150, null);
   }
 }

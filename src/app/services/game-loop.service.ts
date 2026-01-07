@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 // Servicios que usen los loops
-import { CollisionService } from './collision.service';
 import { PetService } from './pet.service';
 import { SpriteService } from './sprites.service';
 import { AnimationService } from './animation.service';
+import { ParticleService } from './particle.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,9 +16,9 @@ export class GameLoopService {
 
   constructor(
     private readonly petService: PetService,
-    private readonly collisionService: CollisionService,
     private readonly spriteService: SpriteService,
-    private readonly animationService: AnimationService
+    private readonly animationService: AnimationService,
+    private readonly particleService: ParticleService
   ) {}
 
   start() {
@@ -56,9 +56,11 @@ export class GameLoopService {
   private update(delta: number) {
     this.animationService.update(delta);
     this.petService.update(delta);
+    this.particleService.update(delta);
   }
 
   private render() {
     this.spriteService.render();
+    this.particleService.render();
   }
 }

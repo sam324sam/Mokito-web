@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 // modelos
 import { Sprite } from '../models/sprites/sprites.model';
 import { AnimationSet } from '../models/sprites/animation-set.model';
-import { AnimationSprite } from '../models/sprites/animationSprite.model';
+import { AnimationSprite } from '../models/sprites/animation-sprite.model';
 import { Pet } from '../models/pet/pet.model';
 
 @Injectable({
@@ -56,14 +56,18 @@ export class AnimationService {
     return animation.frameImg[sprite.currentFrame] ?? animation.frameImg[0];
   }
 
-  // Duracion de la animacion en segundos
+  /**
+   * Duracion de la animacion en segundos
+   */
   getAnimationDuration(sprite: Sprite): number {
     const frames = sprite.animationSprite[sprite.currentAnimation].frameImg.length;
     // total de ticks
     return frames * sprite.frameSpeed;
   }
 
-  // Duracion de la animacion en frames
+  /**
+   * Duracion de la animacion en frames
+   */
   getAnimationDurationFrames(sprite: Sprite, animationName: string): number {
     const anim = sprite.animationSprite[animationName];
     if (!anim) return 0;
@@ -74,7 +78,9 @@ export class AnimationService {
     return totalFrames * frameSpeed;
   }
 
-  // para las animaciones que se asiugnn arriba
+  /**
+   * para las animaciones que se asiugnn arriba
+   */
   loadAnimations(pet: Pet, animations: AnimationSet[]) {
     for (const anim of animations) {
       const frames: HTMLImageElement[] = [];
