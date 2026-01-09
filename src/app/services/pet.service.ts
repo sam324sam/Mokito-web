@@ -61,6 +61,7 @@ export class PetService {
     if (this.activeIa) {
       this.petIaService.update(
         this.pet,
+        delta,
         (dir) => this.getAnimationDuration(dir),
         (dir) => this.setAnimation(dir),
         (dx, dy) => this.movePet(dx, dy),
@@ -305,13 +306,6 @@ export class PetService {
     const centerX = sprite.x + (sprite.width * scale) / 2;
     const centerY = sprite.y + (sprite.height * scale) / 2;
 
-    const colors: Color[] = [
-      { name: 'yellow', color: 'rgb(255, 235, 59)' },
-      { name: 'pink', color: 'rgb(255, 105, 180)' },
-      { name: 'lightGreen', color: 'rgb(139, 195, 74)' },
-      { name: 'lightBlue', color: 'rgb(3, 169, 244)' },
-    ];
-
-    this.particleService.emitExplosion(centerX, centerY, 10, colors, 150, null);
+    this.particleService.emitExplosion(centerX, centerY, 10, 150, null);
   }
 }

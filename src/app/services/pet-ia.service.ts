@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { CollisionService } from './collision.service';
 import { Pet } from '../models/pet/pet.model';
 import { Stats } from '../models/pet/stats.model';
+// Servicios
+import { CollisionService } from './collision.service';
+import { ParticleService } from './particle.service';
 
 type Direction = 'left' | 'right' | 'up' | 'down';
 
@@ -24,7 +26,13 @@ export class PetIaService {
   // para los estados del idle
   private actualIdle: string = '';
 
-  constructor(private readonly collisionService: CollisionService) {}
+  //gotas de stamina
+  private energyCooldown: number = 0;
+
+  constructor(
+    private readonly collisionService: CollisionService,
+    private readonly particleService: ParticleService
+  ) {}
 
   init(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -32,6 +40,7 @@ export class PetIaService {
 
   update(
     pet: Pet,
+    delta: number,
     getAnimationDuration: (dir: string) => number,
     setAnimation: (dir: string) => void,
     movePet: (dx: number, dy: number) => void,
@@ -40,34 +49,77 @@ export class PetIaService {
     setIdleAnimation: (dir: string) => void
   ) {
     this.moveProcess(pet, getAnimationDuration, setAnimation, movePet, sumMinusStat, getStatPet);
-    this.statsProcess(setIdleAnimation, getStatPet);
+    this.statsProcess(pet, delta, setIdleAnimation, getStatPet);
   }
 
   /**
    * Para la organizacion y uso de los comportamientos segun el estado de la pet
    */
   private statsProcess(
+    pet: Pet,
+    delta: number,
     setIdleAnimation: (dir: string) => void,
     getStatPet: (dir: string) => Stats | null
   ) {
-    // seccion para la felicidad
     const happiness: Stats | null = getStatPet('happiness');
+    const energy: Stats | null = getStatPet('energy');
+    // seccion para la felicidad
     if (happiness) {
-      if (happiness.porcent > 65) {
-        if (this.actualIdle === 'happiness100') return;
-        setIdleAnimation('happiness100');
-        this.actualIdle = 'happiness100';
-      } else if (happiness.porcent <= 65 && happiness.porcent >= 15) {
-        if (this.actualIdle === 'happiness65') return;
-        setIdleAnimation('happiness65');
-        this.actualIdle = 'happiness65';
-      } else {
-        if (this.actualIdle === 'happiness15') return;
-        setIdleAnimation('happiness15');
-        this.actualIdle = 'happiness15';
-      }
+      this.happinessProcess(happiness, setIdleAnimation);
+    }
+    // seccion para la energia
+    if (energy) {
+      this.energyProcess(energy, pet, delta);
     }
   }
+  /**
+   * Eventos y comportamientos vinculados a la felicidad
+   */
+  happinessProcess(happiness: Stats, setIdleAnimation: (dir: string) => void) {
+    if (happiness.porcent > 65) {
+      if (this.actualIdle === 'happiness100') return;
+      setIdleAnimation('happiness100');
+      this.actualIdle = 'happiness100';
+    } else if (happiness.porcent <= 65 && happiness.porcent >= 15) {
+      if (this.actualIdle === 'happiness65') return;
+      setIdleAnimation('happiness65');
+      this.actualIdle = 'happiness65';
+    } else {
+      if (this.actualIdle === 'happiness15') return;
+      setIdleAnimation('happiness15');
+      this.actualIdle = 'happiness15';
+    }
+  }
+
+  /**
+   * Eventos y comportamientos para la energia
+   */
+  energyProcess(energy: Stats, pet: Pet, delta: number) {
+  this.energyCooldown -= delta;
+
+  if (this.energyCooldown > 0) {
+    return;
+  }
+
+  // pasar energia a (0 - 0.5)
+  const energyFactor = Math.min(energy.porcent / 100, 0.5);
+
+  // Probabilidad base + bonus por energia
+  const probability = 0.5 + energyFactor;
+
+  if (Math.random() > probability) {
+    const width = pet.sprite.width * pet.sprite.scale;
+    const height = pet.sprite.height * pet.sprite.scale;
+
+    const x = pet.sprite.x + Math.random() * width;
+    const y = pet.sprite.y + Math.random() * height;
+
+    this.particleService.emitDroplets(x, y, 1, 120, null);
+
+    this.energyCooldown = 1000;
+  }
+}
+
 
   /**
    * Procesa toda la logica de IA de la mascota

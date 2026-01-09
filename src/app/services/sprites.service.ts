@@ -46,6 +46,7 @@ export class SpriteService {
   }
 
   addSprite(sprite: Sprite) {
+    sprite.scale = this.spriteScale;
     this.sprites.push(sprite);
     this.animationService.addSprite(sprite);
   }
@@ -55,7 +56,9 @@ export class SpriteService {
 
     for (const sprite of this.sprites) {
       const frame = this.animationService.getFrame(sprite);
-      if (!frame) return;
+      if (!frame) continue;
+
+      this.ctx.save();
 
       this.limitToCanvas(sprite);
       this.ctx.imageSmoothingEnabled = false;
@@ -77,8 +80,9 @@ export class SpriteService {
           sprite.width * this.spriteScale,
           sprite.height * this.spriteScale
         );
-        this.ctx.globalCompositeOperation = 'source-over';
       }
+
+      this.ctx.restore();
     }
   }
 

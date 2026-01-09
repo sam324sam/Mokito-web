@@ -12,8 +12,6 @@ export interface Particle {
   vx: number;
   vy: number;
   size: number;
-  // Para el color de la particula
-  color: Color;
   // textura
   img: HTMLImageElement;
   // Comportamiento

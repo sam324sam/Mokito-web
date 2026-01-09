@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 // Modelos
 import { Particle } from '../models/particle/particle.model';
-import { Color } from '../models/sprites/color.model';
 
 /**
  * Define la firma de un comportamiento de particula
@@ -22,6 +21,8 @@ export class ParticleService {
 
   /** Textura por defecto usada si no se pasa ninguna */
   private readonly defaultTexture: HTMLImageElement;
+
+  activeParticleSistem: boolean = true;
 
   /**
    * Constructor del servicio
@@ -55,13 +56,15 @@ export class ParticleService {
     x: number,
     y: number,
     amount: number,
-    colors: Color[],
     timeToLife: number,
     texture: HTMLImageElement | null,
     behaviors: ParticleBehavior[]
   ) {
+    if (!this.activeParticleSistem) {
+      console.log('El sistema de particulas esta apagado');
+      return;
+    }
     for (let i = 0; i < amount; i++) {
-      const color = colors[Math.floor(Math.random() * colors.length)];
 
       this.particles.push({
         x,
@@ -71,7 +74,6 @@ export class ParticleService {
         timeToLife: timeToLife,
         maxTimeToLife: timeToLife,
         size: 1 * this.scale,
-        color,
         behaviors,
         img: texture || this.defaultTexture,
       });
@@ -86,11 +88,10 @@ export class ParticleService {
     x: number,
     y: number,
     amount: number,
-    colors: Color[],
     timeToLife: number,
     texture: HTMLImageElement | null
   ) {
-    this.emit(x, y, amount, colors, timeToLife, texture, [gravityBehavior, fadeBehavior]);
+    this.emit(x, y, amount, timeToLife, texture, [gravityBehavior, fadeBehavior]);
   }
 
   /**
@@ -101,11 +102,14 @@ export class ParticleService {
     x: number,
     y: number,
     amount: number,
-    colors: Color[],
     timeToLife: number,
     texture: HTMLImageElement | null
   ) {
-    this.emit(x, y, amount, colors, timeToLife, texture, [
+    if (texture == null) {
+      texture = new Image();
+      texture.src = './assets/particle/drops.png';
+    }
+    this.emit(x, y, amount, timeToLife, texture, [
       gravityBehavior,
       slowDownBehavior,
       fadeBehavior,
@@ -141,26 +145,30 @@ export class ParticleService {
    * Aplica transparencia segun el tiempo de vida restante
    */
   render() {
-    for (const p of this.particles) {
-      const alpha = p.timeToLife / p.maxTimeToLife;
-      this.ctx.globalAlpha = alpha;
+    if (this.activeParticleSistem) {
+      for (const p of this.particles) {
+        this.ctx.save();
 
-      if (p.img) {
-        this.ctx.drawImage(p.img, p.x, p.y, p.size, p.size);
+        const alpha = p.timeToLife / p.maxTimeToLife;
+        this.ctx.globalAlpha = alpha;
 
-        if (p.color) {
-          this.ctx.fillStyle = p.color.color;
-          this.ctx.fillRect(p.x, p.y, p.size, p.size);
+        if (p.img) {
+          this.ctx.drawImage(p.img, p.x, p.y, p.size * this.scale, p.size * this.scale);
         }
+
+        this.ctx.restore();
       }
     }
-
-    this.ctx.globalAlpha = 1;
+  }
+  stop() {
+    this.activeParticleSistem = false;
+  }
+  start() {
+    this.activeParticleSistem = true;
   }
 }
 
 // Comportamientos
-
 /**
  * Aplica aceleracion vertical simulando gravedad
  */
