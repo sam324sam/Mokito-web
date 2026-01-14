@@ -5,9 +5,10 @@
 
 @font-face {
   font-family: 'upheavtt';
-  src: url('/Mokito-web/assets/fonts/upheavtt.ttf') format('truetype');
+  src: url('/Mokito-web/assets/fonts/upheavtt.ttf') format('woff2');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 * {

@@ -1,0 +1,44 @@
+{
+  "rooms": [
+    {
+      "name": "sala",
+      "img": "assets/background/living-room.png",
+      "music": "",
+      "buttonRoom": {
+        "name": "Inventario",
+        "img": "assets/ui/buttons/inventory.png",
+        "buttonBehavior": "openInventory"
+      }
+    },
+    {
+      "name": "dormitorio",
+      "img": "assets/background/dormitory.png",
+      "music": "",
+      "buttonRoom": {
+        "name": "Dormir",
+        "img": "assets/ui/buttons/sleep.png",
+        "buttonBehavior": "sleep"
+      }
+    },
+    {
+      "name": "baño",
+      "img": "assets/background/bathroom.png",
+      "music": "",
+      "buttonRoom": {
+        "name": "Higiene",
+        "img": "assets/ui/buttons/brush.png",
+        "buttonBehavior": "brushTeeth"
+      }
+    },
+    {
+      "name": "jardin",
+      "img": "assets/background/garden.png",
+      "music": "",
+      "buttonRoom": {
+        "name": "Regar",
+        "img": "assets/ui/buttons/water.png",
+        "buttonBehavior": "waterPlants"
+      }
+    }
+  ]
+}

@@ -1,5 +1,9 @@
 <!-- Contenedor relativo para posicionamiento absoluto -->
 <div class="relative w-full h-full overflow-hidden">
+  <div
+    class="absolute inset-0 -z-1 background-pet"
+    [style.borderImageSource]="'url(' + currentRoom().img + ')'"
+  ></div>
   <canvas
     #canvas
     id="pet-canvas"
@@ -7,7 +11,7 @@
     (pointerdown)="onCanvasClickDown($event)"
     (pointerup)="onCanvasClickUp($event)"
     (pointermove)="onMouseMove($event)"
-    class="w-full h-full"
+    class="w-full h-full z-30"
   >
   </canvas>
 
@@ -19,7 +23,7 @@
       class="rotate-180 bg-transparent border-none p-0 cursor-pointer mb-2 pointer-events-auto transition-transform hover:scale-110 active:scale-95 duration-200 opacity-40 hover:opacity-900"
     >
       <img
-        src="/Mokito-web/assets/icon/UI/console/boton-stats.png"
+        src="/Mokito-web/assets/icon/UI/console/arrow.png"
         alt="boton-stats"
         class="w-10 h-10 sm:w-20 sm:h-20 drop-shadow-lg clickable"
       />

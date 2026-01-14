@@ -1,6 +1,7 @@
 import {
   AfterViewInit,
   Component,
+  computed,
   ElementRef,
   HostListener,
   OnDestroy,
@@ -10,11 +11,12 @@ import {
 // Service
 import { GameLoopService } from '../../services/game-loop.service';
 import { SpriteService } from '../../services/sprites.service';
-import { PetService } from '../../services/pet.service';
+import { PetService } from '../../services/pet/pet.service';
 import { CursorService } from '../../services/cursor.service';
-import { PetIaService } from '../../services/pet-ia.service';
-import { StatsBar } from "../../component/stats-bar/stats-bar";
+import { StatsBar } from '../../component/stats-bar/stats-bar';
 import { ParticleService } from '../../services/particle.service';
+import { RoomService } from '../../services/room.service';
+import { Room } from '../../models/room/room.model';
 
 @Component({
   selector: 'app-pet-view',
@@ -31,14 +33,24 @@ export class PetView implements AfterViewInit, OnDestroy {
   // Para las stats
   isOpenStats: boolean = false;
 
+  // para room
+  rooms: Room[] = [];
+  currentIndex = computed(() => this.roomService.getCurrentIndex());
+
+  // Computed para obtener la room actual del array
+  currentRoom = computed(() => this.rooms[this.currentIndex()]);
+
   constructor(
     private readonly spriteService: SpriteService,
     private readonly petService: PetService,
     private readonly cursorService: CursorService,
-    private readonly petIaService: PetIaService,
+    //private readonly petIaService: PetIaService,
     private readonly gameLoopService: GameLoopService,
-    private readonly particleService: ParticleService
-  ) {}
+    private readonly particleService: ParticleService,
+    private readonly roomService: RoomService
+  ) {
+    this.rooms = this.roomService.getRooms();
+  }
 
   onCanvasClickDown(event: PointerEvent) {
     this.petService.handlePressDown(event);
@@ -87,10 +99,9 @@ export class PetView implements AfterViewInit, OnDestroy {
     this.particleService.init(this.canvas, this.spriteService.spriteScale);
     this.canvas.width = this.canvas.offsetWidth;
     this.canvas.height = this.canvas.offsetHeight;
-    this.petIaService.init(this.spriteService.getCanvas());
 
     // Esperar a que el Pet
-    this.petService.initPetService();
+    this.petService.initPetService(this.canvas);
     // Centrar la mascota
     this.centerPet();
 
@@ -107,8 +118,12 @@ export class PetView implements AfterViewInit, OnDestroy {
     const canvasWidth = this.canvas.width;
     const canvasHeight = this.canvas.height;
 
-    this.petService.pet.sprite.x = Math.floor((canvasWidth - this.petService.pet.sprite.width * scale) / (2));
-    this.petService.pet.sprite.y = Math.floor((canvasHeight - this.petService.pet.sprite.height * scale) / (2));
+    this.petService.pet.sprite.x = Math.floor(
+      (canvasWidth - this.petService.pet.sprite.width * scale) / 2
+    );
+    this.petService.pet.sprite.y = Math.floor(
+      (canvasHeight - this.petService.pet.sprite.height * scale) / 2
+    );
 
     console.log(
       'Canvas:',
@@ -120,7 +135,7 @@ export class PetView implements AfterViewInit, OnDestroy {
     );
   }
 
-  toggleStats(){
-    this.isOpenStats = !this.isOpenStats 
+  toggleStats() {
+    this.isOpenStats = !this.isOpenStats;
   }
 }

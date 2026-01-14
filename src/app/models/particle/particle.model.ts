@@ -1,6 +1,4 @@
-import { Color } from '../sprites/color.model';
-
-// Setear el tipo
+// Setear el tipo de comportamientos
 type ParticleBehavior = (p: Particle, delta: number) => void;
 
 export interface Particle {

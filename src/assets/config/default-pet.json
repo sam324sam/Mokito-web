@@ -17,6 +17,10 @@
     "godMode": false,
     "noMoreMove": false
   },
+
+  "state": "idle",
+  "condition":[],
+
   "stats": [
     { "name": "hunger", "decay": 0.103, "porcent": 100, "active": true },
     { "name": "energy", "decay": 0.102, "porcent": 100, "active": true },

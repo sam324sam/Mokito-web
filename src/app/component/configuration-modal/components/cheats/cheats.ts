@@ -1,5 +1,5 @@
 import { Component, effect, Input } from '@angular/core';
-import { PetService } from '../../../../services/pet.service';
+import { PetService } from '../../../../services/pet/pet.service';
 import { Stats } from '../../../../models/pet/stats.model';
 
 @Component({

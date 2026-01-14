@@ -1,6 +1,8 @@
-import { AnimationType } from "./animation-sprite.model";
+import { AnimationType } from './animation-sprite.model';
 
-// El name esta en el record
+/**
+ * El name esta en el record
+ */
 export interface AnimationSet {
   petId: number;
   name: string;

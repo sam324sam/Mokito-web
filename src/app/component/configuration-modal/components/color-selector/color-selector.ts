@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Color } from '../../../../models/sprites/color.model';
-import { PetService } from '../../../../services/pet.service';
+import { PetService } from '../../../../services/pet/pet.service';
 
 @Component({
   selector: 'app-color-selector',

@@ -6,22 +6,53 @@
     web
   </h1>
 
+  @if (rooms) {
+  <span class="flex sm:flex-col gap-3 items-center justify-center">
+    <button
+      (click)="roomChange(1)"
+      class="sm:rotate-180 rotate-90 bg-transparent border-none p-0 cursor-pointer mb-2 pointer-events-auto transition-transform hover:scale-110 active:scale-95 duration-200 opacity-40 hover:opacity-900"
+    >
+      <img
+        src="/Mokito-web/assets/icon/UI/console/arrow.png"
+        alt="boton-stats"
+        class="w-10 h-10 sm:w-20 sm:h-20 drop-shadow-lg clickable"
+      />
+    </button>
+    {{ currentRoom().name }}
+    <button
+      (click)="roomChange(-1)"
+      class="sm:rotate-0 -rotate-90 bg-transparent border-none p-0 cursor-pointer mb-2 pointer-events-auto transition-transform hover:scale-110 active:scale-95 duration-200 opacity-40 hover:opacity-900"
+    >
+      <img
+        src="/Mokito-web/assets/icon/UI/console/arrow.png"
+        alt="boton-stats"
+        class="w-10 h-10 sm:w-20 sm:h-20 drop-shadow-lg clickable"
+      /></button
+  ></span>
+    <app-room-button [room]="currentRoom()"></app-room-button>
+}
+
+
   <nav class="flex gap-4 items-center">
     <a
       href="#"
       class="hover:scale-110 transition-transform duration-200"
       (click)="toggleConfiguration($event)"
     >
-      <img src="assets/icon/configuration.png" alt="Config" class="select-none sm:w-16 sm:h-16 clickable" />
+      <img
+        src="assets/icon/configuration/configuration.png"
+        alt="Config"
+        class="select-none sm:w-16 sm:h-16 clickable"
+      />
     </a>
   </nav>
 </header>
 
 <!-- Solo renderiza el modal cuando se ha abierto al menos una vez -->
 @if (isOpenConfiguration) {
-  <app-configuration-modal
-    [isOpenConfiguration]="isOpenConfiguration"
-    (toggleConfiguration)="handleModalToggle($event)"
-  >
-  </app-configuration-modal>
+<app-configuration-modal
+  [isOpenConfiguration]="isOpenConfiguration"
+  (toggleConfiguration)="handleModalToggle($event)"
+>
+</app-configuration-modal>
 }

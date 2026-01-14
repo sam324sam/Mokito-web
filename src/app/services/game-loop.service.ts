@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 // Servicios que usen los loops
-import { PetService } from './pet.service';
+import { PetService } from './pet/pet.service';
 import { SpriteService } from './sprites.service';
 import { AnimationService } from './animation.service';
 import { ParticleService } from './particle.service';
