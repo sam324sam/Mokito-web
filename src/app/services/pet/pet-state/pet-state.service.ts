@@ -3,23 +3,41 @@ import { Injectable } from '@angular/core';
 import { Pet } from '../../../models/pet/pet.model';
 import { PetState } from '../../../models/pet/pet-state.model';
 import { PetStateContext } from './pet-state.context';
-import { PetIaService } from '../pet-ia/pet-ia.service';
+import { ParticleService } from '../../particle.service';
 
+type PetStateHandler = {
+  onEnter?: (pet: Pet, ctx: PetStateContext) => void;
+  update?: (pet: Pet, delta: number, ctx: PetStateContext) => void;
+  onExit?: (pet: Pet, ctx: PetStateContext) => void;
+};
 @Injectable({ providedIn: 'root' })
 export class PetStateService {
   // Mapa de funciones de actualizacion por estado
-  private readonly stateUpdate: Record<
-    PetState,
-    (pet: Pet, delta: number, ctx: PetStateContext) => void
-  > = {
-    [PetState.Idle]: (p, d, c) => this.updateIdle(p, d, c),
-    [PetState.Walking]: () => {},
-    [PetState.Grabbed]: () => {},
-    [PetState.Sleeping]: (p, d, c) => this.updateSleeping(p, d, c),
-    [PetState.Reacting]: () => {},
-  };
+  private readonly stateHandlers: Record<PetState, PetStateHandler> = {
+    [PetState.Idle]: {
+      onEnter: (p, c) => this.enterIdle(p, c),
+      update: (p, d, c) => this.updateIdle(p, d, c),
+    },
 
-  constructor(private readonly ia: PetIaService) {}
+    [PetState.Walking]: {
+      onEnter: (p, c) => this.enterWalk(p, c),
+      update: (p, d, c) => this.updateWalk(p, d, c),
+      onExit: (p, c) => this.exitWalk(p, c),
+    },
+
+    [PetState.Sleeping]: {
+      onEnter: (p, c) => this.enterSleeping(p, c),
+      update: (p, d, c) => this.updateSleeping(p, d, c),
+    },
+
+    [PetState.Grabbed]: {},
+    [PetState.Reacting]: {
+      onEnter: (p, c) => this.enterReacting(p, c)
+    },
+  };
+  lastState: PetState = {} as PetState;
+
+  constructor(private readonly particleService: ParticleService,) {}
 
   // ==================== Metodos publicos ====================
 
@@ -28,21 +46,16 @@ export class PetStateService {
    * Delega la logica especifica al handler correspondiente
    */
   update(pet: Pet, delta: number, ctx: PetStateContext): void {
-    this.stateUpdate[pet.state]?.(pet, delta, ctx);
-  }
+    if (pet.state !== this.lastState) {
+      if (this.lastState !== null) {
+        this.stateHandlers[this.lastState]?.onExit?.(pet, ctx);
+      }
 
-  /**
-   * Cambia el estado de la mascota
-   * Detiene la IA si la mascota es agarrada
-   */
-  setState(pet: Pet, state: PetState): void {
-    if (pet.state === state) return;
-    
-    pet.state = state;
-
-    if (state === PetState.Grabbed) {
-      this.ia.forceStop();
+      this.stateHandlers[pet.state]?.onEnter?.(pet, ctx);
+      this.lastState = pet.state;
     }
+
+    this.stateHandlers[pet.state]?.update?.(pet, delta, ctx);
   }
 
   // ==================== Metodos para los estados ====================
@@ -51,20 +64,56 @@ export class PetStateService {
    * Actualiza el estado Idle
    * Ejecuta la logica de IA para movimiento autonomo
    */
+  private enterIdle(pet: Pet, ctx: PetStateContext): void {
+    ctx.setAnimation('idle');
+  }
+
   private updateIdle(pet: Pet, delta: number, ctx: PetStateContext): void {
     ctx.runIaIdle(pet, delta);
   }
 
+  private enterWalk(pet: Pet, ctx: PetStateContext): void {
+    ctx.setAnimation(ctx.getDirection());
+  }
+
+  /// ====================== Reacting
+  enterReacting(pet: Pet, ctx: PetStateContext): void {
+    ctx.setAnimation('tutsitutsi');
+    ctx.sumMinusStat('happiness', 5);
+
+    // Emitir particulas de felicidad
+    const sprite = pet.sprite;
+    const scale = pet.sprite.scale;
+
+    const centerX = sprite.x + (sprite.width * scale) / 2;
+    const centerY = sprite.y + (sprite.height * scale) / 2;
+
+    this.particleService.emitExplosion(centerX, centerY, 10, 150, null);
+  }
+
+  // ======================== Caminar
+  private updateWalk(pet: Pet, delta: number, ctx: PetStateContext): void {
+    ctx.runIaWalk(pet, delta);
+  }
+
+  private exitWalk(pet: Pet, ctx: PetStateContext): void {
+    ctx.clearDirection();
+  }
+
+  //============================ Dormir
+  private enterSleeping(pet: Pet, ctx: PetStateContext): void {
+    ctx.setAnimation('sleep');
+  }
   /**
    * Actualiza el estado Sleeping
    * Verifica si la energia alcanzo el 80% para despertar
    */
   private updateSleeping(pet: Pet, delta: number, ctx: PetStateContext): void {
     const stat = ctx.getStat('energy');
-    
+
     if (stat !== null) {
       const energy = stat.porcent;
-      
+
       if (energy !== null && energy >= 80) {
         ctx.setState(PetState.Idle);
       }

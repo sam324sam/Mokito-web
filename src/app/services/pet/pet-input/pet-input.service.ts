@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Pet } from '../../../models/pet/pet.model';
 import { PetState } from '../../../models/pet/pet-state.model';
 import { PetInputContext } from './pet-input.context';
-import { ParticleService } from '../../particle.service';
 import { AnimationService } from '../../animation.service';
 
 @Injectable({ providedIn: 'root' })
@@ -18,10 +17,7 @@ export class PetInputService {
   private grabOffsetX = 0;
   private grabOffsetY = 0;
 
-  constructor(
-    private readonly particleService: ParticleService,
-    private readonly animationService: AnimationService
-  ) {}
+  constructor(private readonly animationService: AnimationService) {}
 
   // ==================== Metodos publicos ====================
 
@@ -45,7 +41,6 @@ export class PetInputService {
 
     // Iniciar timer para agarre
     this.pressTimer = setTimeout(() => {
-      ctx.setState(PetState.Grabbed);
       this.startGrabbing(pet, event, ctx);
     }, this.LONG_PRESS_DURATION);
   }
@@ -90,6 +85,8 @@ export class PetInputService {
    * Calcula offset entre mouse y sprite para mantener posicion relativa
    */
   private startGrabbing(pet: Pet, event: PointerEvent, ctx: PetInputContext): void {
+    if (pet.state == PetState.Reacting) return;
+
     const mouse = this.getMousePos(event);
 
     ctx.setState(PetState.Grabbed);
@@ -109,34 +106,17 @@ export class PetInputService {
    * Bloquea movimiento durante animacion y aumenta felicidad
    */
   private triggerPetResponse(pet: Pet, ctx: PetInputContext): void {
-    if(pet.state == PetState.Reacting) return;
+    if (pet.state == PetState.Reacting) return;
 
     ctx.setState(PetState.Reacting);
-    ctx.setAnimation('tutsitutsi');
-    ctx.sumMinusStat('happiness', 5);
-
-    // Emitir particulas de felicidad
-    this.emitHappyParticles(pet);
 
     // Volver a Idle cuando termine la animacion
     const duration = this.animationService.getAnimationDuration(pet.sprite);
     setTimeout(() => {
-      ctx.setState(PetState.Idle);
+      if (pet.state == PetState.Reacting) {
+        ctx.setState(PetState.Idle);
+      }
     }, duration);
-  }
-
-  /**
-   * Emite particulas de explosion en el centro de la mascota
-   * Efecto visual de felicidad
-   */
-  private emitHappyParticles(pet: Pet): void {
-    const sprite = pet.sprite;
-    const scale = pet.sprite.scale;
-
-    const centerX = sprite.x + (sprite.width * scale) / 2;
-    const centerY = sprite.y + (sprite.height * scale) / 2;
-
-    this.particleService.emitExplosion(centerX, centerY, 10, 150, null);
   }
 
   // ==================== Utilidades ====================

@@ -95,10 +95,6 @@ export class PetService {
 
     this.pet.state = state;
 
-    if (state === PetState.Grabbed) {
-      this.petIaService.forceStop();
-    }
-
     console.log('Estado cambiado a ', state);
   }
 
@@ -215,8 +211,13 @@ export class PetService {
    */
   private readonly petStateContext: PetStateContext = {
     runIaIdle: (pet, delta) => this.petIaService.runIaIdle(pet, this.petIaContext),
+    runIaWalk: (pet, delta) => this.petIaService.runIaWalk(pet, this.petIaContext),
     setState: (state) => this.setState(state),
     getStat: (name) => this.getStatPet(name),
+    setAnimation: (name) => this.setAnimation(name),
+    getDirection: () => this.petIaService.getDirection(),
+    clearDirection: () => this.petIaService.clearDirection(),
+    sumMinusStat: (name, value) => this.sumMinusStat(name, value),
   };
 
   /**
@@ -225,6 +226,7 @@ export class PetService {
    */
   private readonly petConditionContext: PetConditionContext = {
     getStat: (name) => this.getStatPet(name),
+    setAnimation: (name) => this.setAnimation(name),
   };
 
   /**
@@ -246,27 +248,18 @@ export class PetService {
   private readonly petIaContext: PetIaContext = {
     getAnimationDuration: (dir) =>
       this.animationService.getAnimationDurationFrames(this.pet.sprite, dir),
-
-    setAnimation: (dir) => {
-      this.pet.sprite.currentAnimation = dir;
-      this.pet.sprite.currentFrame = 0;
-      this.pet.sprite.frameCounter = 0;
-    },
-
     move: (dx, dy) => {
       if (!this.pet.cheats.noMoreMove) {
         this.pet.sprite.x += dx;
         this.pet.sprite.y += dy;
       }
     },
-
     modifyStat: (name, amount) => this.sumMinusStat(name, amount),
     getStat: (name) => this.getStatPet(name),
-
     setIdleAnimation: (name) => {
       this.pet.sprite.animationSprite['idle'] = this.pet.sprite.animationSprite[name];
     },
-
+    setState: (state: PetState) => this.setState(state),
     emitParticle: (x, y) => this.particleService.emitDroplets(x, y, 1, 120, null),
     sumMinusStat: (name, value) => this.sumMinusStat(name, value),
   };

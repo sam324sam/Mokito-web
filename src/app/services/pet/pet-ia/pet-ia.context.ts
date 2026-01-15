@@ -1,8 +1,9 @@
+import { PetState } from '../../../models/pet/pet-state.model';
 import { Stats } from '../../../models/pet/stats.model';
 
 export interface PetIaContext {
   getAnimationDuration(dir: string): number;
-  setAnimation(dir: string): void;
+  setState(state: PetState): void;
   move(dx: number, dy: number): void;
   modifyStat(name: string, amount: number): void;
   getStat(name: string): Stats | null;

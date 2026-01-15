@@ -6,6 +6,7 @@ import { ParticleService } from '../../particle.service';
 
 //Context
 import { PetConditionContext } from './pet-condition.context';
+import { PetState } from '../../../models/pet/pet-state.model';
 
 export type PetConditionBehavior = (pet: Pet, deltaTime: number, ctx: PetConditionContext) => void;
 
@@ -18,32 +19,53 @@ export class PetConditionService {
       const behavior = this.behaviors.get(condition);
       behavior?.(pet, delta, ctx);
     }
+    this.conditionProcess(pet, ctx);
+  }
+
+  conditionProcess(pet: Pet, ctx: PetConditionContext) {
     this.energyProcess(pet, ctx);
+    this.happyProcess(pet, ctx);
   }
 
   // ==================== Metodos que se ejecutan segun las condiciones de la pet ====================
 
   private exhausted(pet: Pet, delta: number, ctx: PetConditionContext): void {
-    console.log("")
+    console.log('');
   }
 
   private energetic(pet: Pet, delta: number, ctx: PetConditionContext): void {
-    console.log("")
+    console.log('');
   }
 
   private hungry(pet: Pet, delta: number, ctx: PetConditionContext): void {
-    console.log("")
-  }
-
-  private depressed(pet: Pet, delta: number, ctx: PetConditionContext): void {
-    console.log("")
+    console.log('');
   }
 
   private happy(pet: Pet, delta: number, ctx: PetConditionContext): void {
-    // animación idle feliz, sin bloquear estado
+    if (pet.state == PetState.Idle) {
+      ctx.setAnimation('happiness100');
+    }
   }
+
+  private sad(pet: Pet, delta: number, ctx: PetConditionContext): void {
+    if (pet.state == PetState.Idle) {
+      ctx.setAnimation('happiness65');
+    }
+  }
+
+  private depressed(pet: Pet, delta: number, ctx: PetConditionContext): void {
+    if (pet.state == PetState.Idle) {
+      ctx.setAnimation('happiness15');
+    }
+  }
+
   // Cooldown para emision de particulas de energia
   private energyCooldown: number = 0;
+  /**
+   * Gestiona efectos visuales de particulas basados en energia
+   * Emite gotas aleatorias con probabilidad inversamente proporcional a la energia
+   * Menos energia = mas probabilidad de emitir particulas (cansancio visual)
+   */
   private readonly tired: PetConditionBehavior = (pet, delta, ctx) => {
     this.energyCooldown -= delta;
 
@@ -71,17 +93,16 @@ export class PetConditionService {
     [PetCondition.Exhausted, this.exhausted],
     [PetCondition.Tired, this.tired],
     [PetCondition.Hungry, this.hungry],
-    [PetCondition.Depressed, this.depressed],
     [PetCondition.Energetic, this.energetic],
     [PetCondition.Happy, this.happy],
+    [PetCondition.Sad, this.sad],
+    [PetCondition.Depressed, this.depressed],
   ]);
 
   // ==================== Lo que genera la condicion de la pet ====================¡
 
   /**
-   * Gestiona efectos visuales de particulas basados en energia
-   * Emite gotas aleatorias con probabilidad inversamente proporcional a la energia
-   * Menos energia = mas probabilidad de emitir particulas (cansancio visual)
+   * Calcula cuando poner y quitar la condicion de cansado
    */
   private energyProcess(pet: Pet, ctx: PetConditionContext): void {
     const energy = ctx.getStat('energy');
@@ -90,6 +111,24 @@ export class PetConditionService {
       pet.conditions.add(PetCondition.Tired);
     } else if (pet.conditions.has(PetCondition.Tired)) {
       pet.conditions.delete(PetCondition.Tired);
+    }
+  }
+
+  private happyProcess(pet: Pet, ctx: PetConditionContext) {
+    const happiness = ctx.getStat('happiness');
+    if (!happiness) return;
+    if (happiness.porcent > 65) {
+      pet.conditions.add(PetCondition.Happy);
+      pet.conditions.delete(PetCondition.Sad);
+      pet.conditions.delete(PetCondition.Depressed);
+    } else if (happiness.porcent <= 65 && happiness.porcent >= 15) {
+      pet.conditions.add(PetCondition.Sad);
+      pet.conditions.delete(PetCondition.Happy);
+      pet.conditions.delete(PetCondition.Depressed);
+    } else {
+      pet.conditions.add(PetCondition.Depressed);
+      pet.conditions.delete(PetCondition.Sad);
+      pet.conditions.delete(PetCondition.Happy);
     }
   }
 }
