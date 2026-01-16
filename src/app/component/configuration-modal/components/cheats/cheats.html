@@ -44,7 +44,6 @@
         <!-- Sliders -->
         <div class="flex flex-col justify-center gap-2">
           @for (stat of stats; track $index) {
-          <!-- Energia -->
           <div class="flex flex-row items-center gap-1">
             <img
               [src]="'/Mokito-web/assets/icon/stats/' + stat.name + '.png'"
@@ -57,7 +56,7 @@
               max="100"
               [value]="roundStat(stat.porcent)"
               class="pixel-slider pixel-box-s"
-              (input)="stat.porcent = $any($event.target).value"
+              (input)="onStatChange(stat.name, $event)"
             />
 
             <span class="text-sm font-medium w-6">{{ roundStat(stat.porcent) }}%</span>

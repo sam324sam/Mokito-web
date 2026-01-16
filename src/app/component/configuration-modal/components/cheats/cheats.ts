@@ -49,4 +49,10 @@ export class Cheats {
   getManipulateStats() {
     this.stats = this.petService.statsChanged();
   }
+
+  // stats
+  onStatChange(name: string, event: Event): void {
+    const value = Number((event.target as HTMLInputElement).value);
+    this.petService.setStatPorcent(name, value);
+  }
 }

@@ -6,17 +6,6 @@ import { PetService } from './pet/pet.service';
 
 @Injectable({ providedIn: 'root' })
 export class RoomService {
-
-  /**
-   * Comportamientos para cada habitacion
-   */
-  private readonly buttonBehaviors: Record<string, () => void> = {
-    openInventory: () => { console.log('Abrir inventario'); },
-    sleep: () => {  },
-    brushTeeth: () => { console.log('Cepillando dientes'); },
-    waterPlants: () => { console.log('Regando plantas'); },
-  };
-
   private readonly rooms: Room[] = [];
   
   private readonly roomIndex = signal(0);
@@ -49,16 +38,5 @@ export class RoomService {
 
     // Actualizar el signal
     this.roomIndex.set(newIndex);
-  }
-
-  /**
-   * Ejecutar la accion de cada habitacion
-   * @param room 
-   * @returns 
-   */
-  executeRoomButton(room: Room) {
-    if (!room.buttonRoom || !this.petService.pet) return;
-    const behavior = this.buttonBehaviors[room.buttonRoom.buttonBehavior];
-    behavior?.();
   }
 }

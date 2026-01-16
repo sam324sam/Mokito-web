@@ -38,6 +38,12 @@
       "baseUrl": "assets/pet/happiness15/",
       "frames": 21,
       "animationType": "loop"
+    },
+    {
+      "name": "sleep",
+      "baseUrl": "assets/pet/sleep/",
+      "frames": 1,
+      "animationType": "loop"
     }
   ]
 }

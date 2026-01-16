@@ -28,16 +28,19 @@ export class PetStateService {
     [PetState.Sleeping]: {
       onEnter: (p, c) => this.enterSleeping(p, c),
       update: (p, d, c) => this.updateSleeping(p, d, c),
+      onExit: (p, c) => this.exitSleeping(p, c),
     },
 
-    [PetState.Grabbed]: {},
+    [PetState.Grabbed]: {
+      onEnter: (p, c) => this.enterGrabbed(p, c),
+    },
     [PetState.Reacting]: {
-      onEnter: (p, c) => this.enterReacting(p, c)
+      onEnter: (p, c) => this.enterReacting(p, c),
     },
   };
   lastState: PetState = {} as PetState;
 
-  constructor(private readonly particleService: ParticleService,) {}
+  constructor(private readonly particleService: ParticleService) {}
 
   // ==================== Metodos publicos ====================
 
@@ -76,8 +79,14 @@ export class PetStateService {
     ctx.setAnimation(ctx.getDirection());
   }
 
+  // Agarrar
+  private enterGrabbed(pet: Pet, ctx: PetStateContext) {
+    ctx.setAnimation('grab');
+  }
+
   /// ====================== Reacting
   enterReacting(pet: Pet, ctx: PetStateContext): void {
+    if (this.lastState == PetState.Sleeping) return;
     ctx.setAnimation('tutsitutsi');
     ctx.sumMinusStat('happiness', 5);
 
@@ -103,6 +112,7 @@ export class PetStateService {
   //============================ Dormir
   private enterSleeping(pet: Pet, ctx: PetStateContext): void {
     ctx.setAnimation('sleep');
+    ctx.setStatActive('energy', true);
   }
   /**
    * Actualiza el estado Sleeping
@@ -110,13 +120,18 @@ export class PetStateService {
    */
   private updateSleeping(pet: Pet, delta: number, ctx: PetStateContext): void {
     const stat = ctx.getStat('energy');
+    ctx.sumMinusStat('energy', 0.005);
 
     if (stat !== null) {
       const energy = stat.porcent;
-
-      if (energy !== null && energy >= 80) {
+      if (energy >= 100) {
         ctx.setState(PetState.Idle);
       }
     }
+  }
+
+  private exitSleeping(pet: Pet, ctx: PetStateContext): void {
+    ctx.setAnimation('idle');
+    ctx.setStatActive('energy', false);
   }
 }

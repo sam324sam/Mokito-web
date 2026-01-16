@@ -5,7 +5,6 @@ import { Stats } from '../../../models/pet/stats.model';
 // Contexto
 import { PetStatContext } from './pet-stat.context';
 
-
 @Injectable({ providedIn: 'root' })
 export class PetStatService {
   // Estado actual de la animacion idle basada en felicidad
@@ -27,7 +26,7 @@ export class PetStatService {
     }
 
     ctx.setStats(pet.stats);
-    this.statsProcess(pet, delta, ctx);
+    this.statsProcess(ctx);
   }
 
   // ==================== Manejo de los stats ====================
@@ -36,7 +35,7 @@ export class PetStatService {
    * Organiza y ejecuta comportamientos basados en las stats de la mascota
    * Procesa happiness y energy si existen
    */
-  private statsProcess(pet: Pet, delta: number, ctx: PetStatContext): void {
+  private statsProcess(ctx: PetStatContext): void {
     const happiness: Stats | null = ctx.getStat('happiness');
 
     if (happiness) {

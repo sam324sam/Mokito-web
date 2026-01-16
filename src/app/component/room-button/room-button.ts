@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Room } from '../../models/room/room.model';
 // servicios
-import { RoomService } from '../../services/room.service';
+import { PetService } from '../../services/pet/pet.service';
 
 @Component({
   selector: 'app-room-button',
@@ -10,12 +10,23 @@ import { RoomService } from '../../services/room.service';
   styleUrl: './room-button.scss',
 })
 export class RoomButton {
-  constructor(private readonly roomService: RoomService) {}
+  constructor(private readonly petService: PetService) {}
   @Input() room: Room = {} as Room;
+  buttonLocked = false;
 
-  onRoomButtonClick(room: Room) {
+  onRoomButtonClick(room: Room): void {
+    if (this.buttonLocked) return;
+
+    this.buttonLocked = true;
+
+    // lógica del botón
     if (room) {
-      this.roomService.executeRoomButton(room);
+      this.petService.executeRoomButton(room);
     }
+
+    // desbloqueo opcional
+    setTimeout(() => {
+      this.buttonLocked = false;
+    }, 500);
   }
 }

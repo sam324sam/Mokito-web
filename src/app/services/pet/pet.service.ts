@@ -105,6 +105,28 @@ export class PetService {
     this.statsChanged.set(stats);
   }
 
+  setStatPorcent(name: string, value: number): void {
+    if (Number.isNaN(value)) return;
+
+    const stat = this.pet.stats.find((s) => s.name === name);
+    if (!stat) return;
+
+    stat.porcent = Math.max(0, Math.min(100, value));
+  }
+
+  /**
+   * Para setear solo un stado en activo
+   * @param name
+   * @param active
+   * @returns
+   */
+  setStatActive(name: string, active: boolean): void {
+    const stat = this.pet.stats.find((s) => s.name === name);
+    if (!stat) return;
+
+    stat.active = active;
+  }
+
   // ==================== Metodos publicos para las animaciones ====================
 
   /**
@@ -138,7 +160,9 @@ export class PetService {
    * Solo cambia si la animacion existe y es diferente a la actual
    */
   setAnimation(name: string): void {
-    if (!this.pet.sprite.animationSprite[name]) return;
+    if (!this.pet.sprite.animationSprite[name]) {
+      console.log('La animacion de ' + name + ' no se a encotrado');
+    }
     if (this.pet.sprite.currentAnimation === name) return;
 
     this.pet.sprite.currentAnimation = name;
@@ -218,6 +242,7 @@ export class PetService {
     getDirection: () => this.petIaService.getDirection(),
     clearDirection: () => this.petIaService.clearDirection(),
     sumMinusStat: (name, value) => this.sumMinusStat(name, value),
+    setStatActive: (name, active) => this,
   };
 
   /**
@@ -278,4 +303,31 @@ export class PetService {
     sumMinusStat: (name, value) => this.sumMinusStat(name, value),
     setState: (state: PetState) => this.setState(state),
   };
+
+  // ====================== Metodos para el input service
+  private readonly buttonBehaviors: Record<string, () => void> = {
+    openInventory: () => {
+      console.log('Abrir inventario');
+    },
+    sleep: () => {
+      this.petInputService.sleep(this.pet, this.petInputContext);
+    },
+    brushTeeth: () => {
+      console.log('Cepillando dientes');
+    },
+    waterPlants: () => {
+      console.log('Regando plantas');
+    },
+  };
+
+  /**
+   * Ejecutar la accion de cada habitacion
+   * @param room
+   * @returns
+   */
+  executeRoomButton(room: Room) {
+    if (!room.buttonRoom) return;
+    const behavior = this.buttonBehaviors[room.buttonRoom.buttonBehavior];
+    behavior?.();
+  }
 }

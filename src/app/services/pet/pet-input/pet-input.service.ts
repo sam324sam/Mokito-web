@@ -78,6 +78,21 @@ export class PetInputService {
     pet.sprite.y = Math.max(0, newY);
   }
 
+  // ==================== Metodos publicos para botones de la room ====================
+
+  /**
+   *
+   */
+  sleep(pet: Pet, ctx: PetInputContext) {
+    if (pet.state == PetState.Sleeping) {
+      ctx.setState(PetState.Idle);
+    } else {
+      ctx.setState(PetState.Sleeping);
+    }
+  }
+
+  
+
   // ==================== Logica del input ====================
 
   /**
@@ -96,9 +111,6 @@ export class PetInputService {
     this.grabOffsetY = mouse.y - pet.sprite.y;
 
     console.log('grabOffsetX', this.grabOffsetX, 'grabOffsetY', this.grabOffsetY);
-
-    // Cambiar a animacion de agarre
-    ctx.setAnimation('grab');
   }
 
   /**
