@@ -16,7 +16,9 @@ export class ColorSelector {
 
   constructor(private readonly petService: PetService) {
     this.colors = this.petService.colors;
-    this.selectedColor = this.petService.pet.sprite.color;
+    if (this.petService.pet.sprite.color) {
+      this.selectedColor = this.petService.pet.sprite.color;
+    }
   }
 
   selectColor(color: Color) {

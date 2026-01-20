@@ -4,6 +4,8 @@ import { PetService } from './pet/pet.service';
 import { SpriteService } from './sprites.service';
 import { AnimationService } from './animation.service';
 import { ParticleService } from './particle.service';
+import { PhysicsService } from './physics.service';
+import { InteractableObjectsService } from './interactable-objects/interactable-objects.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +20,9 @@ export class GameLoopService {
     private readonly petService: PetService,
     private readonly spriteService: SpriteService,
     private readonly animationService: AnimationService,
-    private readonly particleService: ParticleService
+    private readonly particleService: ParticleService,
+    private readonly interactableObjectsService: InteractableObjectsService,
+    private readonly physicsService: PhysicsService,
   ) {}
 
   start() {
@@ -54,8 +58,11 @@ export class GameLoopService {
   }
 
   private update(delta: number) {
+    this.physicsService.update(delta);
+
     this.animationService.update(delta);
     this.petService.update(delta);
+    this.interactableObjectsService.update(delta);
     this.particleService.update(delta);
   }
 

@@ -11,6 +11,8 @@ import petDefault from '../../assets/config/default-pet.json';
 import animationsPet from '../../assets/config/animations-pet.json';
 import colorsJson from '../../assets/config/color-pet.json';
 import roomsJson from '../../assets/config/room-pet.json';
+import objectsJson from '../../assets/config/interactuable-object.json';
+import { InteractuableObject, ObjectType } from '../models/object/interactuable-object.model';
 
 @Injectable({ providedIn: 'root' })
 export class DataService {
@@ -21,6 +23,8 @@ export class DataService {
   animationsCache: Record<number, AnimationSet[]> = {};
 
   rooms: Room[] = [];
+
+  objects: InteractuableObject[] = [];
 
   constructor() {
     this.initData();
@@ -73,6 +77,27 @@ export class DataService {
 
     // cargar room
     this.rooms = [...roomsJson.rooms];
+
+    // cargar los objetos
+    const objTimeToLife = 5000
+    this.objects = objectsJson.map((element) => {
+      const img = new Image();
+      img.src = element.sprite.img;
+
+      return {
+        ...element,
+        type: element.type as ObjectType,
+        sprite: {
+          ...element.sprite,
+          color: null,
+          img,
+          animationSprite: {},
+          frameCounter: 0,
+          timeoutId: null,
+        },
+        timeToLife: objTimeToLife,
+      };
+    });
   }
 
   // Devuelve la mascota
@@ -86,6 +111,10 @@ export class DataService {
 
   getRooms(): Room[] {
     return this.rooms;
+  }
+
+  getObjects(): InteractuableObject[] {
+    return this.objects;
   }
 
   /**

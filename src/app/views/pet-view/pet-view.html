@@ -4,6 +4,9 @@
     class="absolute inset-0 -z-1 background-pet"
     [style.borderImageSource]="'url(' + currentRoom().img + ')'"
   ></div>
+
+  <app-inventory-modal></app-inventory-modal>
+
   <canvas
     #canvas
     id="pet-canvas"

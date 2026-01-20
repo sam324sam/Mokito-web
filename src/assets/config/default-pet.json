@@ -3,6 +3,7 @@
   "isGrab": false,
   "blockMove": false,
   "sprite": {
+    "id": null,
     "colorIndex": 0,
     "x": 0,
     "y": 0,

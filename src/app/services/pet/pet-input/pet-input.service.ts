@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Pet } from '../../../models/pet/pet.model';
 import { PetState } from '../../../models/pet/pet-state.model';
 import { PetInputContext } from './pet-input.context';
+// service
 import { AnimationService } from '../../animation.service';
 
 @Injectable({ providedIn: 'root' })
@@ -91,7 +92,12 @@ export class PetInputService {
     }
   }
 
-  
+  /**
+   *
+   */
+  feed(pet: Pet, ctx: PetInputContext) {
+    
+  }
 
   // ==================== Logica del input ====================
 

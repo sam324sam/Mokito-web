@@ -7,11 +7,13 @@ import { Stats } from '../../models/pet/stats.model';
 import { Color } from '../../models/sprites/color.model';
 import { Room } from '../../models/room/room.model';
 import { PetState } from '../../models/pet/pet-state.model';
+import { ObjectType } from '../../models/object/interactuable-object.model';
 
 // Services
 import { AnimationService } from '../animation.service';
 import { DataService } from '../data.service';
 import { ParticleService } from '../particle.service';
+import { InteractableObjectsService } from '../interactable-objects/interactable-objects.service';
 
 // Pet Services
 import { PetStateService } from './pet-state/pet-state.service';
@@ -45,11 +47,13 @@ export class PetService {
     private readonly petStatService: PetStatService,
     private readonly animationService: AnimationService,
     private readonly dataService: DataService,
+    private readonly interactableObjectsService: InteractableObjectsService,
+
     private readonly petIaService: PetIaService,
     private readonly particleService: ParticleService,
     private readonly petStateService: PetStateService,
     private readonly petInputService: PetInputService,
-    private readonly petConditionService: PetConditionService
+    private readonly petConditionService: PetConditionService,
   ) {}
 
   // ==================== Metodos publicos del servicio nucleo ====================
@@ -95,7 +99,7 @@ export class PetService {
 
     this.pet.state = state;
 
-    console.log('Estado cambiado a ', state);
+    //console.log('Estado cambiado a ', state);
   }
 
   /**
@@ -142,7 +146,7 @@ export class PetService {
         animationName,
         'Array de animaciones',
         this.animations,
-        'Colocando animacion idle default'
+        'Colocando animacion idle default',
       );
       this.pet.sprite.animationSprite['idle'] = this.pet.sprite.animationSprite['default'];
       return;
@@ -302,12 +306,14 @@ export class PetService {
 
     sumMinusStat: (name, value) => this.sumMinusStat(name, value),
     setState: (state: PetState) => this.setState(state),
+
+    getInteractuableObject: (name) => this.interactableObjectsService.getInteractuableObject(name),
   };
 
-  // ====================== Metodos para el input service
+  // ====================== Metodos para el input service e inventario
   private readonly buttonBehaviors: Record<string, () => void> = {
     openInventory: () => {
-      console.log('Abrir inventario');
+      this.toggleInventory(ObjectType.Food);
     },
     sleep: () => {
       this.petInputService.sleep(this.pet, this.petInputContext);
@@ -319,6 +325,22 @@ export class PetService {
       console.log('Regando plantas');
     },
   };
+
+  // Estado del modal
+  isOpenInventory = signal(false);
+  selectedTypeInventory = signal<ObjectType | null>(null);
+
+  toggleInventory(type?: ObjectType) {
+    const isOpen = this.isOpenInventory();
+
+    if (isOpen) {
+      this.isOpenInventory.set(false);
+      this.selectedTypeInventory.set(null);
+    } else if (type) {
+      this.selectedTypeInventory.set(type);
+      this.isOpenInventory.set(true);
+    }
+  }
 
   /**
    * Ejecutar la accion de cada habitacion

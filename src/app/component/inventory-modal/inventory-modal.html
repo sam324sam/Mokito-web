@@ -1,0 +1,34 @@
+@if (isOpenInventory) {
+  <div class="absolute inset-0 bg-black/50 flex items-center justify-center z-30 p-4">
+    <div
+      class="bg-slate-800 text-white p-6 shadow-2xl w-[80%] max-w-md sm:max-w-lg md:max-w-2xl max-h-[90dvh] overflow-y-auto relative border-4 border-slate-900 pixel-box"
+    >
+      <!-- Grid de items -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-4">
+        @for (obj of filteredObjects(); track $index) {
+          <button class="hover:clickable" (click)="generateObject(obj)">
+            <div class="flex items-center justify-center mb-2">
+              <img 
+                [src]="obj.sprite.img.src" 
+                alt="Object" 
+                class="w-16 h-16"
+              />
+            </div>
+            <p class="text-xs text-center" style="font-family: monospace; text-shadow: 1px 1px 0px rgba(0,0,0,0.8);">
+              {{ obj.name }}
+            </p>
+          </button>
+        }
+      </div>
+
+      <!-- Botón cerrar con estilo pixel -->
+      <button 
+        (click)="closeInventory()"
+        class="w-full pixel-box font-bold transition-all"
+        style="font-family: monospace; text-shadow: 2px 2px 0px rgba(0,0,0,0.8);"
+      >
+        Cerrar
+      </button>
+    </div>
+  </div>
+}

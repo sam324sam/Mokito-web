@@ -8,7 +8,7 @@ import { AnimationService } from './animation.service';
 export class SpriteService {
   private canvas!: HTMLCanvasElement;
   private ctx!: CanvasRenderingContext2D;
-  private readonly sprites: Sprite[] = [];
+  private sprites: Sprite[] = [];
 
   // Resolución lógica fija
   private readonly BASE_WIDTH = 200;
@@ -47,15 +47,22 @@ export class SpriteService {
 
   addSprite(sprite: Sprite) {
     sprite.scale = this.spriteScale;
+    sprite.id = this.sprites.length
     this.sprites.push(sprite);
     this.animationService.addSprite(sprite);
+    console.log(sprite)
+  }
+
+  deleteSprite(deleteId: number | null){
+    if (deleteId == null) return
+    this.sprites = this.sprites.filter(sprite => sprite.id !== deleteId);
   }
 
   render() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     for (const sprite of this.sprites) {
-      const frame = this.animationService.getFrame(sprite);
+      const frame = this.animationService.getFrame(sprite) ?? sprite.img;
       if (!frame) continue;
 
       this.ctx.save();

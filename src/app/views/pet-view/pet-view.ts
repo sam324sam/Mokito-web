@@ -7,20 +7,22 @@ import {
   OnDestroy,
   ViewChild,
 } from '@angular/core';
-
+// Modelos
+import { Room } from '../../models/room/room.model';
 // Service
 import { GameLoopService } from '../../services/game-loop.service';
 import { SpriteService } from '../../services/sprites.service';
 import { PetService } from '../../services/pet/pet.service';
 import { CursorService } from '../../services/cursor.service';
-import { StatsBar } from '../../component/stats-bar/stats-bar';
+
 import { ParticleService } from '../../services/particle.service';
 import { RoomService } from '../../services/room.service';
-import { Room } from '../../models/room/room.model';
-
+// Componentes
+import { StatsBar } from '../../component/stats-bar/stats-bar';
+import { InventoryModal } from '../../component/inventory-modal/inventory-modal';
 @Component({
   selector: 'app-pet-view',
-  imports: [StatsBar],
+  imports: [StatsBar,InventoryModal],
   templateUrl: './pet-view.html',
   styleUrl: './pet-view.scss',
   standalone: true,
