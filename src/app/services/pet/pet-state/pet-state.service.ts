@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Pet } from '../../../models/pet/pet.model';
-import { PetState } from '../../../models/pet/pet-state.model';
+import { Pet, PetState } from '../../../models/pet/pet.model';
 import { PetStateContext } from './pet-state.context';
 import { ParticleService } from '../../particle.service';
 

@@ -1,10 +1,7 @@
+import { Entity } from '../entity/entity.model';
 import { Sprite } from '../sprites/sprites.model';
-import { Stats } from './stats.model';
-import { Cheats } from './cheats.model';
-import { PetState } from './pet-state.model';
-import { PetCondition } from './pet-condition.model';
 
-export interface Pet {
+export interface Pet extends Entity {
   id: number;
   sprite: Sprite;
 
@@ -13,4 +10,34 @@ export interface Pet {
 
   stats: Stats[];
   cheats: Cheats;
+}
+
+export interface Cheats {
+  godMode: boolean;
+  noMoreMove: boolean;
+}
+
+export interface Stats {
+  name: string;
+  porcent: number;
+  decay: number;
+  active: boolean;
+}
+
+export enum PetState {
+  Idle = 'idle',
+  Walking = 'walking',
+  Grabbed = 'grabbed',
+  Sleeping = 'sleeping',
+  Reacting = 'reacting',
+}
+
+export enum PetCondition {
+  Tired = 'tired', // energia < 30
+  Exhausted = 'exhausted', // energia < 15
+  Happy = 'happy', // felicidad > 70
+  Sad = 'sad', // felicidad < 30
+  Depressed = 'depressed', // felicidad < 15
+  Hungry = 'hungry', // hambre < 30
+  Energetic = 'energetic', // energia > 70
 }

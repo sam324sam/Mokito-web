@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 // Modelo
-import { Pet } from '../../../models/pet/pet.model';
-import { Stats } from '../../../models/pet/stats.model';
+import { Pet, Stats} from '../../../models/pet/pet.model';
 // Contexto
 import { PetStatContext } from './pet-stat.context';
 

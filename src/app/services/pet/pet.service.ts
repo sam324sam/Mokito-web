@@ -1,12 +1,10 @@
 import { Injectable, signal } from '@angular/core';
 
 // Models
-import { Pet } from '../../models/pet/pet.model';
+import { Pet, Stats, PetState } from '../../models/pet/pet.model';
 import { AnimationSet } from '../../models/sprites/animation-set.model';
-import { Stats } from '../../models/pet/stats.model';
 import { Color } from '../../models/sprites/color.model';
 import { Room } from '../../models/room/room.model';
-import { PetState } from '../../models/pet/pet-state.model';
 import { ObjectType } from '../../models/object/interactuable-object.model';
 
 // Services
@@ -28,6 +26,7 @@ import { PetIaContext } from './pet-ia/pet-ia.context';
 import { PetStateContext } from './pet-state/pet-state.context';
 import { PetInputContext } from './pet-input/pet-input.context';
 import { PetConditionContext } from './pet-condition/pet-condition.context';
+import { EntityStoreService } from '../entity-store.service';
 
 @Injectable({ providedIn: 'root' })
 export class PetService {
@@ -44,11 +43,11 @@ export class PetService {
   statsChanged = signal<Stats[]>([]);
 
   constructor(
-    private readonly petStatService: PetStatService,
+    private readonly entityStoreService: EntityStoreService,
     private readonly animationService: AnimationService,
     private readonly dataService: DataService,
     private readonly interactableObjectsService: InteractableObjectsService,
-
+    private readonly petStatService: PetStatService,
     private readonly petIaService: PetIaService,
     private readonly particleService: ParticleService,
     private readonly petStateService: PetStateService,
@@ -63,13 +62,17 @@ export class PetService {
    * Carga datos, colores, animaciones e inicializa servicios dependientes
    */
   initPetService(canvas: HTMLCanvasElement): void {
-    this.pet = this.dataService.getPet();
+    this.pet = this.dataService.getPetRuntime();
+
     this.colors = this.dataService.getColors();
 
     this.animations = this.dataService.getAnimations(this.pet.id);
     this.animationService.loadAnimations(this.pet, this.animations);
-
+    console.log('La pet', this.pet);
     this.setIdleAnimation('happiness100');
+
+    // Meter la entidad cargada alentity
+    this.entityStoreService.addEntity(this.pet);
 
     // Inicializar servicios que necesitan canvas
     this.petIaService.init(canvas);
@@ -99,7 +102,7 @@ export class PetService {
 
     this.pet.state = state;
 
-    //console.log('Estado cambiado a ', state);
+    // console.log('Estado cambiado a ', state);
   }
 
   /**

@@ -1,5 +1,5 @@
 import { InteractuableObject } from "../../../models/object/interactuable-object.model";
-import { PetState } from "../../../models/pet/pet-state.model";
+import { PetState } from "../../../models/pet/pet.model";
 
 export interface PetInputContext {
   setState(state: PetState): void;

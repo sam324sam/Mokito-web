@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 
-import { Pet } from '../../../models/pet/pet.model';
-import { PetState } from '../../../models/pet/pet-state.model';
+import { Pet, PetCondition, PetState } from '../../../models/pet/pet.model';
 import { PetIaContext } from './pet-ia.context';
 import { CollisionService } from '../../collision.service';
-import { PetCondition } from '../../../models/pet/pet-condition.model';
 
 type Direction = 'left' | 'right' | 'up' | 'down';
 

@@ -1,6 +1,4 @@
-import { PetState } from '../../../models/pet/pet-state.model';
-import { Pet } from '../../../models/pet/pet.model';
-import { Stats } from '../../../models/pet/stats.model';
+import { Pet, PetState, Stats} from '../../../models/pet/pet.model';
 
 export interface PetStateContext {
   setState(state: PetState): void;

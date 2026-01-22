@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 // Modelos
-import { PetCondition } from '../../../models/pet/pet-condition.model';
-import { Pet } from '../../../models/pet/pet.model';
+import { Pet, PetState, PetCondition} from '../../../models/pet/pet.model';
 import { ParticleService } from '../../particle.service';
 
 //Context
 import { PetConditionContext } from './pet-condition.context';
-import { PetState } from '../../../models/pet/pet-state.model';
 
 export type PetConditionBehavior = (pet: Pet, deltaTime: number, ctx: PetConditionContext) => void;
 

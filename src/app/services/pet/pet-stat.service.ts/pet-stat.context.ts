@@ -1,4 +1,4 @@
-import { Stats } from '../../../models/pet/stats.model';
+import { Stats } from '../../../models/pet/pet.model';
 
 export interface PetStatContext {
   getStat(name: string): Stats | null;

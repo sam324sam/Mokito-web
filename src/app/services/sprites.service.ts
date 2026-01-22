@@ -3,19 +3,19 @@ import { Injectable } from '@angular/core';
 import { Sprite } from '../models/sprites/sprites.model';
 // Servicios
 import { AnimationService } from './animation.service';
+import { EntityStoreService } from './entity-store.service';  
 
 @Injectable({ providedIn: 'root' })
 export class SpriteService {
   private canvas!: HTMLCanvasElement;
   private ctx!: CanvasRenderingContext2D;
-  private sprites: Sprite[] = [];
 
   // Resolución lógica fija
   private readonly BASE_WIDTH = 200;
   private readonly BASE_HEIGHT = 200;
   spriteScale = 4;
 
-  constructor(private readonly animationService: AnimationService) {}
+  constructor(private readonly animationService: AnimationService, private readonly entityStoreService:EntityStoreService) {}
 
   init(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -45,28 +45,19 @@ export class SpriteService {
     this.ctx.imageSmoothingEnabled = false;
   }
 
-  addSprite(sprite: Sprite) {
-    sprite.scale = this.spriteScale;
-    sprite.id = this.sprites.length
-    this.sprites.push(sprite);
-    this.animationService.addSprite(sprite);
-    console.log(sprite)
-  }
-
-  deleteSprite(deleteId: number | null){
-    if (deleteId == null) return
-    this.sprites = this.sprites.filter(sprite => sprite.id !== deleteId);
-  }
-
   render() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    for (const sprite of this.sprites) {
+    const entities = this.entityStoreService.getAllEntities();
+
+    for (const e of entities) {
+      const sprite: Sprite = e.sprite;
+      sprite.scale = this.spriteScale;
+
       const frame = this.animationService.getFrame(sprite) ?? sprite.img;
       if (!frame) continue;
 
       this.ctx.save();
-
       this.limitToCanvas(sprite);
       this.ctx.imageSmoothingEnabled = false;
 

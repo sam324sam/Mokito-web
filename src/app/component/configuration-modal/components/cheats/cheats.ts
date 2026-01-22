@@ -1,6 +1,6 @@
 import { Component, effect, Input } from '@angular/core';
 import { PetService } from '../../../../services/pet/pet.service';
-import { Stats } from '../../../../models/pet/stats.model';
+import { Stats } from '../../../../models/pet/pet.model';
 
 @Component({
   selector: 'app-cheats',

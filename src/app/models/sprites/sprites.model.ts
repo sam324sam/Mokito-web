@@ -2,9 +2,6 @@ import { AnimationSprite } from './animation-sprite.model';
 import { Color } from './color.model';
 
 export interface Sprite {
-  // Para el sprite servicio
-  id: number | null;
-
   x: number;
   y: number;
   width: number;

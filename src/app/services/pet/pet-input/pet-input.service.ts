@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Pet } from '../../../models/pet/pet.model';
-import { PetState } from '../../../models/pet/pet-state.model';
+import { Pet, PetState } from '../../../models/pet/pet.model';
 import { PetInputContext } from './pet-input.context';
 // service
 import { AnimationService } from '../../animation.service';

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import {
-  InteractuableObject,
-  InteractuableObjectRuntime,
-} from '../../models/object/interactuable-object.model';
+import { InteractuableObject } from '../../models/object/interactuable-object.model';
+import { InteractuableObjectRuntime } from '../../models/object/Interactuable-object-runtime.model';
+import { EntityStoreService } from '../entity-store.service';
+
 // Servicio
 import { SpriteService } from '../sprites.service';
 import { DataService } from '../data.service';
@@ -16,12 +16,13 @@ export class InteractableObjectsService {
   constructor(
     private readonly dataService: DataService,
     private readonly spriteService: SpriteService,
+    private readonly entityStoreService: EntityStoreService,
   ) {
     this.objects = this.dataService.getObjects();
     console.log(this.objects);
   }
 
-  update(delta: number){
+  update(delta: number) {
     for (const obj of this.activeObjects) {
       obj.timeToLife -= delta;
       if (obj.timeToLife <= 0) {
@@ -48,6 +49,7 @@ export class InteractableObjectsService {
     // crear runtime
     const runtimeObj: InteractuableObjectRuntime = {
       ...objCopy,
+      active: true,
       physics: {
         vx: 0,
         vy: 0,
@@ -60,20 +62,22 @@ export class InteractableObjectsService {
         width: objCopy.sprite.width * objCopy.sprite.scale,
         height: objCopy.sprite.height * objCopy.sprite.scale,
       },
+      grab: {
+        isGrabbed: false,
+        grabOffsetX: 0,
+        grabOffsetY: 0,
+      },
+
       isTouchingPet: false,
     };
 
-    this.spriteService.addSprite(runtimeObj.sprite);
+    this.entityStoreService.addEntity(runtimeObj);
     this.activeObjects.push(runtimeObj);
-    console.log('Nuevo objeto runtime agregado', runtimeObj);
   }
 
   deleteInteractuableObject(obj: InteractuableObject) {
-    this.spriteService.deleteSprite(obj.sprite.id);
-    if (obj.sprite.id == null) return;
-    this.activeObjects = this.activeObjects.filter(
-      (activeObj) => activeObj.sprite.id !== obj.sprite.id,
-    );
-    console.log('Eliminado el objeto', obj);
+    this.entityStoreService.removeEntity(obj.id);
+    if (obj.id == null) return;
+    this.activeObjects = this.activeObjects.filter((activeObj) => activeObj.id !== obj.id);
   }
 }

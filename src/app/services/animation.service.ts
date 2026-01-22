@@ -4,41 +4,36 @@ import { Sprite } from '../models/sprites/sprites.model';
 import { AnimationSet } from '../models/sprites/animation-set.model';
 import { AnimationSprite } from '../models/sprites/animation-sprite.model';
 import { Pet } from '../models/pet/pet.model';
+// Servicio
+import { EntityStoreService } from './entity-store.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AnimationService {
-  private sprites: Sprite[] = [];
-
-  addSprite(sprite: Sprite) {
-    this.sprites.push(sprite);
-  }
-
-  deleteSprite(sprite: Sprite) {
-    this.sprites = this.sprites.filter((s) => s !== sprite);
-  }
+  constructor(private readonly entityStoreService: EntityStoreService) {}
 
   update(deltaTime: number) {
-    for (const sprite of this.sprites) {
-      const anim = sprite.animationSprite[sprite.currentAnimation];
+    const entities = this.entityStoreService.getAllEntities();
+    for (const entitie of entities) {
+      const anim = entitie.sprite.animationSprite[entitie.sprite.currentAnimation];
       if (!anim) continue;
 
       // deltaTime está en ms
-      sprite.frameCounter += deltaTime;
+      entitie.sprite.frameCounter += deltaTime;
 
       // frameSpeed también debe estar en ms por frame
-      if (sprite.frameCounter >= sprite.frameSpeed) {
-        sprite.frameCounter -= sprite.frameSpeed; // no =0 para no perder exceso
-        sprite.currentFrame++;
+      if (entitie.sprite.frameCounter >= entitie.sprite.frameSpeed) {
+        entitie.sprite.frameCounter -= entitie.sprite.frameSpeed; // no =0 para no perder exceso
+        entitie.sprite.currentFrame++;
 
         const totalFrames = anim.frameImg.length;
-        if (sprite.currentFrame >= totalFrames) {
+        if (entitie.sprite.currentFrame >= totalFrames) {
           if (anim.animationType === 'loop') {
-            sprite.currentFrame = 0;
+            entitie.sprite.currentFrame = 0;
           } else if (anim.animationType === 'once') {
-            sprite.currentAnimation = 'idle';
-            sprite.currentFrame = 0;
+            entitie.sprite.currentAnimation = 'idle';
+            entitie.sprite.currentFrame = 0;
           }
         }
       }
@@ -79,7 +74,7 @@ export class AnimationService {
   }
 
   /**
-   * para las animaciones que se asiugnn arriba
+   * para las cargar las animaciones
    */
   loadAnimations(pet: Pet, animations: AnimationSet[]) {
     for (const anim of animations) {
@@ -99,6 +94,5 @@ export class AnimationService {
       pet.sprite.animationSprite[anim.name] = animation;
     }
     console.log(pet, 'La mascota');
-    return pet;
   }
 }

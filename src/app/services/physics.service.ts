@@ -1,53 +1,58 @@
 import { Injectable } from '@angular/core';
-// Servicios
-import { InteractableObjectsService } from './interactable-objects/interactable-objects.service';
+import { EntityStoreService } from './entity-store.service';
 import { SpriteService } from './sprites.service';
-// Moldel
-import { InteractuableObjectRuntime } from '../models/object/interactuable-object.model';
+//guards
+import { hasPhysics } from '../guards/has-physics.guard';
+import { hasCollider } from '../guards/has-collider.guard';
 
 @Injectable({ providedIn: 'root' })
 export class PhysicsService {
   constructor(
-    private readonly interactableObjectsService: InteractableObjectsService,
+    private readonly entityStore: EntityStoreService,
     private readonly spriteService: SpriteService,
   ) {}
 
   update(delta: number) {
     const dt = delta / 1000;
 
-    const canvasHeight = this.spriteService.getCanvas()?.height || 600;
-    const FLOOR_Y = canvasHeight - 20;
+    const canvas = this.spriteService.getCanvas();
+    if (!canvas) return;
 
-    const canvasWidth = this.spriteService.getCanvas()?.width || 800;
+    const FLOOR_Y = canvas.height - 20;
     const LEFT_X = 0;
-    const RIGHT_X = canvasWidth;
+    const RIGHT_X = canvas.width;
 
-    const activeObjects = this.interactableObjectsService
-      .activeObjects as InteractuableObjectRuntime[];
+    const entities = this.entityStore.getAllEntities();
 
-    for (const obj of activeObjects) {
-      if (!obj.physics.enabled) continue;
+    for (const e of entities) {
+      // filtramos los que tienen physics y collider
+      if (!hasPhysics(e) || !hasCollider(e)) continue;
+      if (!e.physics.enabled) continue;
 
-      obj.physics.vy += obj.physics.gravity * dt;
-      obj.sprite.y += obj.physics.vy * dt;
+      // aquí TypeScript ya sabe que e tiene physics y collider
+      e.physics.vy += e.physics.gravity * dt;
+      e.sprite.y += e.physics.vy * dt;
+
+      e.physics.vy += e.physics.gravity * dt;
+      e.sprite.y += e.physics.vy * dt;
+      e.sprite.x += e.physics.vx * dt;
 
       // suelo
-      if (obj.sprite.y + obj.collider.height > FLOOR_Y) {
-        obj.sprite.y = FLOOR_Y - obj.collider.height;
-        obj.physics.vy = 0;
+      if (e.sprite.y + e.collider.height > FLOOR_Y) {
+        e.sprite.y = FLOOR_Y - e.collider.height;
+        e.physics.vy = 0;
       }
 
       // paredes
-      if (obj.sprite.x < LEFT_X) {
-        obj.sprite.x = LEFT_X;
-        obj.physics.vx = 0;
+      if (e.sprite.x < LEFT_X) {
+        e.sprite.x = LEFT_X;
+        e.physics.vx = 0;
       }
-      if (obj.sprite.x + obj.collider.width > RIGHT_X) {
-        obj.sprite.x = RIGHT_X - obj.collider.width;
-        obj.physics.vx = 0;
+
+      if (e.sprite.x + e.collider.width > RIGHT_X) {
+        e.sprite.x = RIGHT_X - e.collider.width;
+        e.physics.vx = 0;
       }
     }
   }
-
-
 }

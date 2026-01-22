@@ -107,9 +107,6 @@ export class PetView implements AfterViewInit, OnDestroy {
     // Centrar la mascota
     this.centerPet();
 
-    // Añadir sprite al motor
-    this.spriteService.addSprite(this.petService.pet.sprite);
-
     // iniciar loop al final
     this.gameLoopService.start();
     document.addEventListener('visibilitychange', this.onVisibilityChange);

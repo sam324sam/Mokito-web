@@ -1,5 +1,4 @@
-import { PetState } from '../../../models/pet/pet-state.model';
-import { Stats } from '../../../models/pet/stats.model';
+import { PetState, Stats} from '../../../models/pet/pet.model';
 
 export interface PetIaContext {
   getAnimationDuration(dir: string): number;
