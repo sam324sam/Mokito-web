@@ -1,21 +1,19 @@
 import { Injectable } from '@angular/core';
 import { InteractuableObject } from '../../models/object/interactuable-object.model';
 import { InteractuableObjectRuntime } from '../../models/object/Interactuable-object-runtime.model';
-import { EntityStoreService } from '../entity-store.service';
 
 // Servicio
-import { SpriteService } from '../sprites.service';
 import { DataService } from '../data.service';
+import { EntityStoreService } from '../entity-store.service';
 @Injectable({
   providedIn: 'root',
 })
 export class InteractableObjectsService {
   objects: InteractuableObject[] = [];
-  activeObjects: InteractuableObject[] = [];
+  activeObjects: InteractuableObjectRuntime[] = [];
 
   constructor(
     private readonly dataService: DataService,
-    private readonly spriteService: SpriteService,
     private readonly entityStoreService: EntityStoreService,
   ) {
     this.objects = this.dataService.getObjects();
@@ -24,7 +22,10 @@ export class InteractableObjectsService {
 
   update(delta: number) {
     for (const obj of this.activeObjects) {
-      obj.timeToLife -= delta;
+      if (obj.grab?.isGrabbed) continue;
+
+      obj.timeToLife = Math.max(0, obj.timeToLife - delta);
+
       if (obj.timeToLife <= 0) {
         this.deleteInteractuableObject(obj);
       }

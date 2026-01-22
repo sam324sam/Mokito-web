@@ -4,6 +4,7 @@ import { SpriteService } from './sprites.service';
 //guards
 import { hasPhysics } from '../guards/has-physics.guard';
 import { hasCollider } from '../guards/has-collider.guard';
+import { hasGrab } from '../guards/has-grab.guard';
 
 @Injectable({ providedIn: 'root' })
 export class PhysicsService {
@@ -26,8 +27,8 @@ export class PhysicsService {
 
     for (const e of entities) {
       // filtramos los que tienen physics y collider
-      if (!hasPhysics(e) || !hasCollider(e)) continue;
-      if (!e.physics.enabled) continue;
+      if (!hasPhysics(e) || !hasCollider(e) || !hasGrab(e)) continue;
+      if (!e.physics.enabled || e.grab.isGrabbed ) continue;
 
       // aquí TypeScript ya sabe que e tiene physics y collider
       e.physics.vy += e.physics.gravity * dt;

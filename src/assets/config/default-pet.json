@@ -1,7 +1,5 @@
 {
   "id": 0,
-  "isGrab": false,
-  "blockMove": false,
   "sprite": {
     "id": null,
     "colorIndex": 0,

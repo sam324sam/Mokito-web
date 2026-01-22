@@ -13,7 +13,7 @@ export class SpriteService {
   // Resolución lógica fija
   private readonly BASE_WIDTH = 200;
   private readonly BASE_HEIGHT = 200;
-  spriteScale = 4;
+  spriteScale = 6;
 
   constructor(private readonly animationService: AnimationService, private readonly entityStoreService:EntityStoreService) {}
 
@@ -39,7 +39,7 @@ export class SpriteService {
 
     console.log('resolucion', container.offsetWidth);
     if (container.offsetWidth <= 500) {
-      this.spriteScale = 2;
+      this.spriteScale = 3;
     }
 
     this.ctx.imageSmoothingEnabled = false;

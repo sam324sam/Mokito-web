@@ -29,55 +29,6 @@ export class PetInputService {
     this.canvas = canvas;
   }
 
-  /**
-   * Maneja el evento de presionar el mouse sobre el pet
-   * Inicia timer para detectar presion prolongada (agarre)
-   */
-  handlePressDown(pet: Pet, event: PointerEvent, ctx: PetInputContext): void {
-    event.preventDefault();
-    if (!this.isPetClicked(pet, event)) return;
-
-    this.clearPressTimer();
-
-    // Iniciar timer para agarre
-    this.pressTimer = setTimeout(() => {
-      this.startGrabbing(pet, event, ctx);
-    }, this.LONG_PRESS_DURATION);
-  }
-
-  /**
-   * Maneja el evento de soltar el mouse
-   * Cancela agarre o ejecuta animacion de respuesta si fue click corto
-   */
-  handlePressUp(pet: Pet, event: PointerEvent, ctx: PetInputContext): void {
-    event.preventDefault();
-
-    this.clearPressTimer();
-
-    // Si fue un click corto sobre la mascota, ejecutar respuesta
-    if (this.isPetClicked(pet, event)) {
-      this.triggerPetResponse(pet, ctx);
-    }
-  }
-
-  /**
-   * Maneja el movimiento del mouse mientras se agarra el pet
-   * Actualiza posicion del sprite siguiendo el cursor
-   */
-  handleMouseMove(pet: Pet, event: PointerEvent): void {
-    if (pet.state !== PetState.Grabbed) return;
-
-    const mouse = this.getMousePos(event);
-
-    // Calcular nueva posicion manteniendo offset donde se clickeo
-    let newX = mouse.x - this.grabOffsetX;
-    let newY = mouse.y - this.grabOffsetY;
-
-    // Limitar al canvas para que no se salga
-    pet.sprite.x = Math.max(0, newX);
-    pet.sprite.y = Math.max(0, newY);
-  }
-
   // ==================== Metodos publicos para botones de la room ====================
 
   /**
@@ -95,45 +46,7 @@ export class PetInputService {
    *
    */
   feed(pet: Pet, ctx: PetInputContext) {
-    
-  }
-
-  // ==================== Logica del input ====================
-
-  /**
-   * Inicia el modo de agarre del pet
-   * Calcula offset entre mouse y sprite para mantener posicion relativa
-   */
-  private startGrabbing(pet: Pet, event: PointerEvent, ctx: PetInputContext): void {
-    if (pet.state == PetState.Reacting) return;
-
-    const mouse = this.getMousePos(event);
-
-    ctx.setState(PetState.Grabbed);
-
-    // Calcular offset para mantener posicion relativa al agarrar
-    this.grabOffsetX = mouse.x - pet.sprite.x;
-    this.grabOffsetY = mouse.y - pet.sprite.y;
-
-    console.log('grabOffsetX', this.grabOffsetX, 'grabOffsetY', this.grabOffsetY);
-  }
-
-  /**
-   * Ejecuta la animacion de respuesta al click (tutsitutsi)
-   * Bloquea movimiento durante animacion y aumenta felicidad
-   */
-  private triggerPetResponse(pet: Pet, ctx: PetInputContext): void {
-    if (pet.state == PetState.Reacting) return;
-
-    ctx.setState(PetState.Reacting);
-
-    // Volver a Idle cuando termine la animacion
-    const duration = this.animationService.getAnimationDuration(pet.sprite);
-    setTimeout(() => {
-      if (pet.state == PetState.Reacting) {
-        ctx.setState(PetState.Idle);
-      }
-    }, duration);
+    console.log("comidita")
   }
 
   // ==================== Utilidades ====================

@@ -27,6 +27,7 @@ import { PetStateContext } from './pet-state/pet-state.context';
 import { PetInputContext } from './pet-input/pet-input.context';
 import { PetConditionContext } from './pet-condition/pet-condition.context';
 import { EntityStoreService } from '../entity-store.service';
+import { hasGrab } from '../../guards/has-grab.guard';
 
 @Injectable({ providedIn: 'root' })
 export class PetService {
@@ -86,6 +87,16 @@ export class PetService {
   update(delta: number): void {
     if (!this.pet.sprite) return;
 
+    const isGrabbed = hasGrab(this.pet) && this.pet.grab.isGrabbed;
+
+    if (isGrabbed) {
+      this.setState(PetState.Grabbed);
+    }
+
+    if (!isGrabbed && this.pet.state === PetState.Grabbed) {
+      this.setState(PetState.Reacting);
+    }
+
     this.petStateService.update(this.pet, delta, this.petStateContext);
     this.petStatService.updateStats(this.pet, delta, this.petStatContext);
     this.petConditionService.update(this.pet, delta, this.petConditionContext);
@@ -99,10 +110,8 @@ export class PetService {
    */
   setState(state: PetState): void {
     if (this.pet.state === state) return;
-
+    console.log("Estado de la pet", this.pet.state)
     this.pet.state = state;
-
-    // console.log('Estado cambiado a ', state);
   }
 
   /**
@@ -190,29 +199,6 @@ export class PetService {
     }
   }
 
-  // ==================== Metodos publicos para el inptu service ====================
-
-  /**
-   * Maneja el evento de presionar sobre la mascota
-   */
-  handlePressDown(event: PointerEvent): void {
-    this.petInputService.handlePressDown(this.pet, event, this.petInputContext);
-  }
-
-  /**
-   * Maneja el evento de soltar la presion sobre la mascota
-   */
-  handlePressUp(event: PointerEvent): void {
-    this.petInputService.handlePressUp(this.pet, event, this.petInputContext);
-  }
-
-  /**
-   * Maneja el movimiento del mouse sobre la mascota
-   */
-  handleMouseMove(event: PointerEvent): void {
-    this.petInputService.handleMouseMove(this.pet, event);
-  }
-
   // ==================== Stats ====================
 
   /**
@@ -246,6 +232,7 @@ export class PetService {
     setState: (state) => this.setState(state),
     getStat: (name) => this.getStatPet(name),
     setAnimation: (name) => this.setAnimation(name),
+    getAnimationDuration: (sprite) => this.animationService.getAnimationDuration(sprite), 
     getDirection: () => this.petIaService.getDirection(),
     clearDirection: () => this.petIaService.clearDirection(),
     sumMinusStat: (name, value) => this.sumMinusStat(name, value),

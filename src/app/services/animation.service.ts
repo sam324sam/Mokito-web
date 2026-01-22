@@ -52,7 +52,7 @@ export class AnimationService {
   }
 
   /**
-   * Duracion de la animacion en segundos
+   * Duracion de la animacion en milisegundos
    */
   getAnimationDuration(sprite: Sprite): number {
     const frames = sprite.animationSprite[sprite.currentAnimation].frameImg.length;

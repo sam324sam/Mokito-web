@@ -35,10 +35,12 @@ export class PetStateService {
     },
     [PetState.Reacting]: {
       onEnter: (p, c) => this.enterReacting(p, c),
+      onExit: (p, c) => this.exitReacting(p, c),
     },
   };
   lastState: PetState = {} as PetState;
-
+  // Para el reacting
+  private reactingTimeout: any = null;
   constructor(private readonly particleService: ParticleService) {}
 
   // ==================== Metodos publicos ====================
@@ -97,6 +99,25 @@ export class PetStateService {
     const centerY = sprite.y + (sprite.height * scale) / 2;
 
     this.particleService.emitExplosion(centerX, centerY, 10, 150, null);
+
+    const durationMs = ctx.getAnimationDuration(sprite);
+
+    this.clearReactingTimeout();
+
+    this.reactingTimeout = setTimeout(() => {
+      ctx.setState(PetState.Idle);
+    }, durationMs);
+  }
+
+  private exitReacting(pet: Pet, ctx: PetStateContext): void {
+    this.clearReactingTimeout();
+  }
+
+  private clearReactingTimeout(): void {
+    if (this.reactingTimeout) {
+      clearTimeout(this.reactingTimeout);
+      this.reactingTimeout = null;
+    }
   }
 
   // ======================== Caminar

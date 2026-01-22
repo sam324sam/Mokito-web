@@ -14,7 +14,7 @@ import { GameLoopService } from '../../services/game-loop.service';
 import { SpriteService } from '../../services/sprites.service';
 import { PetService } from '../../services/pet/pet.service';
 import { CursorService } from '../../services/cursor.service';
-
+import { GrabService } from '../../services/grab.service';
 import { ParticleService } from '../../services/particle.service';
 import { RoomService } from '../../services/room.service';
 // Componentes
@@ -22,7 +22,7 @@ import { StatsBar } from '../../component/stats-bar/stats-bar';
 import { InventoryModal } from '../../component/inventory-modal/inventory-modal';
 @Component({
   selector: 'app-pet-view',
-  imports: [StatsBar,InventoryModal],
+  imports: [StatsBar, InventoryModal],
   templateUrl: './pet-view.html',
   styleUrl: './pet-view.scss',
   standalone: true,
@@ -46,33 +46,19 @@ export class PetView implements AfterViewInit, OnDestroy {
     private readonly spriteService: SpriteService,
     private readonly petService: PetService,
     private readonly cursorService: CursorService,
-    //private readonly petIaService: PetIaService,
+    private readonly grabService: GrabService,
     private readonly gameLoopService: GameLoopService,
     private readonly particleService: ParticleService,
-    private readonly roomService: RoomService
+    private readonly roomService: RoomService,
   ) {
     this.rooms = this.roomService.getRooms();
   }
-
-  onCanvasClickDown(event: PointerEvent) {
-    this.petService.handlePressDown(event);
-    this.cursorService.setCanvasCursor('assets/cursor/cursor-grab.png');
-  }
-
-  onCanvasClickUp(event: PointerEvent) {
-    this.petService.handlePressUp(event);
-    this.cursorService.resetCanvasCursor();
-  }
-
+  
   @HostListener('window:resize')
   onResize() {
     // Algun dia esto funcionara
     this.spriteService.resizeCanvas();
     this.centerPet();
-  }
-
-  onMouseMove(event: PointerEvent) {
-    this.petService.handleMouseMove(event);
   }
 
   ngOnDestroy() {
@@ -107,6 +93,26 @@ export class PetView implements AfterViewInit, OnDestroy {
     // Centrar la mascota
     this.centerPet();
 
+    // Registrar eventos de puntero directamente en el canvas
+    this.canvas.addEventListener('pointerdown', (event: PointerEvent) => {
+      this.grabService.handlePressDown(event);
+      this.cursorService.setCanvasCursor('assets/cursor/cursor-grab.png');
+    });
+
+    this.canvas.addEventListener('pointermove', (event: PointerEvent) => {
+      this.grabService.handleMouseMove(event);
+    });
+
+    this.canvas.addEventListener('pointerup', (event: PointerEvent) => {
+      this.grabService.handlePressUp(event);
+      this.cursorService.resetCanvasCursor();
+    });
+
+    this.canvas.addEventListener('pointercancel', (event: PointerEvent) => {
+      this.grabService.handlePressUp(event);
+      this.cursorService.resetCanvasCursor();
+    });
+
     // iniciar loop al final
     this.gameLoopService.start();
     document.addEventListener('visibilitychange', this.onVisibilityChange);
@@ -118,10 +124,10 @@ export class PetView implements AfterViewInit, OnDestroy {
     const canvasHeight = this.canvas.height;
 
     this.petService.pet.sprite.x = Math.floor(
-      (canvasWidth - this.petService.pet.sprite.width * scale) / 2
+      (canvasWidth - this.petService.pet.sprite.width * scale) / 2,
     );
     this.petService.pet.sprite.y = Math.floor(
-      (canvasHeight - this.petService.pet.sprite.height * scale) / 2
+      (canvasHeight - this.petService.pet.sprite.height * scale) / 2,
     );
 
     console.log(
@@ -130,7 +136,7 @@ export class PetView implements AfterViewInit, OnDestroy {
       canvasHeight,
       'Pet:',
       this.petService.pet.sprite.x,
-      this.petService.pet.sprite.y
+      this.petService.pet.sprite.y,
     );
   }
 
