@@ -41,7 +41,7 @@ export class SpriteService {
     if (container.offsetWidth <= 500) {
       this.spriteScale = 3;
     }
-
+    
     this.ctx.imageSmoothingEnabled = false;
   }
 

@@ -76,6 +76,12 @@ export class DataService {
         grabOffsetX: 0,
         grabOffsetY: 0,
       },
+      collider: {
+        offsetX: 0,
+        offsetY: 0,
+        width: jsonPet.sprite.width,
+        height: jsonPet.sprite.width,
+      },
     };
 
     // Cargar animaciones
@@ -92,7 +98,7 @@ export class DataService {
     this.rooms = [...roomsJson.rooms];
 
     // cargar los objetos
-    const objTimeToLife = 5000;
+    const objTimeToLife = 50000;
     this.objects = objectsJson.map((element) => {
       const img = new Image();
       img.src = element.sprite.img;

@@ -110,7 +110,7 @@ export class PetService {
    */
   setState(state: PetState): void {
     if (this.pet.state === state) return;
-    console.log("Estado de la pet", this.pet.state)
+    //console.log("Estado de la pet", this.pet.state)
     this.pet.state = state;
   }
 

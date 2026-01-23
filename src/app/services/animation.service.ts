@@ -93,6 +93,5 @@ export class AnimationService {
 
       pet.sprite.animationSprite[anim.name] = animation;
     }
-    console.log(pet, 'La mascota');
   }
 }
