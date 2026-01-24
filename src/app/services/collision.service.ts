@@ -5,6 +5,8 @@ import { Sprite } from '../models/sprites/sprites.model';
 import { isPet } from '../guards/is-pet.guard';
 import { isInteractuableObject } from '../guards/is-interactuable-object.guard';
 import { Entity } from '../models/entity/entity.model';
+import { hasCollider } from '../guards/has-collider.guard';
+import { hasPhysics } from '../guards/has-physics.guard';
 @Injectable({ providedIn: 'root' })
 export class CollisionService {
   // Ahora considera la escala del sprite
@@ -81,7 +83,56 @@ export class CollisionService {
     }
 
     if (isInteractuableObject(a) && isInteractuableObject(b)) {
-      console.log('Objeto con objeto');
+      this.resolveObjectObject(a, b);
+    }
+  }
+
+  resolveObjectObject(a: Entity, b: Entity) {
+    const A = a.sprite;
+    const B = b.sprite;
+    if (!hasCollider(a) || !hasCollider(b) || !hasPhysics(a) || !hasPhysics(b)) return;
+    const cA = a.collider;
+    const cB = b.collider;
+
+    // Escala
+    const sA = A.scale ?? 1;
+    const sB = B.scale ?? 1;
+
+    // Tamaño y poscion del colider de a yb
+    const Ax = A.x + cA.offsetX * sA;
+    const Ay = A.y + cA.offsetY * sA;
+    const Aw = cA.width * sA;
+    const Ah = cA.height * sA;
+
+    const Bx = B.x + cB.offsetX * sB;
+    const By = B.y + cB.offsetY * sB;
+    const Bw = cB.width * sB;
+    const Bh = cB.height * sB;
+
+    // ver si coliciona de arrba o abajo
+    const overlapX = Math.min(Ax + Aw - Bx, Bx + Bw - Ax);
+    const overlapY = Math.min(Ay + Ah - By, By + Bh - Ay);
+
+    // empujar mediante el eje menor
+    if (overlapY < overlapX) {
+      // a cae sobre b
+      if (Ay < By) {
+        A.y -= overlapY;
+        a.physics.vy = 0;
+      }
+      // b cae sobre a
+      else {
+        B.y -= overlapY;
+        b.physics.vy = 0;
+      }
+    } else if (Ax < Bx) {
+      // empuje lateral izquierda
+      A.x -= overlapX / 2;
+      B.x += overlapX / 2;
+    } else {
+      // Empuje lateral derecha
+      A.x += overlapX / 2;
+      B.x -= overlapX / 2;
     }
   }
 }

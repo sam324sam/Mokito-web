@@ -30,6 +30,7 @@ export enum PetState {
   Grabbed = 'grabbed',
   Sleeping = 'sleeping',
   Reacting = 'reacting',
+  Eating = 'eating',
 }
 
 export enum PetCondition {

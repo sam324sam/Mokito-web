@@ -37,6 +37,11 @@ export class PetStateService {
       onEnter: (p, c) => this.enterReacting(p, c),
       onExit: (p, c) => this.exitReacting(p, c),
     },
+    [PetState.Eating]: {
+      onEnter: (p, c) => this.enterEating(p, c),
+      update: undefined,
+      onExit: undefined,
+    },
   };
   lastState: PetState = {} as PetState;
   // Para el reacting
@@ -120,7 +125,7 @@ export class PetStateService {
   private updateWalk(pet: Pet, delta: number, ctx: PetStateContext): void {
     ctx.runIaWalk(pet, delta);
   }
-  
+
   private enterWalk(pet: Pet, ctx: PetStateContext): void {
     ctx.setAnimation(ctx.getDirection());
   }
@@ -128,6 +133,9 @@ export class PetStateService {
   private exitWalk(pet: Pet, ctx: PetStateContext): void {
     ctx.clearDirection();
   }
+
+  // ========================= Comer
+  private enterEating(pet: Pet, ctx: PetStateContext) {}
 
   //============================ Dormir
   private enterSleeping(pet: Pet, ctx: PetStateContext): void {

@@ -5,33 +5,11 @@
     [style.borderImageSource]="'url(' + currentRoom().img + ')'"
   ></div>
 
-  <app-inventory-modal></app-inventory-modal>
-
-  <canvas
-    #canvas
-    id="pet-canvas"
-    tabindex="0"
-    class="w-full h-full z-30"
-  >
-  </canvas>
-
   <!-- Contenedor absoluto en la parte inferior -->
-  <div class="absolute bottom-0 left-0 right-0 flex flex-col items-center pb-4 pointer-events-none">
-    <!-- Boton con pointer-events habilitado -->
-    <button
-      (click)="toggleStats()"
-      class="rotate-180 bg-transparent border-none p-0 cursor-pointer mb-2 pointer-events-auto transition-transform hover:scale-110 active:scale-95 duration-200 opacity-40 hover:opacity-900"
-    >
-      <img
-        src="/Mokito-web/assets/icon/UI/console/arrow.png"
-        alt="boton-stats"
-        class="w-10 h-10 sm:w-20 sm:h-20 drop-shadow-lg clickable"
-      />
-    </button>
-
+  <div class="absolute top-0 left-0 right-0 flex flex-col items-center pb-4 pointer-events-none">
     <!-- Stats bar con animacion de entrada/salida -->
     <div
-      class="w-full max-w-sm px-4 pointer-events-auto transition-all duration-300 ease-in-out"
+      class="w-full max-w-sm pt-2 pb-2 px-4 pointer-events-auto transition-all duration-300 ease-in-out"
       [class.max-h-0]="!isOpenStats"
       [class.max-h-96]="isOpenStats"
       [class.opacity-0]="!isOpenStats"
@@ -43,5 +21,20 @@
     >
       <app-stats-bar></app-stats-bar>
     </div>
+    <!-- Boton con pointer-events habilitado -->
+    <button
+      (click)="toggleStats()"
+      class="bg-transparent border-none p-0 cursor-pointer mb-2 pointer-events-auto transition-transform hover:scale-110 active:scale-95 duration-200 opacity-40 hover:opacity-900"
+    >
+      <img
+        src="/Mokito-web/assets/icon/UI/console/arrow.png"
+        alt="boton-stats"
+        class="w-10 h-10 sm:w-20 sm:h-20 drop-shadow-lg clickable"
+      />
+    </button>
   </div>
+
+  <app-inventory-modal></app-inventory-modal>
+
+  <canvas #canvas id="pet-canvas" tabindex="0" class="w-full h-full z-30"> </canvas>
 </div>
