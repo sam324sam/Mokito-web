@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 
 import { Pet, PetCondition, PetState } from '../../../models/pet/pet.model';
 import { PetIaContext } from './pet-ia.context';
-import { CollisionService } from '../../collision.service';
 
 type Direction = 'left' | 'right' | 'up' | 'down';
 
@@ -22,8 +21,6 @@ export class PetIaService {
   // Control de decisiones de IA
   private lastDecisionTime = 0;
   private readonly decisionCooldown = 2500; // ms entre decisiones
-
-  constructor(private readonly collisionService: CollisionService) {}
 
   // ==================== Metodos publicos ====================
 
@@ -104,12 +101,12 @@ export class PetIaService {
 
     // Verificar colision antes de mover
     if (
-      this.collisionService.checkCollision(
+      this.checkCollision(
         pet.sprite.x + dx,
         pet.sprite.y + dy,
         pet.sprite.width,
         pet.sprite.height,
-        this.canvas
+        this.canvas,
       )
     ) {
       this.stop(ctx);
@@ -216,13 +213,27 @@ export class PetIaService {
       testY += dy;
 
       if (
-        this.collisionService.checkCollision(testX, testY, sprite.width, sprite.height, this.canvas)
+        this.checkCollision(testX, testY, sprite.width, sprite.height, this.canvas)
       ) {
         return false;
       }
     }
 
     return true;
+  }
+
+  checkCollision(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    canvas: HTMLCanvasElement,
+  ): boolean {
+    if (x < 0) return true; // izquierda
+    if (y < 0) return true; // arriba
+    if (x + width > canvas.width) return true; // derecha
+    if (y + height > canvas.height) return true; // abajo
+    return false; // no hay colision
   }
 
   /**

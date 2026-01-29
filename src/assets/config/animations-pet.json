@@ -44,6 +44,12 @@
       "baseUrl": "assets/pet/sleep/",
       "frames": 1,
       "animationType": "loop"
+    },
+    {
+      "name": "eat",
+      "baseUrl": "assets/pet/eat/",
+      "frames": 3,
+      "animationType": "once"
     }
   ]
 }

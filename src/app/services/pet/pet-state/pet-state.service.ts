@@ -39,13 +39,15 @@ export class PetStateService {
     },
     [PetState.Eating]: {
       onEnter: (p, c) => this.enterEating(p, c),
-      update: undefined,
-      onExit: undefined,
+      onExit: (p, c) => this.onExit(p, c),
     },
   };
   lastState: PetState = {} as PetState;
+  // Temporisadores
   // Para el reacting
   private reactingTimeout: any = null;
+  private eatTimeout: any = null;
+
   constructor(private readonly particleService: ParticleService) {}
 
   // ==================== Metodos publicos ====================
@@ -65,6 +67,15 @@ export class PetStateService {
     }
 
     this.stateHandlers[pet.state]?.update?.(pet, delta, ctx);
+  }
+
+  // ==================== Utilidades ====================
+
+  private clearTimer(timer: any): void {
+    if (timer) {
+      clearTimeout(timer);
+      timer = null;
+    }
   }
 
   // ==================== Metodos para los estados ====================
@@ -103,7 +114,7 @@ export class PetStateService {
 
     const durationMs = ctx.getAnimationDuration(sprite);
 
-    this.clearReactingTimeout();
+    this.clearTimer(this.reactingTimeout);
 
     this.reactingTimeout = setTimeout(() => {
       ctx.setState(PetState.Idle);
@@ -111,14 +122,7 @@ export class PetStateService {
   }
 
   private exitReacting(pet: Pet, ctx: PetStateContext): void {
-    this.clearReactingTimeout();
-  }
-
-  private clearReactingTimeout(): void {
-    if (this.reactingTimeout) {
-      clearTimeout(this.reactingTimeout);
-      this.reactingTimeout = null;
-    }
+    this.clearTimer(this.reactingTimeout);
   }
 
   // ======================== Caminar
@@ -135,7 +139,21 @@ export class PetStateService {
   }
 
   // ========================= Comer
-  private enterEating(pet: Pet, ctx: PetStateContext) {}
+  private enterEating(pet: Pet, ctx: PetStateContext) {
+    // limpiar timeout anterior
+    this.clearTimer(this.eatTimeout);
+
+    ctx.setAnimation('eat');
+    const durationMs = ctx.getAnimationDuration(pet.sprite);
+
+    this.eatTimeout = setTimeout(() => {
+      ctx.setState(PetState.Idle);
+    }, durationMs);
+  }
+
+  private onExit(pet: Pet, ctx: PetStateContext) {
+    this.clearTimer(this.eatTimeout);
+  }
 
   //============================ Dormir
   private enterSleeping(pet: Pet, ctx: PetStateContext): void {

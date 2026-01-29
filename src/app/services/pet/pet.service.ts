@@ -15,13 +15,13 @@ import { InteractableObjectsService } from '../interactable-objects/interactable
 
 // Pet Services
 import { PetStateService } from './pet-state/pet-state.service';
-import { PetStatService } from './pet-stat.service.ts/pet-stats.service';
+import { PetStatService } from './pet-stat/pet-stats.service';
 import { PetIaService } from './pet-ia/pet-ia.service';
 import { PetInputService } from './pet-input/pet-input.service';
 import { PetConditionService } from './pet-condition/pet-condition.service';
 
 // Contexts
-import { PetStatContext } from './pet-stat.service.ts/pet-stat.context';
+import { PetStatContext } from './pet-stat/pet-stat.context';
 import { PetIaContext } from './pet-ia/pet-ia.context';
 import { PetStateContext } from './pet-state/pet-state.context';
 import { PetInputContext } from './pet-input/pet-input.context';
@@ -112,6 +112,7 @@ export class PetService {
     if (this.pet.state === state) return;
     //console.log("Estado de la pet", this.pet.state)
     this.pet.state = state;
+    console.log(state);
   }
 
   /**
@@ -205,7 +206,7 @@ export class PetService {
    * Suma o resta valor a una stat especifica
    * Clampea el valor entre 0 y 100
    */
-  private sumMinusStat(name: string, value: number): void {
+  sumMinusStat(name: string, value: number): void {
     const stat = this.getStatPet(name);
     if (!stat) return;
 

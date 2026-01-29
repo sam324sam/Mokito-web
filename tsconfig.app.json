@@ -9,7 +9,7 @@
   },
   "include": [
     "src/**/*.ts"
-  ],
+, "src/app/services/pet/pet-stat"  ],
   "exclude": [
     "src/**/*.spec.ts"
   ]

@@ -1,15 +1,25 @@
 import { Injectable } from '@angular/core';
 // model
 import { Sprite } from '../models/sprites/sprites.model';
+import { Entity } from '../models/entity/entity.model';
 // Guards
 import { isPet } from '../guards/is-pet.guard';
 import { isInteractuableObject } from '../guards/is-interactuable-object.guard';
-import { Entity } from '../models/entity/entity.model';
 import { hasCollider } from '../guards/has-collider.guard';
 import { hasPhysics } from '../guards/has-physics.guard';
+// servicios
+import { PetObjectInteractionService } from './interactable-objects/pet-object-interaction.service';
 @Injectable({ providedIn: 'root' })
 export class CollisionService {
-  // Ahora considera la escala del sprite
+  constructor(private readonly petObjectInteractionService: PetObjectInteractionService) {}
+
+  /**
+   *
+   * @param sprite
+   * @param x
+   * @param y
+   * @returns
+   */
   isPointInsideSprite(sprite: Sprite, x: number, y: number): boolean {
     const sx = sprite.x;
     const sy = sprite.y;
@@ -30,20 +40,6 @@ export class CollisionService {
     });
 
     return isInside;
-  }
-
-  checkCollision(
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    canvas: HTMLCanvasElement,
-  ): boolean {
-    if (x < 0) return true; // izquierda
-    if (y < 0) return true; // arriba
-    if (x + width > canvas.width) return true; // derecha
-    if (y + height > canvas.height) return true; // abajo
-    return false; // no hay colision
   }
 
   areColliding(a: Entity, b: Entity): boolean {
@@ -73,12 +69,12 @@ export class CollisionService {
 
   resolve(a: Entity, b: Entity) {
     if (isPet(a) && isInteractuableObject(b)) {
-      console.log('pet con objeto');
+      this.petObjectInteractionService.onPetTouchObject(a, b);
       return;
     }
 
     if (isPet(b) && isInteractuableObject(a)) {
-      console.log('Objeto con pet');
+      this.petObjectInteractionService.onPetTouchObject(b, a);
       return;
     }
 

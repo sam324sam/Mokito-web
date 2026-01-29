@@ -19,7 +19,7 @@ export class RoomButton {
 
     this.buttonLocked = true;
 
-    // lógica del botón
+    // logica del botón
     if (room) {
       this.petService.executeRoomButton(room);
     }

@@ -7,19 +7,21 @@ import { PetService } from './pet/pet.service';
 @Injectable({ providedIn: 'root' })
 export class RoomService {
   private readonly rooms: Room[] = [];
-  
+
   private readonly roomIndex = signal(0);
 
+  constructor(
+    private readonly dataService: DataService,
+    private readonly petService: PetService,
+  ) {
+    this.rooms = this.dataService.getRooms();
+  }
   currentRoom = computed(() => {
     if (this.rooms.length === 0) {
       return { name: '', img: null, music: null };
     }
     return this.rooms[this.roomIndex()];
   });
-
-  constructor(private readonly dataService: DataService, private readonly petService: PetService) {
-    this.rooms = this.dataService.getRooms();
-  }
 
   getRooms(): Room[] {
     return this.rooms;
