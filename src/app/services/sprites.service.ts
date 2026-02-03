@@ -108,4 +108,8 @@ export class SpriteService {
   getCanvas() {
     return this.canvas;
   }
+
+  getScale(){
+    return this.spriteScale;
+  }
 }

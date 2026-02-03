@@ -43,10 +43,11 @@ export class PetStateService {
     },
     [PetState.Bathing]: {
       onEnter: (p, c) => this.enterBathing(p, c),
-      
+      update: (p, c) => this.updateBathing(p, c),
       onExit: (p, c) => this.exitBathing(p, c),
     },
   };
+  
   lastState: PetState = {} as PetState;
   // Temporisadores
   // Para el reacting
@@ -114,7 +115,7 @@ export class PetStateService {
     const centerX = sprite.x + (sprite.width * scale) / 2;
     const centerY = sprite.y + (sprite.height * scale) / 2;
 
-    this.particleService.emitExplosion(centerX, centerY, 10, 2, null);
+    this.particleService.emitExplosion(centerX, centerY, 15, 4, null);
 
     const durationMs = ctx.getAnimationDuration(sprite, 'tutsitutsi');
 
@@ -186,10 +187,14 @@ export class PetStateService {
   //============================ Bañandolo
   private enterBathing(pet: Pet, ctx: PetStateContext): void {
     ctx.setAnimation('idle');
+    this.particleService.emitSticky(pet.sprite.x, pet.sprite.y, 100, null, pet);
   }
   /**
-   * 
+   *
    */
+  private updateBathing(pet: Pet, d: number) {
+    //this.particleService.emitSticky(pet.sprite.x, pet.sprite.y, 100, null, pet);
+  }
 
   private exitBathing(pet: Pet, ctx: PetStateContext): void {
     ctx.setAnimation('idle');

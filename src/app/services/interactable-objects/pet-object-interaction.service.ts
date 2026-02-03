@@ -25,8 +25,8 @@ export class PetObjectInteractionService {
     }
   }
 
-  private petBathing(pet: Pet, food: InteractuableObjectRuntime) {
-    this.petService.setState(PetState.Eating);
+  private petBathing(pet: Pet, obj: InteractuableObjectRuntime) {
+    this.petService.setState(PetState.Bathing);
   }
 
   private petEat(pet: Pet, food: InteractuableObjectRuntime) {

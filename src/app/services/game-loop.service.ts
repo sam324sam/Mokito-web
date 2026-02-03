@@ -58,12 +58,11 @@ export class GameLoopService {
   }
 
   private update(delta: number) {
-    this.physicsService.update(delta);
-
     this.animationService.update(delta);
     this.petService.update(delta);
     this.interactableObjectsService.update(delta);
     this.particleService.update(delta);
+    this.physicsService.update(delta);
   }
 
   private render() {

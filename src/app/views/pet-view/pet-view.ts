@@ -84,7 +84,7 @@ export class PetView implements AfterViewInit, OnDestroy {
     this.canvas = document.getElementById('pet-canvas') as HTMLCanvasElement;
 
     this.spriteService.init(this.canvas);
-    this.particleService.init(this.canvas, this.spriteService.spriteScale);
+    this.particleService.init();
     this.canvas.width = this.canvas.offsetWidth;
     this.canvas.height = this.canvas.offsetHeight;
 

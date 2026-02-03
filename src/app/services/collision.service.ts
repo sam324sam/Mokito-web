@@ -9,6 +9,7 @@ import { hasCollider } from '../guards/has-collider.guard';
 import { hasPhysics } from '../guards/has-physics.guard';
 // servicios
 import { PetObjectInteractionService } from './interactable-objects/pet-object-interaction.service';
+import { isParticle } from '../guards/is-particle.guard';
 @Injectable({ providedIn: 'root' })
 export class CollisionService {
   constructor(private readonly petObjectInteractionService: PetObjectInteractionService) {}
@@ -78,15 +79,21 @@ export class CollisionService {
       return;
     }
 
-    if (isInteractuableObject(a) && isInteractuableObject(b)) {
+    if (
+      (isInteractuableObject(a) && isInteractuableObject(b)) ||
+      (isParticle(a) && isInteractuableObject(b))
+    ) {
       this.resolveObjectObject(a, b);
+      console.log('Colicionan', a, b);
     }
   }
 
   resolveObjectObject(a: Entity, b: Entity) {
     const A = a.sprite;
     const B = b.sprite;
-    if (!hasCollider(a) || !hasCollider(b) || !hasPhysics(a) || !hasPhysics(b)) return;
+    if (!hasCollider(a) || !hasCollider(b)) {
+      return;
+    }
     const cA = a.collider;
     const cB = b.collider;
 
@@ -111,15 +118,12 @@ export class CollisionService {
 
     // empujar mediante el eje menor
     if (overlapY < overlapX) {
-      // a cae sobre b
       if (Ay < By) {
         A.y -= overlapY;
-        a.physics.vy = 0;
-      }
-      // b cae sobre a
-      else {
+        if (hasPhysics(a)) a.physics.vy = 0;
+      } else {
         B.y -= overlapY;
-        b.physics.vy = 0;
+        if (hasPhysics(b)) b.physics.vy = 0;
       }
     } else if (Ax < Bx) {
       // empuje lateral izquierda

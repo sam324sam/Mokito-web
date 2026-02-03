@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { Particle } from '../models/particle/particle.model';
 import { EntityStoreService } from './entity-store.service';
 import { hasPhysics } from '../guards/has-physics.guard';
+import { Entity } from '../models/entity/entity.model';
+import { SpriteService } from './sprites.service';
 
 /**
  * Define la firma de un comportamiento de particula
@@ -12,9 +14,6 @@ type ParticleBehavior = (particle: Particle, deltaTime: number) => void;
 
 @Injectable({ providedIn: 'root' })
 export class ParticleService {
-  private canvas!: HTMLCanvasElement;
-  private ctx!: CanvasRenderingContext2D;
-
   /** Escala aplicada al tamano de las particulas */
   private scale: number = 1;
 
@@ -30,7 +29,7 @@ export class ParticleService {
    * Constructor del servicio
    * Inicializa la textura por defecto de las particulas
    */
-  constructor(private readonly entityStoreService: EntityStoreService) {
+  constructor(private readonly entityStoreService: EntityStoreService, private readonly spriteService: SpriteService) {
     const img = new Image();
     img.src = './assets/particle/default.png';
     this.defaultTexture = img;
@@ -40,21 +39,17 @@ export class ParticleService {
    * Inicializa el sistema de particulas
    * Asocia el canvas y configura el contexto grafico
    */
-  init(canvas: HTMLCanvasElement, scale: number) {
-    this.canvas = canvas;
-    this.scale = scale;
-    this.ctx = this.canvas.getContext('2d')!;
-    this.ctx.imageSmoothingEnabled = false;
+  init() {
+    this.scale = this.spriteService.getScale();
   }
 
   /**
    * Para el isertar particulas en la poscion asignada
-   * @param x
-   * @param y
    * @param amount Cantidad de particulas
-   * @param colors Colores que puede usar las particulas de forma random
+   * @param newParticle La particula a copiar
+   * @param randomVelocity Si se quiere que las particulas salgan con distintas velocidades
    */
-  emit(amount: number, newParticle: Particle) {
+  emit(amount: number, newParticle: Particle, randomVelocity = false) {
     if (!this.activeParticleSistem) {
       console.log('El sistema de particulas esta apagado');
       return;
@@ -69,9 +64,9 @@ export class ParticleService {
       };
 
       // Añadir variación aleatoria a la velocidad
-      if (hasPhysics(particle)) {
-        particle.physics.vx = (Math.random() - 0.5) * 1.5;
-        particle.physics.vy = (Math.random() - 0.5) * 1.5;
+      if (hasPhysics(particle) && randomVelocity) {
+        particle.physics.vx = (Math.random() - 0.5) * 100;
+        particle.physics.vy = (Math.random() - 0.5) * 50;
       }
 
       this.particles.push(particle);
@@ -120,17 +115,17 @@ export class ParticleService {
       physics: {
         vx: 0,
         vy: 0,
-        gravity: 980,
+        gravity: 100,
         enabled: true,
       },
       collider: {
-        offsetX: x,
-        offsetY: y,
-        width: 4,
-        height: 4,
+        offsetX: 0,
+        offsetY: 0,
+        width: 4 * this.scale,
+        height: 4 * this.scale,
       },
     };
-    this.emit(amount, newParticle);
+    this.emit(amount, newParticle, true);
   }
 
   /**
@@ -186,11 +181,61 @@ export class ParticleService {
       collider: {
         offsetX: 0,
         offsetY: 0,
-        width: 4,
-        height: 4,
+        width: 4 * this.scale,
+        height: 4 * this.scale,
       },
     };
     this.emit(amount, newParticle);
+  }
+
+  emitSticky(
+    x: number,
+    y: number,
+    timeToLife: number,
+    texture: HTMLImageElement | null,
+    entityTarget: Entity,
+  ) {
+    if (texture == null) {
+      texture = new Image();
+      texture.src = './assets/particle/drops.png';
+    }
+
+    let behaviors = [fadeBehavior, stickyBehavior];
+    let newParticle: Particle = {
+      id: 0,
+      active: true,
+      timeToLife: timeToLife,
+      maxTimeToLife: timeToLife,
+      behaviors,
+      sprite: {
+        x,
+        y,
+        img: texture,
+        width: 4,
+        height: 4,
+        scale: this.scale,
+        color: null,
+        animationSprite: {},
+        currentAnimation: '',
+        currentFrame: 0,
+        frameSpeed: 0,
+        frameCounter: 0,
+        timeoutId: null,
+        alpha: 100,
+      },
+      collider: {
+        offsetX: 0,
+        offsetY: 0,
+        width: 4 * this.scale,
+        height: 4 * this.scale,
+      },
+      stickyTarget: {
+        spriteTarget: entityTarget.sprite,
+        offsetX: 0,
+        offsetY: 0,
+      },
+    };
+    this.emit(1, newParticle);
   }
 
   /**
@@ -242,7 +287,12 @@ const fadeBehavior: ParticleBehavior = (p, delta) => {
 /**
  * Simula que la particula este pegada al sprite que le indiquen
  */
-const sticky: ParticleBehavior = (p, delta) => {};
+const stickyBehavior: ParticleBehavior = (p, delta) => {
+  if (!p.stickyTarget) return;
+
+  p.sprite.x = p.stickyTarget.spriteTarget.x + p.stickyTarget.offsetX;
+  p.sprite.y = p.stickyTarget.spriteTarget.y + p.stickyTarget.offsetY;
+};
 
 /**
  * Reduce progresivamente la velocidad de la particula
