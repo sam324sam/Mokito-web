@@ -9,6 +9,9 @@ import { PetService } from '../pet/pet.service';
 
 @Injectable({ providedIn: 'root' })
 export class PetObjectInteractionService {
+
+  private readonly TouchCooldown = 2500; // ms para no colicionar varias veces
+
   constructor(
     private readonly petService: PetService,
     private readonly interactableObjectsService: InteractableObjectsService,
@@ -17,7 +20,13 @@ export class PetObjectInteractionService {
   onPetTouchObject(pet: Pet, obj: InteractuableObjectRuntime) {
     if (obj.type === ObjectType.Food) {
       this.petEat(pet, obj);
+    }else if (obj.type == ObjectType.Bathroom) {
+      this.petBathing(pet,obj);
     }
+  }
+
+  private petBathing(pet: Pet, food: InteractuableObjectRuntime) {
+    this.petService.setState(PetState.Eating);
   }
 
   private petEat(pet: Pet, food: InteractuableObjectRuntime) {

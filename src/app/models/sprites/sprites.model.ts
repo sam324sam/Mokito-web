@@ -10,6 +10,7 @@ export interface Sprite {
   // imagen base opcional
   img: HTMLImageElement;
   color: Color | null;
+  alpha: number;
   animationSprite: Record<string, AnimationSprite>;
 
   // índice de animación

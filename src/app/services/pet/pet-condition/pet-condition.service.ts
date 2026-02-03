@@ -82,7 +82,7 @@ export class PetConditionService {
       const x = pet.sprite.x + Math.random() * width;
       const y = pet.sprite.y + Math.random() * height;
 
-      this.particleService.emitDroplets(x, y, 1, 120, null);
+      this.particleService.emitDroplets(x, y, 1, 2, null);
       this.energyCooldown = 1000;
     }
   };

@@ -14,7 +14,7 @@
       "animationType": "once"
     },
 
-    { "name": "grab", "baseUrl": "assets/pet/Grab/", "frames": 11, "animationType": "loop" },
+    { "name": "grab", "baseUrl": "assets/pet/grab/", "frames": 11, "animationType": "loop" },
     { "name": "right", "baseUrl": "assets/pet/Right/", "frames": 12, "animationType": "once" },
     { "name": "left", "baseUrl": "assets/pet/Left/", "frames": 12, "animationType": "once" },
     { "name": "up", "baseUrl": "assets/pet/Up/", "frames": 12, "animationType": "once" },
@@ -48,7 +48,7 @@
     {
       "name": "eat",
       "baseUrl": "assets/pet/eat/",
-      "frames": 3,
+      "frames": 6,
       "animationType": "once"
     }
   ]

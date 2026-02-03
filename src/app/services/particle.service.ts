@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 // Modelos
 import { Particle } from '../models/particle/particle.model';
+import { EntityStoreService } from './entity-store.service';
+import { hasPhysics } from '../guards/has-physics.guard';
 
 /**
  * Define la firma de un comportamiento de particula
@@ -28,7 +30,7 @@ export class ParticleService {
    * Constructor del servicio
    * Inicializa la textura por defecto de las particulas
    */
-  constructor() {
+  constructor(private readonly entityStoreService: EntityStoreService) {
     const img = new Image();
     img.src = './assets/particle/default.png';
     this.defaultTexture = img;
@@ -52,114 +54,169 @@ export class ParticleService {
    * @param amount Cantidad de particulas
    * @param colors Colores que puede usar las particulas de forma random
    */
-  emit(
-    x: number,
-    y: number,
-    amount: number,
-    timeToLife: number,
-    texture: HTMLImageElement | null,
-    behaviors: ParticleBehavior[]
-  ) {
+  emit(amount: number, newParticle: Particle) {
     if (!this.activeParticleSistem) {
       console.log('El sistema de particulas esta apagado');
       return;
     }
     for (let i = 0; i < amount; i++) {
+      // Clonar la partícula para que cada una sea independiente
+      const particle: Particle = {
+        ...newParticle,
+        physics: newParticle.physics ? { ...newParticle.physics } : undefined,
+        sprite: { ...newParticle.sprite },
+        collider: newParticle.collider ? { ...newParticle.collider } : undefined,
+      };
 
-      this.particles.push({
-        x,
-        y,
-        vx: (Math.random() - 0.5) * 1.5,
-        vy: (Math.random() - 0.5) * 1.5,
-        timeToLife: timeToLife,
-        maxTimeToLife: timeToLife,
-        size: 1 * this.scale,
-        behaviors,
-        img: texture || this.defaultTexture,
-      });
+      // Añadir variación aleatoria a la velocidad
+      if (hasPhysics(particle)) {
+        particle.physics.vx = (Math.random() - 0.5) * 1.5;
+        particle.physics.vy = (Math.random() - 0.5) * 1.5;
+      }
+
+      this.particles.push(particle);
+      this.entityStoreService.addEntity(particle);
     }
   }
 
   /**
-   * Emite un conjunto de particulas con comportamiento de explosion
+   *Emite un conjunto de particulas con comportamiento de explosion
    * Usa gravedad y desvanecimiento progresivo
+   * @param x
+   * @param y
+   * @param amount Cantidad de particulas
+   * @param timeToLife Tiempo de vida en segundos
    */
   emitExplosion(
     x: number,
     y: number,
     amount: number,
     timeToLife: number,
-    texture: HTMLImageElement | null
+    texture: HTMLImageElement | null,
   ) {
-    this.emit(x, y, amount, timeToLife, texture, [gravityBehavior, fadeBehavior]);
+    let behaviors = [fadeBehavior];
+    let newParticle: Particle = {
+      id: 0,
+      active: true,
+      timeToLife: timeToLife,
+      maxTimeToLife: timeToLife,
+      behaviors,
+      sprite: {
+        x,
+        y,
+        img: texture || this.defaultTexture,
+        width: 4,
+        height: 4,
+        scale: this.scale,
+        color: null,
+        animationSprite: {},
+        currentAnimation: '',
+        currentFrame: 0,
+        frameSpeed: 0,
+        frameCounter: 0,
+        timeoutId: null,
+        alpha: 100,
+      },
+      physics: {
+        vx: 0,
+        vy: 0,
+        gravity: 980,
+        enabled: true,
+      },
+      collider: {
+        offsetX: x,
+        offsetY: y,
+        width: 4,
+        height: 4,
+      },
+    };
+    this.emit(amount, newParticle);
   }
 
   /**
    * Emite particulas con comportamiento de gotas
    * Simula caida y desaceleracion progresiva
+   * @param x
+   * @param y
+   * @param amount Cantidad de particulas
+   * @param timeToLife Tiempo de vida en segundos
+   *
    */
   emitDroplets(
     x: number,
     y: number,
     amount: number,
     timeToLife: number,
-    texture: HTMLImageElement | null
+    texture: HTMLImageElement | null,
   ) {
     if (texture == null) {
       texture = new Image();
       texture.src = './assets/particle/drops.png';
     }
-    this.emit(x, y, amount, timeToLife, texture, [
-      gravityBehavior,
-      slowDownBehavior,
-      fadeBehavior,
-      sweatBehavior,
-    ]);
+
+    let behaviors = [fadeBehavior, slowDownBehavior];
+    let newParticle: Particle = {
+      id: 0,
+      active: true,
+      timeToLife: timeToLife,
+      maxTimeToLife: timeToLife,
+      behaviors,
+      sprite: {
+        x,
+        y,
+        img: texture,
+        width: 4,
+        height: 4,
+        scale: this.scale,
+        color: null,
+        animationSprite: {},
+        currentAnimation: '',
+        currentFrame: 0,
+        frameSpeed: 0,
+        frameCounter: 0,
+        timeoutId: null,
+        alpha: 100,
+      },
+      physics: {
+        vx: 0,
+        vy: 0,
+        gravity: 100,
+        enabled: true,
+      },
+      collider: {
+        offsetX: 0,
+        offsetY: 0,
+        width: 4,
+        height: 4,
+      },
+    };
+    this.emit(amount, newParticle);
   }
 
   /**
    * Se encarga de mover y el tiempo de vida de las particulas
+   * Ahora solo maneja behaviors y timeToLife
+   * El movimiento lo maneja PhysicsService
    */
   update(delta: number) {
     for (let i = this.particles.length - 1; i >= 0; i--) {
       const p = this.particles[i];
 
-      // aceleracion por la gravedad
+      // Aplicar behaviors (fade, slowdown, etc.)
       if (p.behaviors) {
         for (const behavior of p.behaviors) {
           behavior(p, delta);
         }
       }
 
-      p.x += p.vx;
-      p.y += p.vy;
-
+      // Remover partículas muertas
       if (p.timeToLife <= 0) {
         this.particles.splice(i, 1);
+        this.entityStoreService.removeEntity(p.id);
       }
     }
   }
 
-  /**
-   * Dibujar el array de particulas
-   * Aplica transparencia segun el tiempo de vida restante
-   */
-  render() {
-    if (this.activeParticleSistem) {
-      for (const p of this.particles) {
-        this.ctx.save();
-
-        const alpha = p.timeToLife / p.maxTimeToLife;
-        this.ctx.globalAlpha = alpha;
-
-        if (p.img) {
-          this.ctx.drawImage(p.img, p.x, p.y, p.size * this.scale, p.size * this.scale);
-        }
-
-        this.ctx.restore();
-      }
-    }
-  }
   stop() {
     this.activeParticleSistem = false;
   }
@@ -170,39 +227,29 @@ export class ParticleService {
 
 // Comportamientos
 /**
- * Aplica aceleracion vertical simulando gravedad
- */
-const gravityBehavior: ParticleBehavior = (p, delta) => {
-  const dt = delta / 1000;
-  p.vy += 0.8 * dt;
-};
-
-/**
  * Comportamiento de desvanecimiento
  * No modifica la particula directamente
  */
 const fadeBehavior: ParticleBehavior = (p, delta) => {
   const dt = delta / 1000;
-  p.timeToLife -= dt * 60;
+
+  p.timeToLife -= dt;
+  if (p.timeToLife < 0) p.timeToLife = 0;
+
+  p.sprite.alpha = (p.timeToLife / p.maxTimeToLife) * 100;
 };
 
 /**
- * Simula sudor o liquido ligero
- * Reduce la velocidad horizontal y aumenta la vertical
+ * Simula que la particula este pegada al sprite que le indiquen
  */
-const sweatBehavior: ParticleBehavior = (p, delta) => {
-  const dt = delta / 1000;
-
-  p.vx *= Math.pow(0.98, dt * 60);
-  p.vy += 0.6 * dt;
-};
+const sticky: ParticleBehavior = (p, delta) => {};
 
 /**
  * Reduce progresivamente la velocidad de la particula
  */
 const slowDownBehavior: ParticleBehavior = (p, delta) => {
+  if (!hasPhysics(p)) return;
   const dt = delta / 1000;
-
-  p.vx *= Math.pow(0.95, dt * 60);
-  p.vy *= Math.pow(0.95, dt * 60);
+  p.physics.vx *= Math.pow(0.95, dt * 60);
+  p.physics.vy *= Math.pow(0.95, dt * 60);
 };

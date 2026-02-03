@@ -6,8 +6,7 @@
       "music": "",
       "buttonRoom": {
         "name": "Inventario",
-        "img": "assets/ui/buttons/inventory.png",
-        "buttonBehavior": "openInventory"
+        "buttonBehavior": "openInventoryFood"
       }
     },
     {
@@ -16,7 +15,6 @@
       "music": "",
       "buttonRoom": {
         "name": "Dormir",
-        "img": "assets/ui/buttons/sleep.png",
         "buttonBehavior": "sleep"
       }
     },
@@ -26,8 +24,7 @@
       "music": "",
       "buttonRoom": {
         "name": "Higiene",
-        "img": "assets/ui/buttons/brush.png",
-        "buttonBehavior": "brushTeeth"
+        "buttonBehavior": "openInventoryBathroom"
       }
     },
     {
@@ -36,7 +33,6 @@
       "music": "",
       "buttonRoom": {
         "name": "Regar",
-        "img": "assets/ui/buttons/water.png",
         "buttonBehavior": "waterPlants"
       }
     }

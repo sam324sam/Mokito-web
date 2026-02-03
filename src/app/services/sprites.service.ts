@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Sprite } from '../models/sprites/sprites.model';
 // Servicios
 import { AnimationService } from './animation.service';
-import { EntityStoreService } from './entity-store.service';  
+import { EntityStoreService } from './entity-store.service';
 
 @Injectable({ providedIn: 'root' })
 export class SpriteService {
@@ -15,7 +15,10 @@ export class SpriteService {
   private readonly BASE_HEIGHT = 200;
   spriteScale = 6;
 
-  constructor(private readonly animationService: AnimationService, private readonly entityStoreService:EntityStoreService) {}
+  constructor(
+    private readonly animationService: AnimationService,
+    private readonly entityStoreService: EntityStoreService,
+  ) {}
 
   init(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -41,7 +44,7 @@ export class SpriteService {
     if (container.offsetWidth <= 500) {
       this.spriteScale = 3;
     }
-    
+
     this.ctx.imageSmoothingEnabled = false;
   }
 
@@ -60,14 +63,16 @@ export class SpriteService {
       this.ctx.save();
       this.limitToCanvas(sprite);
       this.ctx.imageSmoothingEnabled = false;
-
+      this.ctx.globalAlpha = sprite.alpha / 100;
       this.ctx.drawImage(
         frame,
         sprite.x,
         sprite.y,
         sprite.width * this.spriteScale,
-        sprite.height * this.spriteScale
+        sprite.height * this.spriteScale,
       );
+
+      
 
       if (sprite.color) {
         this.ctx.globalCompositeOperation = 'source-atop';
@@ -76,7 +81,7 @@ export class SpriteService {
           sprite.x,
           sprite.y,
           sprite.width * this.spriteScale,
-          sprite.height * this.spriteScale
+          sprite.height * this.spriteScale,
         );
       }
 

@@ -233,7 +233,7 @@ export class PetService {
     setState: (state) => this.setState(state),
     getStat: (name) => this.getStatPet(name),
     setAnimation: (name) => this.setAnimation(name),
-    getAnimationDuration: (sprite) => this.animationService.getAnimationDuration(sprite), 
+    getAnimationDuration: (sprite, name) => this.animationService.getAnimationDuration(sprite, name), 
     getDirection: () => this.petIaService.getDirection(),
     clearDirection: () => this.petIaService.clearDirection(),
     sumMinusStat: (name, value) => this.sumMinusStat(name, value),
@@ -266,8 +266,8 @@ export class PetService {
    * Provee metodos para movimiento, animaciones y stats de la IA
    */
   private readonly petIaContext: PetIaContext = {
-    getAnimationDuration: (dir) =>
-      this.animationService.getAnimationDurationFrames(this.pet.sprite, dir),
+    getAnimationDuration: (sprite, name) =>
+      this.animationService.getAnimationDuration(sprite, name),
     move: (dx, dy) => {
       if (!this.pet.cheats.noMoreMove) {
         this.pet.sprite.x += dx;
@@ -303,14 +303,14 @@ export class PetService {
 
   // ====================== Metodos para el input service e inventario
   private readonly buttonBehaviors: Record<string, () => void> = {
-    openInventory: () => {
+    openInventoryFood: () => {
       this.toggleInventory(ObjectType.Food);
     },
     sleep: () => {
       this.petInputService.sleep(this.pet, this.petInputContext);
     },
-    brushTeeth: () => {
-      console.log('Cepillando dientes');
+    openInventoryBathroom: () => {
+      this.toggleInventory(ObjectType.Bathroom);
     },
     waterPlants: () => {
       console.log('Regando plantas');

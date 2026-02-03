@@ -2,7 +2,7 @@ import { Pet, PetState, Stats} from '../../../models/pet/pet.model';
 import { Sprite } from '../../../models/sprites/sprites.model';
 
 export interface PetStateContext {
-  getAnimationDuration(sprite: Sprite): number;
+  getAnimationDuration(sprite: Sprite, name: string): number;
   setState(state: PetState): void;
   getStat(name: string): Stats | null;
   setStatActive(name: string, active: boolean): void;

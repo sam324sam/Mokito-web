@@ -69,6 +69,7 @@ export class DataService {
         animationSprite: {},
         frameCounter: 0,
         timeoutId: null,
+        alpha: 100
       },
       // runtime components
       grab: {
@@ -113,6 +114,7 @@ export class DataService {
           animationSprite: {},
           frameCounter: 0,
           timeoutId: null,
+          alpha: 100,
         },
         timeToLife: objTimeToLife,
         active: true,

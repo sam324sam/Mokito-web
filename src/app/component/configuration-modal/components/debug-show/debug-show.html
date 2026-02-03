@@ -1,0 +1,32 @@
+<div
+  class="overflow-hidden transition-all duration-300 ease-in-out mb-2"
+  [class.max-h-0]="!isDebugSectionOpen"
+  [class.opacity-0]="!isDebugSectionOpen"
+  [class.opacity-100]="isDebugSectionOpen"
+>
+  <div class="mt-3 p-4 bg-slate-700/50 rounded-lg pixel-box-s text-left space-y-2">
+    @for (entity of entityDebug; track entity.id) {
+      <div class="p-2 bg-slate-800/60 rounded border border-slate-600">
+        <div><strong>ID:</strong> {{ entity.id }}</div>
+        <div><strong>Active:</strong> {{ entity.active }}</div>
+
+        <!-- sprite -->
+        <div class="mt-1 relative group inline-block">
+          <strong class="cursor-help underline">Sprite</strong>
+
+          <div class="ml-3 text-sm">
+            <div><strong>X:</strong> {{ entity.sprite.x }}</div>
+            <div><strong>Y:</strong> {{ entity.sprite.y }}</div>
+            <div><strong>Width:</strong> {{ entity.sprite.width }}</div>
+            <div><strong>Height:</strong> {{ entity.sprite.height }}</div>
+            <div><strong>Imagen:</strong> {{ entity.sprite.img.src }}</div>
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (entityDebug.length === 0) {
+      <div class="text-slate-300 text-sm">No hay entities registradas</div>
+    }
+  </div>
+</div>

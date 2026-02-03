@@ -36,6 +36,8 @@ export class InventoryModal {
 
   generateObject(obj: InteractuableObject) {
     this.interactableObjectsService.addInteractuableObject(obj);
+    this.petService.toggleInventory();
+    
   }
 
   closeInventory() {

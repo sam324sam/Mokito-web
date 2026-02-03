@@ -5,12 +5,13 @@ import { ColorSelector } from './components/color-selector/color-selector';
 import { DataConfig } from './components/data-config/data-config';
 import { Cheats } from './components/cheats/cheats';
 import { UserUiConfig } from "./components/user-ui-config/user-ui-config";
+import { DebugShow } from "./components/debug-show/debug-show";
 
 @Component({
   selector: 'app-configuration-modal',
   templateUrl: './configuration-modal.html',
   styleUrl: './configuration-modal.scss',
-  imports: [ColorSelector, DataConfig, Cheats, UserUiConfig],
+  imports: [ColorSelector, DataConfig, Cheats, UserUiConfig, DebugShow],
 })
 export class ConfigurationModal {
   @Input() isOpenConfiguration: boolean = false;
@@ -21,6 +22,7 @@ export class ConfigurationModal {
   isCheatsSectionOpen = false;
   isSaveSectionOpen = false;
   isUserUiSectionOpen = false;
+  isDebugSectionOpen = false;
 
   toggleColorSection() {
     this.isColorSectionOpen = !this.isColorSectionOpen;
@@ -36,6 +38,10 @@ export class ConfigurationModal {
 
   toggleUserUiSection(){
     this.isUserUiSectionOpen = !this.isUserUiSectionOpen;
+  }
+
+  togleDebugSection(){
+    this.isDebugSectionOpen = !this.isDebugSectionOpen;
   }
 
   close() {

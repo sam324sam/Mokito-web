@@ -39,7 +39,12 @@ export class PetStateService {
     },
     [PetState.Eating]: {
       onEnter: (p, c) => this.enterEating(p, c),
-      onExit: (p, c) => this.onExit(p, c),
+      onExit: (p, c) => this.exitEating(p, c),
+    },
+    [PetState.Bathing]: {
+      onEnter: (p, c) => this.enterBathing(p, c),
+      
+      onExit: (p, c) => this.exitBathing(p, c),
     },
   };
   lastState: PetState = {} as PetState;
@@ -61,7 +66,6 @@ export class PetStateService {
       if (this.lastState !== null) {
         this.stateHandlers[this.lastState]?.onExit?.(pet, ctx);
       }
-
       this.stateHandlers[pet.state]?.onEnter?.(pet, ctx);
       this.lastState = pet.state;
     }
@@ -110,9 +114,9 @@ export class PetStateService {
     const centerX = sprite.x + (sprite.width * scale) / 2;
     const centerY = sprite.y + (sprite.height * scale) / 2;
 
-    this.particleService.emitExplosion(centerX, centerY, 10, 150, null);
+    this.particleService.emitExplosion(centerX, centerY, 10, 2, null);
 
-    const durationMs = ctx.getAnimationDuration(sprite);
+    const durationMs = ctx.getAnimationDuration(sprite, 'tutsitutsi');
 
     this.clearTimer(this.reactingTimeout);
 
@@ -141,17 +145,16 @@ export class PetStateService {
   // ========================= Comer
   private enterEating(pet: Pet, ctx: PetStateContext) {
     // limpiar timeout anterior
-    this.clearTimer(this.eatTimeout);
 
     ctx.setAnimation('eat');
-    const durationMs = ctx.getAnimationDuration(pet.sprite);
-
+    const durationMs = ctx.getAnimationDuration(pet.sprite, 'eat');
+    this.clearTimer(this.eatTimeout);
     this.eatTimeout = setTimeout(() => {
       ctx.setState(PetState.Idle);
     }, durationMs);
   }
 
-  private onExit(pet: Pet, ctx: PetStateContext) {
+  private exitEating(pet: Pet, ctx: PetStateContext) {
     this.clearTimer(this.eatTimeout);
   }
 
@@ -179,5 +182,16 @@ export class PetStateService {
   private exitSleeping(pet: Pet, ctx: PetStateContext): void {
     ctx.setAnimation('idle');
     ctx.setStatActive('energy', false);
+  }
+  //============================ Bañandolo
+  private enterBathing(pet: Pet, ctx: PetStateContext): void {
+    ctx.setAnimation('idle');
+  }
+  /**
+   * 
+   */
+
+  private exitBathing(pet: Pet, ctx: PetStateContext): void {
+    ctx.setAnimation('idle');
   }
 }

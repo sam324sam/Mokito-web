@@ -54,10 +54,15 @@ export class AnimationService {
   /**
    * Duracion de la animacion en milisegundos
    */
-  getAnimationDuration(sprite: Sprite): number {
-    const frames = sprite.animationSprite[sprite.currentAnimation].frameImg.length;
-    // total de ticks
-    return frames * sprite.frameSpeed;
+  getAnimationDuration(sprite: Sprite, animationName: string): number {
+    const anim = sprite.animationSprite[animationName];
+    if (!anim) return 0;
+
+    if (anim.animationType === 'loop') {
+      return Infinity;
+    }
+
+    return anim.frameImg.length * sprite.frameSpeed;
   }
 
   /**

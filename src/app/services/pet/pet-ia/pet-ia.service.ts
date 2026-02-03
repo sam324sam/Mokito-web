@@ -153,7 +153,7 @@ export class PetIaService {
 
     // Buscar primera direccion valida sin colisiones
     for (const dir of shuffledDirections) {
-      const animDurationMs = ctx.getAnimationDuration(dir);
+      const animDurationMs = ctx.getAnimationDuration(pet.sprite, dir);
       const framesInAnimation = animDurationMs / 16.67;
 
       this.targetDistance = Math.floor(framesInAnimation * this.speed);
@@ -212,9 +212,7 @@ export class PetIaService {
       testX += dx;
       testY += dy;
 
-      if (
-        this.checkCollision(testX, testY, sprite.width, sprite.height, this.canvas)
-      ) {
+      if (this.checkCollision(testX, testY, sprite.width, sprite.height, this.canvas)) {
         return false;
       }
     }

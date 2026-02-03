@@ -68,6 +68,5 @@ export class GameLoopService {
 
   private render() {
     this.spriteService.render();
-    this.particleService.render();
   }
 }
