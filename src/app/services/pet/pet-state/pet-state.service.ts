@@ -47,7 +47,7 @@ export class PetStateService {
       onExit: (p, c) => this.exitBathing(p, c),
     },
   };
-  
+
   lastState: PetState = {} as PetState;
   // Temporisadores
   // Para el reacting
@@ -115,7 +115,7 @@ export class PetStateService {
     const centerX = sprite.x + (sprite.width * scale) / 2;
     const centerY = sprite.y + (sprite.height * scale) / 2;
 
-    this.particleService.emitExplosion(centerX, centerY, 15, 4, null);
+    this.particleService.emitExplosion(centerX, centerY, 15, 2, null);
 
     const durationMs = ctx.getAnimationDuration(sprite, 'tutsitutsi');
 

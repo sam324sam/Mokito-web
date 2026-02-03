@@ -78,20 +78,13 @@ export class CollisionService {
       this.petObjectInteractionService.onPetTouchObject(b, a);
       return;
     }
-
-    if (
-      (isInteractuableObject(a) && isInteractuableObject(b)) ||
-      (isParticle(a) && isInteractuableObject(b))
-    ) {
-      this.resolveObjectObject(a, b);
-      console.log('Colicionan', a, b);
-    }
+    this.resolveCollisionBetweenEntities(a, b);
   }
 
-  resolveObjectObject(a: Entity, b: Entity) {
+  resolveCollisionBetweenEntities(a: Entity, b: Entity) {
     const A = a.sprite;
     const B = b.sprite;
-    if (!hasCollider(a) || !hasCollider(b)) {
+    if (!hasCollider(a) || !hasCollider(b) || !hasPhysics(a) || !hasPhysics(b)) {
       return;
     }
     const cA = a.collider;
@@ -117,22 +110,28 @@ export class CollisionService {
     const overlapY = Math.min(Ay + Ah - By, By + Bh - Ay);
 
     // empujar mediante el eje menor
+    const restitution = 0.5;
+
+    // Eje Y
     if (overlapY < overlapX) {
       if (Ay < By) {
         A.y -= overlapY;
-        if (hasPhysics(a)) a.physics.vy = 0;
+        a.physics.vy = -a.physics.vy * restitution;
       } else {
         B.y -= overlapY;
-        if (hasPhysics(b)) b.physics.vy = 0;
+        b.physics.vy = -b.physics.vy * restitution;
       }
     } else if (Ax < Bx) {
-      // empuje lateral izquierda
+      // Eje X
       A.x -= overlapX / 2;
       B.x += overlapX / 2;
+      a.physics.vx = -a.physics.vx * restitution;
+      b.physics.vx = -b.physics.vx * restitution;
     } else {
-      // Empuje lateral derecha
       A.x += overlapX / 2;
       B.x -= overlapX / 2;
+      a.physics.vx = -a.physics.vx * restitution;
+      b.physics.vx = -b.physics.vx * restitution;
     }
   }
 }

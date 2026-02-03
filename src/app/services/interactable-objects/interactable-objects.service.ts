@@ -44,7 +44,7 @@ export class InteractableObjectsService {
     // clonar objeto base
     const objCopy: InteractuableObject = {
       ...obj,
-      sprite: { ...obj.sprite }, // clonar sprite también
+      sprite: { ...obj.sprite }, // clonar sprite tambien
     };
 
     // crear runtime

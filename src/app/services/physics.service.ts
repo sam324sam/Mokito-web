@@ -112,6 +112,7 @@ export class PhysicsService {
     if (e.sprite.y + e.collider.height * e.sprite.scale > FLOOR_Y) {
       e.sprite.y = FLOOR_Y - e.collider.height * e.sprite.scale;
       e.physics.vy = 0;
+      e.physics.vx *= 0.9;
     }
 
     // Paredes
@@ -125,10 +126,6 @@ export class PhysicsService {
     for (let j = i; j < entities.length; j++) {
       const b = entities[j];
       if (a === b || !hasCollider(b)) continue;
-
-      // Ignorar colisiones con partículas (las partículas no colisionan con otras entidades)
-      if (this.isParticle(b)) continue;
-
       if (this.collisionService.areColliding(a, b)) {
         this.collisionService.resolve(a, b);
       }

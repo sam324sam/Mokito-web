@@ -4,6 +4,7 @@ import { Sprite } from '../models/sprites/sprites.model';
 // Servicios
 import { AnimationService } from './animation.service';
 import { EntityStoreService } from './entity-store.service';
+import { hasCollider } from '../guards/has-collider.guard';
 
 @Injectable({ providedIn: 'root' })
 export class SpriteService {
@@ -14,6 +15,7 @@ export class SpriteService {
   private readonly BASE_WIDTH = 200;
   private readonly BASE_HEIGHT = 200;
   spriteScale = 6;
+  debugColliders: boolean = false;
 
   constructor(
     private readonly animationService: AnimationService,
@@ -25,7 +27,7 @@ export class SpriteService {
     this.ctx = canvas.getContext('2d')!;
     this.ctx.imageSmoothingEnabled = false;
 
-    // Tamaño lógico fijo
+    // Tamaño logico fijo
     this.canvas.width = this.BASE_WIDTH;
     this.canvas.height = this.BASE_HEIGHT;
 
@@ -72,8 +74,6 @@ export class SpriteService {
         sprite.height * this.spriteScale,
       );
 
-      
-
       if (sprite.color) {
         this.ctx.globalCompositeOperation = 'source-atop';
         this.ctx.fillStyle = sprite.color.color;
@@ -87,6 +87,36 @@ export class SpriteService {
 
       this.ctx.restore();
     }
+    // Dibujar colliders solo si esta activado
+    if (this.debugColliders) {
+      this.renderColliders();
+    }
+  }
+  /**
+   * Renderiza los colliders de todas las entidades para depuracion
+   */
+  private renderColliders() {
+    if (!this.ctx) return;
+
+    const entities = this.entityStoreService.getAllEntities();
+    this.ctx.save();
+    this.ctx.strokeStyle = 'red';
+    this.ctx.lineWidth = 1;
+
+    for (const e of entities) {
+      if (!hasCollider(e)) continue;
+
+      const c = e.collider;
+      const s = e.sprite.scale ?? 1;
+      const x = e.sprite.x + c.offsetX * s;
+      const y = e.sprite.y + c.offsetY * s;
+      const w = c.width * s;
+      const h = c.height * s;
+
+      this.ctx.strokeRect(x, y, w, h);
+    }
+
+    this.ctx.restore();
   }
 
   limitToCanvas(sprite: Sprite) {
@@ -109,7 +139,7 @@ export class SpriteService {
     return this.canvas;
   }
 
-  getScale(){
+  getScale() {
     return this.spriteScale;
   }
 }

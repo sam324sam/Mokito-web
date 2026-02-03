@@ -65,8 +65,8 @@ export class ParticleService {
 
       // Añadir variación aleatoria a la velocidad
       if (hasPhysics(particle) && randomVelocity) {
-        particle.physics.vx = (Math.random() - 0.5) * 100;
-        particle.physics.vy = (Math.random() - 0.5) * 50;
+        particle.physics.vx = (Math.random() - 0.5) * 250;
+        particle.physics.vy = -(Math.random() - 0.5) * 250;
       }
 
       this.particles.push(particle);
@@ -121,8 +121,8 @@ export class ParticleService {
       collider: {
         offsetX: 0,
         offsetY: 0,
-        width: 4 * this.scale,
-        height: 4 * this.scale,
+        width: 4,
+        height: 4,
       },
     };
     this.emit(amount, newParticle, true);
@@ -181,8 +181,8 @@ export class ParticleService {
       collider: {
         offsetX: 0,
         offsetY: 0,
-        width: 4 * this.scale,
-        height: 4 * this.scale,
+        width: 4,
+        height: 4,
       },
     };
     this.emit(amount, newParticle);
@@ -226,8 +226,8 @@ export class ParticleService {
       collider: {
         offsetX: 0,
         offsetY: 0,
-        width: 4 * this.scale,
-        height: 4 * this.scale,
+        width: 4,
+        height: 4,
       },
       stickyTarget: {
         spriteTarget: entityTarget.sprite,
