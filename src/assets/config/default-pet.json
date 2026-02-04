@@ -2,6 +2,7 @@
   "id": 0,
   "sprite": {
     "id": null,
+    "img": "assets/pet/pet.png",
     "colorIndex": 0,
     "x": 0,
     "y": 0,

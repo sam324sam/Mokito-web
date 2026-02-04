@@ -57,6 +57,10 @@ export class DataService {
       ? (rawState as PetState)
       : PetState.Idle;
 
+    // Imagen default
+    let imgDefault = new Image();
+    imgDefault.src = jsonPet.sprite.img;
+
     this.petRuntime = {
       ...jsonPet,
       state: petState,
@@ -65,11 +69,11 @@ export class DataService {
       sprite: {
         ...jsonPet.sprite,
         color: this.colors[jsonPet.sprite.colorIndex],
-        img: new Image(),
+        img: imgDefault,
         animationSprite: {},
         frameCounter: 0,
         timeoutId: null,
-        alpha: 100
+        alpha: 100,
       },
       // runtime components
       grab: {

@@ -66,13 +66,15 @@ export class SpriteService {
       this.limitToCanvas(sprite);
       this.ctx.imageSmoothingEnabled = false;
       this.ctx.globalAlpha = sprite.alpha / 100;
-      this.ctx.drawImage(
-        frame,
-        sprite.x,
-        sprite.y,
-        sprite.width * this.spriteScale,
-        sprite.height * this.spriteScale,
-      );
+      if (frame) {
+        this.ctx.drawImage(
+          frame,
+          sprite.x,
+          sprite.y,
+          sprite.width * this.spriteScale,
+          sprite.height * this.spriteScale,
+        );
+      }
 
       if (sprite.color) {
         this.ctx.globalCompositeOperation = 'source-atop';
