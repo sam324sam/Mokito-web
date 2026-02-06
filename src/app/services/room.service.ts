@@ -32,13 +32,17 @@ export class RoomService {
   }
 
   changeRoom(delta: number): void {
-    const newIndex = this.roomIndex() + delta;
+    const total = this.rooms.length;
+    if (total === 0) return;
 
-    if (newIndex < 0 || newIndex >= this.rooms.length) {
-      return;
+    let newIndex = this.roomIndex() + delta;
+
+    if (newIndex < 0) {
+      newIndex = total - 1;
+    } else if (newIndex >= total) {
+      newIndex = 0;
     }
 
-    // Actualizar el signal
     this.roomIndex.set(newIndex);
   }
 }

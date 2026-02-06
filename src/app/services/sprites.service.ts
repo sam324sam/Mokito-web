@@ -42,9 +42,16 @@ export class SpriteService {
     const container = this.canvas.parentElement;
     if (!container) return;
 
-    console.log('resolucion', container.offsetWidth);
-    if (container.offsetWidth <= 500) {
+    const w = container.offsetWidth;
+
+    if (w <= 360) {
+      this.spriteScale = 2;
+    } else if (w <= 500) {
       this.spriteScale = 3;
+    } else if (w <= 768) {
+      this.spriteScale = 4;
+    } else {
+      this.spriteScale = 5;
     }
 
     this.ctx.imageSmoothingEnabled = false;
@@ -66,7 +73,16 @@ export class SpriteService {
       this.limitToCanvas(sprite);
       this.ctx.imageSmoothingEnabled = false;
       this.ctx.globalAlpha = sprite.alpha / 100;
-      if (frame) {
+      if (
+        frame instanceof HTMLImageElement &&
+        frame.complete &&
+        frame.naturalWidth > 0 &&
+        frame.naturalHeight > 0 &&
+        Number.isFinite(sprite.x) &&
+        Number.isFinite(sprite.y) &&
+        Number.isFinite(sprite.width) &&
+        Number.isFinite(sprite.height)
+      ) {
         this.ctx.drawImage(
           frame,
           sprite.x,

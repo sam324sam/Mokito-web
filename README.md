@@ -1,59 +1,118 @@
-# TamagotchiWeb
+# 🐾 Mokito-Web
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.2.1.
+![Angular](https://img.shields.io/badge/Angular-%23DD0031?style=flat-square&logo=angular)
+![TypeScript](https://img.shields.io/badge/TypeScript-%23007ACC?style=flat-square&logo=typescript)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-%2338B2AC?style=flat-square&logo=tailwindcss)
 
-## Development server
+Mokito-Web es un juego de mascotas virtuales (Tamagotchi) desarrollado con Angular y TailwindCSS. ¡Cuida de tu adorable mascota virtual Mokito en diferentes habitaciones de la casa!.
 
-To start a local development server, run:
+Aun la aplicacion esta en fase muy temprana y aun faltan por implementar muchas funciones puedes probarlo [aquí](https://sam324sam.github.io/Mokito-web/)
 
-```bash
-ng serve
-```
+<img src="githubAssest/app-view.gif" alt="Presentacion de mokito"></img>
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## ✨ Características
 
-## Code scaffolding
+- **🐶 Mascota Virtual Interactiva** - Mokito responde a tus interacciones con animaciones y comportamientos únicos
+- **🏠 Multiple Habitaciones** - Explora el baño, dormitorio, salón y jardín
+- **📊 Sistema de Estadísticas** - Administra el hambre, felicidad, higiene y energía de tu mascota
+- **🎨 Personalización** - Cambia los colores de la interfaz y configura la experiencia a tu gusto
+- **🎮 Modo Cheats** - Experimenta con opciones de depuración y
+- **📦 Sistema de Inventario** - Usa objetos para cuidar de Mokito
+- **⚡ Sistema de Física** - Implementación propia de física para interacciones realistas
+- **🎨 Sprites Animados** - Sprites personalizados con animaciones suaves
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+## 🚀 Instalación
 
 ```bash
-ng build
+# Clonar el repositorio
+git clone https://github.com/tu-usuario/Mokito-web.git
+
+# Entrar al directorio
+cd Mokito-web
+
+# Instalar dependencias
+npm install
+
+# Iniciar el servidor de desarrollo
+ng serve --host 0.0.0.0
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## 🏗️ Arquitectura del Proyecto
 
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
+```
+src/
+├── app/
+│   ├── component/           # Componentes reutilizables
+│   │   ├── configuration-modal/    # Configuración del juego
+│   │   ├── header/                 # Cabecera con estadísticas
+│   │   ├── inventory-modal/        # Inventario de objetos
+│   │   ├── room-button/            # Botones de navegación
+│   │   └── stats-bar/              # Barra de estadísticas
+│   ├── guards/              # Guards de Angular
+│   ├── models/              # Modelos de datos
+│   │   ├── entity/          # Entidades del juego
+│   │   ├── object/          # Objetos interactuables
+│   │   ├── particle/        # Sistema de partículas
+│   │   ├── pet/              # Modelo de la mascota
+│   │   ├── room/            # Modelo de habitaciones
+│   │   └── sprites/         # Modelos de sprites y animaciones
+│   ├── services/            # Servicios del juego
+│   │   ├── animation/       # Servicio de animaciones
+│   │   ├── collision/       # Detección de colisiones
+│   │   ├── cursor/          # Gestión del cursor
+│   │   ├── data/            # Persistencia de datos
+│   │   ├── entity-store/    # Almacén de entidades
+│   │   ├── game-loop/       # Bucle principal del juego
+│   │   ├── grab/            # Sistema de arrastre
+│   │   ├── particle/        # Efectos de partículas
+│   │   ├── physics/         # Motor de física
+│   │   ├── room/            # Gestión de habitaciones
+│   │   └── sprites/         # Carga de sprites
+│   └── views/               # Vistas principales
+│       └── pet-view/        # Vista principal de la mascota
+├── public/                  # Assets estáticos
+└── styles/                  # Estilos globales
 ```
 
-## Running end-to-end tests
+## 🎮 Cómo Jugar
 
-For end-to-end (e2e) testing, run:
+1. **Navega entre habitaciones** usando los botones inferiores
+2. **Observa las estadísticas** de Mokito en la cabecera
+3. **Usa el inventario** para darle comida, juguetes y más
+4. **Configura** la apariencia a tu gusto en el menú de configuración
+5. ¡Asegúrate de que Mokito esté siempre feliz, limpio y bien alimentado!
 
-```bash
-ng e2e
-```
+## 🧩 Tecnologías
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+- **Framework**: Angular 21+
+- **Estilos**: TailwindCSS 4.x + SCSS
+- **Lenguaje**: TypeScript
+- **Despliegue**: GitHub Pages
 
-## Additional Resources
+## Programas usados
+- **Libresprite**: Para las animaciones y dibujos en pixelart.
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+## 📝 Licencia
+
+Este proyecto está bajo la Licencia MIT.
+
+## 🤝 Contribuciones
+
+Las contribuciones son bienvenidas. Por favor, abre un issue o envía un pull request.
+
+---
+
+## Autor
+
+<table>
+  <tr>
+    </td>
+      <td align="center">
+      <a href="https://github.com/sam324sam">
+        <img src="https://github.com/sam324sam.png" width="100px;" alt="Samuel Moniz Pereira"/><br />
+        <sub><b>Samuel Moniz Pereira</b></sub>
+      </a><br />
+    </td>
+  </tr>
+</table>

@@ -3,16 +3,19 @@
   <div class="console-body w-[85%] h-[90dvh] z-1">
     <!-- Dentro de la consola -->
     <div class="console-frame sm:flex w-full h-full gap-2 p-4">
-      <app-header class="sm:w-[20%] w-full"></app-header>
+      <div>
+        <app-header class="sm:w-[20%] w-full"></app-header>
+        <app-room-button class="sm:block hidden"></app-room-button>
+      </div>
       <!-- contenido de la pet o del inicio -->
       <div class="flex flex-1 flex-col justify-center gap-3">
         <div
-          class="console-screen flex sm:w-full sm:h-full w-[90%] h-[65dvh] ml-auto mr-auto sm:ml-0 sm:mr-0"
+          class="console-screen flex sm:w-full sm:h-full w-full h-[65dvh] ml-auto mr-auto sm:ml-0 sm:mr-0"
         >
           <app-pet-view class="w-full h-full"></app-pet-view>
         </div>
-        
       </div>
+      <app-room-button class="sm:hidden mt-4 w-full"></app-room-button>
     </div>
   </div>
 </div>

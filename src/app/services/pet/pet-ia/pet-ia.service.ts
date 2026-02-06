@@ -120,7 +120,7 @@ export class PetIaService {
     // Verificar si completo la distancia objetivo
     if (this.movedDistance >= this.targetDistance) {
       this.stop(ctx);
-      ctx.sumMinusStat('energy', -3);
+      ctx.sumMinusStat('energy', -2);
     }
   }
 

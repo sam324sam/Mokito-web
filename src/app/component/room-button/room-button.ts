@@ -1,7 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { Room } from '../../models/room/room.model';
 // servicios
 import { PetService } from '../../services/pet/pet.service';
+import { RoomService } from '../../services/room.service';
 
 @Component({
   selector: 'app-room-button',
@@ -10,9 +11,18 @@ import { PetService } from '../../services/pet/pet.service';
   styleUrl: './room-button.scss',
 })
 export class RoomButton {
-  constructor(private readonly petService: PetService) {}
-  @Input() room: Room = {} as Room;
+  constructor(
+    private readonly petService: PetService,
+    private readonly roomService: RoomService,
+  ) {
+    this.rooms = this.roomService.getRooms();
+  }
   buttonLocked = false;
+
+  rooms: Room[] = [];
+  currentIndex = computed(() => this.roomService.getCurrentIndex());
+  // Computed para obtener la room actual del array
+  currentRoom = computed(() => this.rooms[this.currentIndex()]);
 
   onRoomButtonClick(room: Room): void {
     if (this.buttonLocked) return;
@@ -28,5 +38,9 @@ export class RoomButton {
     setTimeout(() => {
       this.buttonLocked = false;
     }, 500);
+  }
+
+  roomChange(delta: number) {
+    this.roomService.changeRoom(delta);
   }
 }

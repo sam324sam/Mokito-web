@@ -1,38 +1,10 @@
 <header
-  class="text-[black] py-2 px-6 flex justify-between items-center cursor-auto sm:flex sm:flex-col gap-10"
+  class="text-[black] py-2 px-6 flex justify-between items-center cursor-auto sm:flex sm:flex-col gap-2"
 >
   <h1 class="sm:text-xl text-sm font-semibold select-none text-center console-name">
     Mokito <br />
     web
   </h1>
-
-  @if (rooms) {
-  <span class="flex sm:flex-col gap-3 items-center justify-center">
-    <button
-      (click)="roomChange(1)"
-      class="sm:rotate-180 rotate-90 bg-transparent border-none p-0 cursor-pointer mb-2 pointer-events-auto transition-transform hover:scale-110 active:scale-95 duration-200 opacity-40 hover:opacity-900"
-    >
-      <img
-        src="/Mokito-web/assets/icon/UI/console/arrow.png"
-        alt="boton-stats"
-        class="w-10 h-10 sm:w-20 sm:h-20 drop-shadow-lg clickable"
-      />
-    </button>
-    {{ currentRoom().name }}
-    <button
-      (click)="roomChange(-1)"
-      class="sm:rotate-0 -rotate-90 bg-transparent border-none p-0 cursor-pointer mb-2 pointer-events-auto transition-transform hover:scale-110 active:scale-95 duration-200 opacity-40 hover:opacity-900"
-    >
-      <img
-        src="/Mokito-web/assets/icon/UI/console/arrow.png"
-        alt="boton-stats"
-        class="w-10 h-10 sm:w-20 sm:h-20 drop-shadow-lg clickable"
-      /></button
-  ></span>
-    <app-room-button [room]="currentRoom()"></app-room-button>
-}
-
-
   <nav class="flex gap-4 items-center">
     <a
       href="#"

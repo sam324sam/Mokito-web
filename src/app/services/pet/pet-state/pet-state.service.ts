@@ -170,7 +170,7 @@ export class PetStateService {
    */
   private updateSleeping(pet: Pet, delta: number, ctx: PetStateContext): void {
     const stat = ctx.getStat('energy');
-    ctx.sumMinusStat('energy', 0.005);
+    ctx.sumMinusStat('energy', 0.05);
 
     if (stat !== null) {
       const energy = stat.porcent;
@@ -188,15 +188,15 @@ export class PetStateService {
   private enterBathing(pet: Pet, ctx: PetStateContext): void {
     ctx.setAnimation('idle');
     this.particleService.emitSticky(pet.sprite.x, pet.sprite.y, 100, null, pet);
+    ctx.setState(PetState.Idle);
   }
   /**
    *
    */
   private updateBathing(pet: Pet, d: number) {
-    //this.particleService.emitSticky(pet.sprite.x, pet.sprite.y, 100, null, pet);
   }
 
   private exitBathing(pet: Pet, ctx: PetStateContext): void {
-    ctx.setAnimation('idle');
+
   }
 }
