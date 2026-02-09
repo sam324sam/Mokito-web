@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { InteractuableObject } from '../../models/object/interactuable-object.model';
+import { InteractuableObject, ObjectType } from '../../models/object/interactuable-object.model';
 import { InteractuableObjectRuntime } from '../../models/object/Interactuable-object-runtime.model';
 
 // Servicio
 import { DataService } from '../data.service';
 import { EntityStoreService } from '../entity-store.service';
+import { isInteractuableObject } from '../../guards/is-interactuable-object.guard';
 @Injectable({
   providedIn: 'root',
 })
@@ -44,7 +45,8 @@ export class InteractableObjectsService {
     // clonar objeto base
     const objCopy: InteractuableObject = {
       ...obj,
-      sprite: { ...obj.sprite }, // clonar sprite tambien
+      sprite: { ...obj.sprite },
+      id: null, // Resetear ID para que se genere uno nuevo
     };
 
     // crear runtime
@@ -72,13 +74,35 @@ export class InteractableObjectsService {
       isTouchingPet: false,
     };
 
+    this.spawnLocation(runtimeObj);
+
     this.entityStoreService.addEntity(runtimeObj);
     this.activeObjects.push(runtimeObj);
+  }
+
+  spawnLocation(runtimeObj: InteractuableObjectRuntime) {
+    const entities = this.entityStoreService.getAllEntities();
+
+    if (runtimeObj.type !== ObjectType.Food) return;
+
+    const table = entities.filter(isInteractuableObject).find((e) => e.name === 'Mesa');
+    if (!table) return;
+
+    runtimeObj.sprite.x = table.sprite.x + table.sprite.width / 2 - runtimeObj.sprite.width / 2;
+
+    runtimeObj.sprite.y = table.sprite.y - table.sprite.height;
   }
 
   deleteInteractuableObject(obj: InteractuableObject) {
     this.entityStoreService.removeEntity(obj.id);
     if (obj.id == null) return;
     this.activeObjects = this.activeObjects.filter((activeObj) => activeObj.id !== obj.id);
+  }
+
+  deleteAllInteractuableObjects() {
+    for (const element of this.activeObjects) {
+      this.entityStoreService.removeEntity(element.id);
+    }
+    this.activeObjects = [];
   }
 }

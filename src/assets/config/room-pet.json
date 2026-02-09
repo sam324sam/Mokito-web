@@ -2,39 +2,85 @@
   "rooms": [
     {
       "name": "sala",
-      "img": "assets/background/living-room.png",
+      "img": "assets/room/background/living-room.png",
       "music": "",
       "buttonRoom": {
         "name": "Inventario",
         "buttonBehavior": "openInventoryFood"
-      }
+      },
+      "objects": [
+        {
+          "name": "Mesa",
+          "type": "room",
+          "sprite": {
+            "id": null,
+            "x": 0,
+            "y": 1000,
+            "width": 64,
+            "height": 64,
+            "scale": 1,
+            "currentAnimation": "idle",
+            "currentFrame": 0,
+            "frameSpeed": 100,
+            "color": "#000000",
+            "img": "assets/room/objects/table.png",
+            "animationSprite": {},
+            "frameCounter": 0,
+            "timeoutId": null
+          }
+        },
+        {
+          "name": "Silla",
+          "type": "room",
+          "sprite": {
+            "id": null,
+            "x": 1000,
+            "y": 1000,
+            "width": 36,
+            "height": 33,
+            "scale": 1,
+            "currentAnimation": "idle",
+            "currentFrame": 0,
+            "frameSpeed": 100,
+            "color": "#000000",
+            "img": "assets/room/objects/chair.png",
+            "animationSprite": {},
+            "frameCounter": 0,
+            "timeoutId": null
+          }
+        }
+      
+      ]
     },
     {
       "name": "dormitorio",
-      "img": "assets/background/dormitory.png",
+      "img": "assets/room/background/dormitory.png",
       "music": "",
       "buttonRoom": {
         "name": "Dormir",
         "buttonBehavior": "sleep"
-      }
+      },
+      "objects": []
     },
     {
       "name": "baño",
-      "img": "assets/background/bathroom.png",
+      "img": "assets/room/background/bathroom.png",
       "music": "",
       "buttonRoom": {
         "name": "Higiene",
         "buttonBehavior": "openInventoryBathroom"
-      }
+      },
+      "objects": []
     },
     {
       "name": "jardin",
-      "img": "assets/background/garden.png",
+      "img": "assets/room/background/garden.png",
       "music": "",
       "buttonRoom": {
         "name": "Regar",
         "buttonBehavior": "waterPlants"
-      }
+      },
+      "objects": []
     }
   ]
 }

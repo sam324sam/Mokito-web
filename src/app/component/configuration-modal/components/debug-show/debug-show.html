@@ -19,7 +19,13 @@
             <div><strong>Y:</strong> {{ entity.sprite.y }}</div>
             <div><strong>Width:</strong> {{ entity.sprite.width }}</div>
             <div><strong>Height:</strong> {{ entity.sprite.height }}</div>
-            <div><strong>Imagen:</strong> {{ entity.sprite.img.src }}</div>
+            <div class="mt-2">
+              <img
+                [src]="entity.sprite.img.src"
+                alt="sprite"
+                class="w-16 h-16 image-rendering-pixelated border border-slate-600 bg-slate-900"
+              />
+            </div>
           </div>
         </div>
       </div>

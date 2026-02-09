@@ -100,7 +100,35 @@ export class DataService {
     this.animationsCache[jsonPet.id] = animations;
 
     // cargar room
-    this.rooms = [...roomsJson.rooms];
+    this.rooms = roomsJson.rooms.map((room) => {
+      const objects: Record<string, InteractuableObject> = {};
+
+      for (const object of room.objects) {
+        const spriteImage = new Image();
+        spriteImage.src = object.sprite.img;
+
+        objects[object.name] = {
+          id: null,
+          name: object.name,
+          type: object.type as ObjectType,
+          active: true,
+          timeToLife: 1,
+          sprite: {
+            ...object.sprite,
+            color: null,
+            img: spriteImage,
+            animationSprite: {},
+            frameCounter: 0,
+            timeoutId: null,
+            alpha: 100,
+          },
+        };
+      }
+      return {
+        ...room,
+        objects,
+      };
+    });
 
     // cargar los objetos
     const objTimeToLife = 50000;
@@ -109,6 +137,7 @@ export class DataService {
       img.src = element.sprite.img;
 
       return {
+        id: null,
         ...element,
         type: element.type as ObjectType,
         sprite: {

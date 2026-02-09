@@ -2,7 +2,6 @@ import { Entity } from "../entity/entity.model";
 import { Sprite } from "../sprites/sprites.model";
 
 export interface InteractuableObject extends Entity{
-  id: number;
   name: string;
   sprite: Sprite;
   type: ObjectType;
@@ -12,5 +11,6 @@ export interface InteractuableObject extends Entity{
 export enum ObjectType {
   Food = 'food',
   Bathroom = 'bathroom',
-  Default = 'default'
+  Default = 'default',
+  Room = 'room'
 }

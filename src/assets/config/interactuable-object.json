@@ -1,6 +1,5 @@
 [
   {
-    "id": 0,
     "name": "Fresa",
     "type": "food",
     "sprite": {
@@ -21,7 +20,6 @@
     }
   },
   {
-    "id": 1,
     "name": "Hamburguesa",
     "type": "food",
     "sprite": {
@@ -42,7 +40,6 @@
     }
   },
   {
-    "id": 2,
     "name": "Paloimtas",
     "type": "food",
     "sprite": {
@@ -63,7 +60,6 @@
     }
   },
   {
-    "id": 3,
     "name": "Leche",
     "type": "food",
     "sprite": {
@@ -84,7 +80,6 @@
     }
   },
   {
-    "id": 4,
     "name": "Jabon",
     "type": "bathroom",
     "sprite": {

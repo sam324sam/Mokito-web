@@ -23,7 +23,8 @@ export class EntityStoreService {
     return Object.values(this.entities);
   }
 
-  removeEntity(id: number) {
+  removeEntity(id: number | null) {
+    if (id == null) return;
     delete this.entities[id];
   }
 }

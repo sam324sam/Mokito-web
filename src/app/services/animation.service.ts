@@ -24,7 +24,7 @@ export class AnimationService {
 
       // frameSpeed también debe estar en ms por frame
       if (entitie.sprite.frameCounter >= entitie.sprite.frameSpeed) {
-        entitie.sprite.frameCounter -= entitie.sprite.frameSpeed; // no =0 para no perder exceso
+        entitie.sprite.frameCounter -= entitie.sprite.frameSpeed;
         entitie.sprite.currentFrame++;
 
         const totalFrames = anim.frameImg.length;

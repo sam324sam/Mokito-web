@@ -9,7 +9,6 @@ import { hasCollider } from '../guards/has-collider.guard';
 import { hasPhysics } from '../guards/has-physics.guard';
 // servicios
 import { PetObjectInteractionService } from './interactable-objects/pet-object-interaction.service';
-import { isParticle } from '../guards/is-particle.guard';
 @Injectable({ providedIn: 'root' })
 export class CollisionService {
   constructor(private readonly petObjectInteractionService: PetObjectInteractionService) {}

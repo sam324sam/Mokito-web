@@ -48,7 +48,7 @@
     {
       "name": "eat",
       "baseUrl": "assets/pet/eat/",
-      "frames": 6,
+      "frames": 18,
       "animationType": "once"
     }
   ]

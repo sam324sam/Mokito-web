@@ -1,7 +1,7 @@
 import { Sprite } from "../sprites/sprites.model";
 
 export interface Entity {
-  id: number;
+  id: number | null;
   sprite: Sprite;
   active: boolean;
 }
