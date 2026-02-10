@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { PetService } from './pet/pet.service';
 import { SpriteService } from './sprites.service';
 import { AnimationService } from './animation.service';
-import { ParticleService } from './particle.service';
+import { ParticleService } from './particle/particle.service';
 import { PhysicsService } from './physics.service';
 import { InteractableObjectsService } from './interactable-objects/interactable-objects.service';
 

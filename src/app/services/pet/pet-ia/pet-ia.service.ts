@@ -239,27 +239,23 @@ export class PetIaService {
    * Retorna valor entre 0 y 1 (mayor = mas probable que se mueva)
    */
   private decisionMove(pet: Pet, ctx: PetIaContext): number {
-    let probability = 0.6; // valor base neutro
+    let probability = 0.5; // valor base neutro
 
     // Energia
 
     if (pet.conditions.has(PetCondition.Energetic)) {
-      probability += 0.2;
+      probability += 0.1;
     }
 
     if (pet.conditions.has(PetCondition.Tired)) {
-      probability -= 0.25;
+      probability -= 0.3;
     }
 
     if (pet.conditions.has(PetCondition.Exhausted)) {
-      probability -= 0.4;
+      probability -= 0.5;
     }
 
     // Estado emocional
-
-    if (pet.conditions.has(PetCondition.Happy)) {
-      probability += 0.15;
-    }
 
     if (pet.conditions.has(PetCondition.Sad)) {
       probability -= 0.15;
@@ -269,7 +265,7 @@ export class PetIaService {
       probability -= 0.3;
     }
 
-    return Math.min(Math.max(probability, 0), 1);
+    return probability;
   }
 
   /**

@@ -17,7 +17,8 @@
       "animationSprite": {},
       "frameCounter": 0,
       "timeoutId": null
-    }
+    },
+    "nameBehaviors": [""]
   },
   {
     "name": "Hamburguesa",
@@ -37,7 +38,8 @@
       "animationSprite": {},
       "frameCounter": 0,
       "timeoutId": null
-    }
+    },
+    "nameBehaviors": [""]
   },
   {
     "name": "Paloimtas",
@@ -57,7 +59,8 @@
       "animationSprite": {},
       "frameCounter": 0,
       "timeoutId": null
-    }
+    },
+    "nameBehaviors": [""]
   },
   {
     "name": "Leche",
@@ -77,7 +80,8 @@
       "animationSprite": {},
       "frameCounter": 0,
       "timeoutId": null
-    }
+    },
+    "nameBehaviors": [""]
   },
   {
     "name": "Jabon",
@@ -97,6 +101,28 @@
       "animationSprite": {},
       "frameCounter": 0,
       "timeoutId": null
-    }
+    },
+    "nameBehaviors": [""]
+  },
+  {
+    "name": "Ducha",
+    "type": "bathroom",
+    "sprite": {
+      "id": null,
+      "x": 0,
+      "y": 0,
+      "width": 16,
+      "height": 16,
+      "scale": 1,
+      "currentAnimation": "idle",
+      "currentFrame": 0,
+      "frameSpeed": 100,
+      "color": "...",
+      "img": "./assets/objects/shower.png",
+      "animationSprite": {},
+      "frameCounter": 0,
+      "timeoutId": null
+    },
+    "nameBehaviors": ["dropWater"]
   }
 ]

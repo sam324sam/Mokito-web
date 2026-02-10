@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Pet, PetState } from '../../../models/pet/pet.model';
 import { PetStateContext } from './pet-state.context';
-import { ParticleService } from '../../particle.service';
+import { ParticleService } from '../../particle/particle.service';
 
 type PetStateHandler = {
   onEnter?: (pet: Pet, ctx: PetStateContext) => void;
@@ -53,6 +53,7 @@ export class PetStateService {
   // Para el reacting
   private reactingTimeout: any = null;
   private eatTimeout: any = null;
+  private batingTimeout: any = null;
 
   constructor(private readonly particleService: ParticleService) {}
 
@@ -187,16 +188,31 @@ export class PetStateService {
   //============================ Bañandolo
   private enterBathing(pet: Pet, ctx: PetStateContext): void {
     ctx.setAnimation('idle');
-    this.particleService.emitSticky(pet.sprite.x, pet.sprite.y, 100, null, pet);
-    ctx.setState(PetState.Idle);
+
+    const halfW = (pet.sprite.width * pet.sprite.scale) / 2;
+    const halfH = (pet.sprite.height * pet.sprite.scale) / 2;
+
+    const number = Math.floor(Math.random() * 3) + 1;
+    const textureName = 'bubles' + number;
+
+    const x = pet.sprite.x + Math.random() * (halfW * 2);
+    const y = pet.sprite.y + Math.random() * (halfH * 2);
+
+    const offsetX = x - pet.sprite.x;
+    const offsetY = y - pet.sprite.y;
+
+    this.particleService.emitSticky(offsetX, offsetY, 100, textureName, pet);
+    this.batingTimeout = setTimeout(() => {
+      ctx.setState(PetState.Idle);
+    }, 400);
   }
+
   /**
    *
    */
-  private updateBathing(pet: Pet, d: number) {
-  }
+  private updateBathing(pet: Pet, d: number) {}
 
   private exitBathing(pet: Pet, ctx: PetStateContext): void {
-
+    this.clearTimer(this.batingTimeout)
   }
 }

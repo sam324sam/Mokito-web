@@ -6,6 +6,10 @@ import { InteractuableObjectRuntime } from '../../models/object/Interactuable-ob
 import { DataService } from '../data.service';
 import { EntityStoreService } from '../entity-store.service';
 import { isInteractuableObject } from '../../guards/is-interactuable-object.guard';
+import { ParticleService } from '../particle/particle.service';
+import { hasGrab } from '../../guards/has-grab.guard';
+
+type ObjectBehaviors = (p: InteractuableObject, delta: number) => void;
 @Injectable({
   providedIn: 'root',
 })
@@ -13,9 +17,15 @@ export class InteractableObjectsService {
   objects: InteractuableObject[] = [];
   activeObjects: InteractuableObjectRuntime[] = [];
 
+  // Mapa de behaviors disponibles
+  behaviorMap: Record<string, ObjectBehaviors> = {
+    dropWater: this.dropWater.bind(this),
+  };
+
   constructor(
     private readonly dataService: DataService,
     private readonly entityStoreService: EntityStoreService,
+    private readonly particleService: ParticleService,
   ) {
     this.objects = this.dataService.getObjects();
     console.log(this.objects);
@@ -23,6 +33,12 @@ export class InteractableObjectsService {
 
   update(delta: number) {
     for (const obj of this.activeObjects) {
+      // Aplicar behaviors (fade, slowdown, etc.)
+      if (obj.behaviors) {
+        for (const behavior of obj.behaviors) {
+          behavior(obj, delta);
+        }
+      }
       if (obj.grab?.isGrabbed) continue;
 
       obj.timeToLife = Math.max(0, obj.timeToLife - delta);
@@ -49,6 +65,13 @@ export class InteractableObjectsService {
       id: null, // Resetear ID para que se genere uno nuevo
     };
 
+    const behaviors: ObjectBehaviors[] = [];
+    for (const element of obj.nameBehaviors) {
+      if (element) {
+        behaviors.push(this.behaviorMap[element]);
+      }
+    }
+
     // crear runtime
     const runtimeObj: InteractuableObjectRuntime = {
       ...objCopy,
@@ -64,13 +87,14 @@ export class InteractableObjectsService {
         offsetY: 0,
         width: objCopy.sprite.width * objCopy.sprite.scale,
         height: objCopy.sprite.height * objCopy.sprite.scale,
+        tags: ['object']
       },
       grab: {
         isGrabbed: false,
         grabOffsetX: 0,
         grabOffsetY: 0,
       },
-
+      behaviors: behaviors,
       isTouchingPet: false,
     };
 
@@ -83,14 +107,14 @@ export class InteractableObjectsService {
   spawnLocation(runtimeObj: InteractuableObjectRuntime) {
     const entities = this.entityStoreService.getAllEntities();
 
-    if (runtimeObj.type !== ObjectType.Food) return;
+    if (runtimeObj.type == ObjectType.Food) {
+      const table = entities.filter(isInteractuableObject).find((e) => e.name === 'Mesa');
+      if (!table) return;
 
-    const table = entities.filter(isInteractuableObject).find((e) => e.name === 'Mesa');
-    if (!table) return;
+      runtimeObj.sprite.x = table.sprite.x + table.sprite.width / 2 - runtimeObj.sprite.width / 2;
 
-    runtimeObj.sprite.x = table.sprite.x + table.sprite.width / 2 - runtimeObj.sprite.width / 2;
-
-    runtimeObj.sprite.y = table.sprite.y - table.sprite.height;
+      runtimeObj.sprite.y = table.sprite.y - table.sprite.height;
+    }
   }
 
   deleteInteractuableObject(obj: InteractuableObject) {
@@ -104,5 +128,17 @@ export class InteractableObjectsService {
       this.entityStoreService.removeEntity(element.id);
     }
     this.activeObjects = [];
+  }
+
+  private dropWater(obj: InteractuableObject, delta: number) {
+    if (hasGrab(obj) && obj.grab.isGrabbed) {
+      this.particleService.emitShowerWater(
+        obj.sprite.x + obj.sprite.width,
+        obj.sprite.y + obj.sprite.height,
+        1,
+        5,
+        'drops',
+      );
+    }
   }
 }

@@ -15,7 +15,7 @@ import { SpriteService } from '../../services/sprites.service';
 import { PetService } from '../../services/pet/pet.service';
 import { CursorService } from '../../services/cursor.service';
 import { GrabService } from '../../services/grab.service';
-import { ParticleService } from '../../services/particle.service';
+import { ParticleService } from '../../services/particle/particle.service';
 import { RoomService } from '../../services/room.service';
 // Componentes
 import { StatsBar } from '../../component/stats-bar/stats-bar';

@@ -1,0 +1,24 @@
+{
+  "texture": [
+    {
+      "name": "default",
+      "src": "./assets/particle/default.png"
+    },
+    {
+      "name": "drops",
+      "src": "./assets/particle/drops.png"
+    },
+    {
+      "name": "bubles1",
+      "src": "./assets/particle/bubles1.png"
+    },
+    {
+      "name": "bubles2",
+      "src": "./assets/particle/bubles2.png"
+    },
+    {
+      "name": "bubles3",
+      "src": "./assets/particle/bubles3.png"
+    }
+  ]
+}

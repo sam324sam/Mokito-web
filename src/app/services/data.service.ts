@@ -15,6 +15,7 @@ import animationsPet from '../../assets/config/animations-pet.json';
 import colorsJson from '../../assets/config/color-pet.json';
 import roomsJson from '../../assets/config/room-pet.json';
 import objectsJson from '../../assets/config/interactuable-object.json';
+import particleTextureJson from '../../assets/config/particle-texture.json';
 
 @Injectable({ providedIn: 'root' })
 export class DataService {
@@ -29,6 +30,8 @@ export class DataService {
   rooms: Room[] = [];
 
   objects: InteractuableObject[] = [];
+
+  particleTexture: Record<string, HTMLImageElement> = {};
 
   constructor(private readonly entityStoreService: EntityStoreService) {
     this.initData();
@@ -86,6 +89,7 @@ export class DataService {
         offsetY: 0,
         width: jsonPet.sprite.width,
         height: jsonPet.sprite.width,
+        tags: ['pet'],
       },
     };
 
@@ -113,6 +117,7 @@ export class DataService {
           type: object.type as ObjectType,
           active: true,
           timeToLife: 1,
+          nameBehaviors: [],
           sprite: {
             ...object.sprite,
             color: null,
@@ -153,6 +158,20 @@ export class DataService {
         active: true,
       };
     });
+
+    // Carga las texturas de las particulas
+    for (const tex of particleTextureJson.texture) {
+      if (!tex.name) continue;
+
+      const img = new Image();
+      img.src = tex.src;
+
+      this.particleTexture[tex.name] = img;
+    }
+  }
+
+  getParticleTexture(): Record<string, HTMLImageElement> {
+    return this.particleTexture;
   }
 
   // Devuelve la mascota

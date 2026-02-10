@@ -9,9 +9,15 @@ import { hasCollider } from '../guards/has-collider.guard';
 import { hasPhysics } from '../guards/has-physics.guard';
 // servicios
 import { PetObjectInteractionService } from './interactable-objects/pet-object-interaction.service';
+import { isParticle } from '../guards/is-particle.guard';
+import { ParticleInteractionService } from './particle/particle-interaction.service';
+
 @Injectable({ providedIn: 'root' })
 export class CollisionService {
-  constructor(private readonly petObjectInteractionService: PetObjectInteractionService) {}
+  constructor(
+    private readonly petObjectInteractionService: PetObjectInteractionService,
+    private readonly particleInteractionService: ParticleInteractionService,
+  ) {}
 
   /**
    *
@@ -77,7 +83,74 @@ export class CollisionService {
       this.petObjectInteractionService.onPetTouchObject(b, a);
       return;
     }
+
+    if (isParticle(a) && isInteractuableObject(b)) {
+      this.handleParticleHitObject(a, b);
+      return;
+    }
+
+    if (isParticle(b) && isInteractuableObject(a)) {
+      this.handleParticleHitObject(b, a);
+      return;
+    }
+
+    if (isParticle(a) && isParticle(b)) {
+      this.particleInteractionService.resolve(a,b);
+      return;
+    }
+
     this.resolveCollisionBetweenEntities(a, b);
+  }
+
+  private handleParticleHitObject(particle: Entity, object: Entity) {
+    const A = particle.sprite;
+    const B = object.sprite;
+
+    if (!hasCollider(particle) || !hasCollider(object) || !hasPhysics(particle)) {
+      return;
+    }
+
+    const cA = particle.collider;
+    const cB = object.collider;
+
+    const sA = A.scale ?? 1;
+    const sB = B.scale ?? 1;
+
+    const Px = A.x + cA.offsetX * sA;
+    const Py = A.y + cA.offsetY * sA;
+    const Pw = cA.width * sA;
+    const Ph = cA.height * sA;
+
+    const Ox = B.x + cB.offsetX * sB;
+    const Oy = B.y + cB.offsetY * sB;
+    const Ow = cB.width * sB;
+    const Oh = cB.height * sB;
+
+    const overlapX = Math.min(Px + Pw - Ox, Ox + Ow - Px);
+    const overlapY = Math.min(Py + Ph - Oy, Oy + Oh - Py);
+
+    if (overlapX <= 0 || overlapY <= 0) return;
+
+    // Empujar la particula fuera del objeto usando el eje menor
+    const restitution = 0.5;
+
+    if (overlapY < overlapX) {
+      // Colision vertical
+      if (Py < Oy) {
+        A.y -= overlapY;
+        particle.physics.vy = -particle.physics.vy * restitution;
+      } else {
+        A.y += overlapY;
+        particle.physics.vy = -particle.physics.vy * restitution;
+      }
+    } else if (Px < Ox) {
+      // Colision horizontal
+      A.x -= overlapX;
+      particle.physics.vx = -particle.physics.vx * restitution;
+    } else {
+      A.x += overlapX;
+      particle.physics.vx = -particle.physics.vx * restitution;
+    }
   }
 
   resolveCollisionBetweenEntities(a: Entity, b: Entity) {

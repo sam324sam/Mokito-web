@@ -10,7 +10,7 @@ import { ObjectType } from '../../models/object/interactuable-object.model';
 // Services
 import { AnimationService } from '../animation.service';
 import { DataService } from '../data.service';
-import { ParticleService } from '../particle.service';
+import { ParticleService } from '../particle/particle.service';
 import { InteractableObjectsService } from '../interactable-objects/interactable-objects.service';
 
 // Pet Services

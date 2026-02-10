@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 // Modelos
 import { Pet, PetState, PetCondition} from '../../../models/pet/pet.model';
-import { ParticleService } from '../../particle.service';
+import { ParticleService } from '../../particle/particle.service';
 
 //Context
 import { PetConditionContext } from './pet-condition.context';
@@ -82,7 +82,7 @@ export class PetConditionService {
       const x = pet.sprite.x + Math.random() * width;
       const y = pet.sprite.y + Math.random() * height;
 
-      this.particleService.emitDroplets(x, y, 1, 2, null);
+      this.particleService.emitDroplets(x, y, 1, 2, 'drops');
       this.energyCooldown = 1000;
     }
   };

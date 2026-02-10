@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 // Modelos
-import { Particle } from '../models/particle/particle.model';
-import { EntityStoreService } from './entity-store.service';
-import { hasPhysics } from '../guards/has-physics.guard';
-import { Entity } from '../models/entity/entity.model';
-import { SpriteService } from './sprites.service';
+import { Particle } from '../../models/particle/particle.model';
+import { EntityStoreService } from '../entity-store.service';
+import { hasPhysics } from '../../guards/has-physics.guard';
+import { Entity } from '../../models/entity/entity.model';
+// servicios
+import { SpriteService } from '../sprites.service';
+import { DataService } from '../data.service';
 
 /**
  * Define la firma de un comportamiento de particula
@@ -14,6 +16,7 @@ type ParticleBehavior = (particle: Particle, deltaTime: number) => void;
 
 @Injectable({ providedIn: 'root' })
 export class ParticleService {
+
   /** Escala aplicada al tamano de las particulas */
   private scale: number = 1;
 
@@ -21,7 +24,7 @@ export class ParticleService {
   private readonly particles: Particle[] = [];
 
   /** Textura por defecto usada si no se pasa ninguna */
-  private readonly defaultTexture: HTMLImageElement;
+  private readonly texture: Record<string, HTMLImageElement> = {};
 
   activeParticleSistem: boolean = true;
 
@@ -29,10 +32,12 @@ export class ParticleService {
    * Constructor del servicio
    * Inicializa la textura por defecto de las particulas
    */
-  constructor(private readonly entityStoreService: EntityStoreService, private readonly spriteService: SpriteService) {
-    const img = new Image();
-    img.src = './assets/particle/default.png';
-    this.defaultTexture = img;
+  constructor(
+    private readonly entityStoreService: EntityStoreService,
+    private readonly spriteService: SpriteService,
+    private readonly dataService: DataService,
+  ) {
+    this.texture = this.dataService.getParticleTexture();
   }
 
   /**
@@ -99,7 +104,7 @@ export class ParticleService {
       sprite: {
         x,
         y,
-        img: texture || this.defaultTexture,
+        img: texture || this.texture['default'],
         width: 4,
         height: 4,
         scale: this.scale,
@@ -123,6 +128,7 @@ export class ParticleService {
         offsetY: 0,
         width: 4,
         height: 4,
+        tags: ['particle'],
       },
     };
     this.emit(amount, newParticle, true);
@@ -142,12 +148,9 @@ export class ParticleService {
     y: number,
     amount: number,
     timeToLife: number,
-    texture: HTMLImageElement | null,
+    textureName: string | null,
   ) {
-    if (texture == null) {
-      texture = new Image();
-      texture.src = './assets/particle/drops.png';
-    }
+    textureName ??= 'default';
 
     let behaviors = [fadeBehavior, slowDownBehavior];
     let newParticle: Particle = {
@@ -159,7 +162,7 @@ export class ParticleService {
       sprite: {
         x,
         y,
-        img: texture,
+        img: this.texture[textureName],
         width: 4,
         height: 4,
         scale: this.scale,
@@ -183,6 +186,7 @@ export class ParticleService {
         offsetY: 0,
         width: 4,
         height: 4,
+        tags: ['particle'],
       },
     };
     this.emit(amount, newParticle);
@@ -192,13 +196,10 @@ export class ParticleService {
     x: number,
     y: number,
     timeToLife: number,
-    texture: HTMLImageElement | null,
+    textureName: string | null,
     entityTarget: Entity,
   ) {
-    if (texture == null) {
-      texture = new Image();
-      texture.src = './assets/particle/drops.png';
-    }
+    textureName ??= 'default';
 
     let behaviors = [fadeBehavior, stickyBehavior];
     let newParticle: Particle = {
@@ -208,9 +209,9 @@ export class ParticleService {
       maxTimeToLife: timeToLife,
       behaviors,
       sprite: {
-        x,
-        y,
-        img: texture,
+        x: 0,
+        y: 0,
+        img: this.texture[textureName],
         width: 4,
         height: 4,
         scale: this.scale,
@@ -228,14 +229,72 @@ export class ParticleService {
         offsetY: 0,
         width: 4,
         height: 4,
+        tags: ['particle', 'bubles'],
       },
       stickyTarget: {
         spriteTarget: entityTarget.sprite,
-        offsetX: 0,
-        offsetY: 0,
+        offsetX: x,
+        offsetY: y,
       },
     };
     this.emit(1, newParticle);
+  }
+
+  /**
+   * Emite partículas de agua simulando la ducha
+   * @param x Posición x de la ducha
+   * @param y Posición y de la ducha
+   * @param amount Cantidad de partículas por tick
+   * @param timeToLife Tiempo de vida de cada partícula en segundos
+   */
+  emitShowerWater(
+    x: number,
+    y: number,
+    amount: number,
+    timeToLife: number,
+    textureName: string | null,
+  ) {
+    textureName ??= 'default';
+
+    const behaviors = [fadeBehavior, slowDownBehavior];
+    const newParticle: Particle = {
+      id: 0,
+      active: true,
+      timeToLife,
+      maxTimeToLife: timeToLife,
+      behaviors,
+      sprite: {
+        x,
+        y,
+        img: this.texture[textureName],
+        width: 4,
+        height: 4,
+        scale: this.scale,
+        color: null,
+        animationSprite: {},
+        currentAnimation: '',
+        currentFrame: 0,
+        frameSpeed: 0,
+        frameCounter: 0,
+        timeoutId: null,
+        alpha: 100,
+      },
+      physics: {
+        vx: (Math.random() - 0.5) * 1000,
+        vy: Math.random() * 50,
+        gravity: 200,
+        enabled: true,
+      },
+      collider: {
+        offsetX: 0,
+        offsetY: 0,
+        width: 4,
+        height: 4,
+        tags: ['water', 'particle'],
+      },
+    };
+
+    this.emit(amount, newParticle);
   }
 
   /**
