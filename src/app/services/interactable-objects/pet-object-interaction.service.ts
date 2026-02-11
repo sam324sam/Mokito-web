@@ -6,10 +6,12 @@ import { ObjectType } from '../../models/object/interactuable-object.model';
 // Service
 import { InteractableObjectsService } from './interactable-objects.service';
 import { PetService } from '../pet/pet.service';
+import { Entity } from '../../models/entity/entity.model';
+import { isPet } from '../../guards/is-pet.guard';
+import { isInteractuableObject } from '../../guards/is-interactuable-object.guard';
 
 @Injectable({ providedIn: 'root' })
 export class PetObjectInteractionService {
-
   private readonly TouchCooldown = 2500; // ms para no colicionar varias veces
 
   constructor(
@@ -17,16 +19,19 @@ export class PetObjectInteractionService {
     private readonly interactableObjectsService: InteractableObjectsService,
   ) {}
 
-  onPetTouchObject(pet: Pet, obj: InteractuableObjectRuntime) {
+  onPetTouchObject(pet: Entity, obj: Entity) {
+    if (!isPet(pet) || !isInteractuableObject(obj)) return;
     if (obj.type === ObjectType.Food) {
       this.petEat(pet, obj);
-    }else if (obj.type == ObjectType.Bathroom) {
-      this.petBathing(pet,obj);
+    } else if (obj.type == ObjectType.Bathroom) {
+      this.petBathing(pet, obj);
     }
   }
 
   private petBathing(pet: Pet, obj: InteractuableObjectRuntime) {
-    this.petService.setState(PetState.Bathing);
+    if (obj.tags.includes('soap')) {
+      this.petService.setState(PetState.Bathing);
+    }
   }
 
   private petEat(pet: Pet, food: InteractuableObjectRuntime) {

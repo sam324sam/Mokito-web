@@ -87,7 +87,6 @@ export class InteractableObjectsService {
         offsetY: 0,
         width: objCopy.sprite.width * objCopy.sprite.scale,
         height: objCopy.sprite.height * objCopy.sprite.scale,
-        tags: ['object']
       },
       grab: {
         isGrabbed: false,
@@ -132,13 +131,15 @@ export class InteractableObjectsService {
 
   private dropWater(obj: InteractuableObject, delta: number) {
     if (hasGrab(obj) && obj.grab.isGrabbed) {
-      this.particleService.emitShowerWater(
-        obj.sprite.x + obj.sprite.width,
-        obj.sprite.y + obj.sprite.height,
-        1,
-        5,
-        'drops',
-      );
+      if (Math.random() < 0.3) {
+        this.particleService.emitShowerWater(
+          obj.sprite.x + obj.sprite.height,
+          obj.sprite.y + obj.sprite.height * obj.sprite.scale,
+          1,
+          5,
+          'drops',
+        );
+      }
     }
   }
 }

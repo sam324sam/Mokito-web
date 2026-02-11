@@ -34,16 +34,12 @@ export class GrabService {
 
   handlePressUp(event: PointerEvent): void {
     event.preventDefault();
-    console.log('Mouse up en canvas', event);
 
     this.clearPressTimer();
 
     const grabbed = this.getGrabbedEntity();
     if (grabbed) {
       grabbed.grab.isGrabbed = false;
-      console.log('Entidad soltada:', grabbed);
-    } else {
-      console.log('No había ninguna entidad agarrada');
     }
   }
 
@@ -83,7 +79,6 @@ export class GrabService {
   ): (Entity & { grab: { isGrabbed: boolean; grabOffsetX: number; grabOffsetY: number } }) | null {
     const mouse = this.getMousePos(event);
     const entities = this.entityStore.getAllEntities();
-    console.log('Buscando entidad bajo cursor:', mouse);
 
     for (let i = entities.length - 1; i >= 0; i--) {
       const e = entities[i];
@@ -94,12 +89,9 @@ export class GrabService {
       const realHeight = height * scale;
 
       if (mouse.x >= x && mouse.x <= x + realWidth && mouse.y >= y && mouse.y <= y + realHeight) {
-        console.log('Entidad encontrada bajo cursor:', e);
         return e;
       }
     }
-
-    console.log('No se encontró entidad bajo cursor');
     return null;
   }
 
@@ -107,7 +99,6 @@ export class GrabService {
     if (this.pressTimer) {
       clearTimeout(this.pressTimer);
       this.pressTimer = null;
-      console.log('Timer de agarre cancelado');
     }
   }
 

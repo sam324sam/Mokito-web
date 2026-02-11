@@ -76,7 +76,6 @@ export class RoomService {
           offsetY: 0,
           width: object.sprite.width,
           height: object.sprite.height,
-          tags: [object.type]
         },
         grab: {
           isGrabbed: false,

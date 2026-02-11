@@ -1,5 +1,6 @@
 {
   "id": 0,
+  "tags": ["pet"],
   "sprite": {
     "id": null,
     "img": "assets/pet/pet.png",

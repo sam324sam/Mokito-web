@@ -3,13 +3,10 @@ import { Injectable } from '@angular/core';
 import { Sprite } from '../models/sprites/sprites.model';
 import { Entity } from '../models/entity/entity.model';
 // Guards
-import { isPet } from '../guards/is-pet.guard';
-import { isInteractuableObject } from '../guards/is-interactuable-object.guard';
 import { hasCollider } from '../guards/has-collider.guard';
 import { hasPhysics } from '../guards/has-physics.guard';
 // servicios
 import { PetObjectInteractionService } from './interactable-objects/pet-object-interaction.service';
-import { isParticle } from '../guards/is-particle.guard';
 import { ParticleInteractionService } from './particle/particle-interaction.service';
 
 @Injectable({ providedIn: 'root' })
@@ -20,190 +17,209 @@ export class CollisionService {
   ) {}
 
   /**
-   *
-   * @param sprite
-   * @param x
-   * @param y
-   * @returns
+   * Detecta si un punto esta dentro de un sprite
    */
   isPointInsideSprite(sprite: Sprite, x: number, y: number): boolean {
     const sx = sprite.x;
     const sy = sprite.y;
-
     const sw = sprite.width;
     const sh = sprite.height;
 
     const isInside = x >= sx && x <= sx + sw && y >= sy && y <= sy + sh;
 
-    console.log('Click detection:', {
-      mouseX: x.toFixed(2),
-      mouseY: y.toFixed(2),
-      spriteX: sx.toFixed(2),
-      spriteY: sy.toFixed(2),
-      spriteW: sw,
-      spriteH: sh,
-      isInside,
-    });
-
     return isInside;
   }
 
+  /**
+   * Detecta si dos entidades estan colisionando
+   */
   areColliding(a: Entity, b: Entity): boolean {
-    if (!('sprite' in a) || !('sprite' in b)) return false;
-    if (!('collider' in a) || !('collider' in b)) return false;
+    if (!hasCollider(a) || !hasCollider(b)) return false;
 
-    const A = a.sprite;
-    const B = b.sprite;
-    const cA = (a as any).collider;
-    const cB = (b as any).collider;
+    const colliderA = this.getColliderBounds(a) || null;
+    const colliderB = this.getColliderBounds(b) || null;
 
-    const sA = A.scale ?? 1;
-    const sB = B.scale ?? 1;
+    if (!colliderA || !colliderB) return false;
 
-    const Ax = A.x + cA.offsetX * sA;
-    const Ay = A.y + cA.offsetY * sA;
-    const Aw = cA.width * sA;
-    const Ah = cA.height * sA;
-
-    const Bx = B.x + cB.offsetX * sB;
-    const By = B.y + cB.offsetY * sB;
-    const Bw = cB.width * sB;
-    const Bh = cB.height * sB;
-
-    return !(Ax + Aw < Bx || Ax > Bx + Bw || Ay + Ah < By || Ay > By + Bh);
+    return !(
+      colliderA.x + colliderA.width < colliderB.x ||
+      colliderA.x > colliderB.x + colliderB.width ||
+      colliderA.y + colliderA.height < colliderB.y ||
+      colliderA.y > colliderB.y + colliderB.height
+    );
   }
 
-  resolve(a: Entity, b: Entity) {
-    if (isPet(a) && isInteractuableObject(b)) {
+  /**
+   * Resuelve la colision entre dos entidades segun sus tags
+   */
+  resolve(a: Entity, b: Entity): void {
+    // Pet y Object
+    if (this.hasTag(a, 'pet') && this.hasTag(b, 'object')) {
       this.petObjectInteractionService.onPetTouchObject(a, b);
       return;
     }
 
-    if (isPet(b) && isInteractuableObject(a)) {
+    if (this.hasTag(b, 'pet') && this.hasTag(a, 'object')) {
       this.petObjectInteractionService.onPetTouchObject(b, a);
       return;
     }
 
-    if (isParticle(a) && isInteractuableObject(b)) {
-      this.handleParticleHitObject(a, b);
+    // Particle y Pet 
+    if (
+      (this.hasTag(a, 'particle') && this.hasTag(b, 'pet')) ||
+      (this.hasTag(b, 'particle') && this.hasTag(a, 'pet'))
+    ) {
+      return; // No hacer nadota
+    }
+
+    // Particle y Object
+    if (this.hasTag(a, 'particle') && this.hasTag(b, 'object')) {
+      this.resolveParticleObjectCollision(a, b);
       return;
     }
 
-    if (isParticle(b) && isInteractuableObject(a)) {
-      this.handleParticleHitObject(b, a);
+    if (this.hasTag(b, 'particle') && this.hasTag(a, 'object')) {
+      this.resolveParticleObjectCollision(b, a);
       return;
     }
 
-    if (isParticle(a) && isParticle(b)) {
-      this.particleInteractionService.resolve(a,b);
+    // Particle y Particle
+    if (this.hasTag(a, 'particle') && this.hasTag(b, 'particle')) {
+      this.particleInteractionService.resolve(a, b);
       return;
     }
 
-    this.resolveCollisionBetweenEntities(a, b);
+    // Colision fisica por defecto
+    this.resolvePhysicsCollision(a, b);
   }
 
-  private handleParticleHitObject(particle: Entity, object: Entity) {
-    const A = particle.sprite;
-    const B = object.sprite;
+  /**
+   * Verifica si una entidad tiene un tag especifico
+   */
+  private hasTag(entity: Entity, tag: string): boolean {
+    return entity.tags.includes(tag);
+  }
 
+  /**
+   * Obtiene los limites del collider de una entidad
+   */
+  private getColliderBounds(entity: Entity) {
+    if (!hasCollider(entity)) {
+      return;
+    }
+
+    const sprite = entity.sprite;
+    const collider = (entity as any).collider;
+    const scale = sprite.scale ?? 1;
+
+    return {
+      x: sprite.x + collider.offsetX * scale,
+      y: sprite.y + collider.offsetY * scale,
+      width: collider.width * scale,
+      height: collider.height * scale,
+    };
+  }
+
+  /**
+   * Calcula el overlap entre dos colliders
+   */
+  private calculateOverlap(
+    a: { x: number; y: number; width: number; height: number } | null | undefined,
+    b: { x: number; y: number; width: number; height: number } | null | undefined,
+  ): { overlapX: number; overlapY: number } | null {
+    if (!a || !b) return null;
+
+    const overlapX = Math.min(a.x + a.width - b.x, b.x + b.width - a.x);
+    const overlapY = Math.min(a.y + a.height - b.y, b.y + b.height - a.y);
+
+    return { overlapX, overlapY };
+  }
+
+  /**
+   * Resuelve la colision entre una particula y un objeto
+   */
+  private resolveParticleObjectCollision(particle: Entity, object: Entity): void {
     if (!hasCollider(particle) || !hasCollider(object) || !hasPhysics(particle)) {
       return;
     }
 
-    const cA = particle.collider;
-    const cB = object.collider;
+    const particleBounds = this.getColliderBounds(particle);
+    const objectBounds = this.getColliderBounds(object);
+    if (!particleBounds || !objectBounds) return;
 
-    const sA = A.scale ?? 1;
-    const sB = B.scale ?? 1;
+    const overlap = this.calculateOverlap(particleBounds, objectBounds);
 
-    const Px = A.x + cA.offsetX * sA;
-    const Py = A.y + cA.offsetY * sA;
-    const Pw = cA.width * sA;
-    const Ph = cA.height * sA;
+    if (!overlap) return;
 
-    const Ox = B.x + cB.offsetX * sB;
-    const Oy = B.y + cB.offsetY * sB;
-    const Ow = cB.width * sB;
-    const Oh = cB.height * sB;
-
-    const overlapX = Math.min(Px + Pw - Ox, Ox + Ow - Px);
-    const overlapY = Math.min(Py + Ph - Oy, Oy + Oh - Py);
-
+    const { overlapX, overlapY } = overlap;
     if (overlapX <= 0 || overlapY <= 0) return;
 
-    // Empujar la particula fuera del objeto usando el eje menor
     const restitution = 0.5;
+    const sprite = particle.sprite;
+    const physics = (particle as any).physics;
 
+    // Resolver por el eje con menor penetracion
     if (overlapY < overlapX) {
       // Colision vertical
-      if (Py < Oy) {
-        A.y -= overlapY;
-        particle.physics.vy = -particle.physics.vy * restitution;
+      if (particleBounds.y < objectBounds.y) {
+        sprite.y -= overlapY;
       } else {
-        A.y += overlapY;
-        particle.physics.vy = -particle.physics.vy * restitution;
+        sprite.y += overlapY;
       }
-    } else if (Px < Ox) {
-      // Colision horizontal
-      A.x -= overlapX;
-      particle.physics.vx = -particle.physics.vx * restitution;
+      physics.vy = -physics.vy * restitution;
     } else {
-      A.x += overlapX;
-      particle.physics.vx = -particle.physics.vx * restitution;
+      // Colision horizontal
+      if (particleBounds.x < objectBounds.x) {
+        sprite.x -= overlapX;
+      } else {
+        sprite.x += overlapX;
+      }
+      physics.vx = -physics.vx * restitution;
     }
   }
 
-  resolveCollisionBetweenEntities(a: Entity, b: Entity) {
-    const A = a.sprite;
-    const B = b.sprite;
+  /**
+   * Resuelve la colision fisica entre dos entidades con fisica
+   */
+  private resolvePhysicsCollision(a: Entity, b: Entity): void {
     if (!hasCollider(a) || !hasCollider(b) || !hasPhysics(a) || !hasPhysics(b)) {
       return;
     }
-    const cA = a.collider;
-    const cB = b.collider;
 
-    // Escala
-    const sA = A.scale ?? 1;
-    const sB = B.scale ?? 1;
+    const boundsA = this.getColliderBounds(a);
+    const boundsB = this.getColliderBounds(b);
+    if (!boundsA || !boundsB) return;
 
-    // Tamaño y poscion del colider de a yb
-    const Ax = A.x + cA.offsetX * sA;
-    const Ay = A.y + cA.offsetY * sA;
-    const Aw = cA.width * sA;
-    const Ah = cA.height * sA;
+    const overlap = this.calculateOverlap(boundsA, boundsB);
+    if (!overlap) return;
 
-    const Bx = B.x + cB.offsetX * sB;
-    const By = B.y + cB.offsetY * sB;
-    const Bw = cB.width * sB;
-    const Bh = cB.height * sB;
+    const { overlapX, overlapY } = overlap;
 
-    // ver si coliciona de arrba o abajo
-    const overlapX = Math.min(Ax + Aw - Bx, Bx + Bw - Ax);
-    const overlapY = Math.min(Ay + Ah - By, By + Bh - Ay);
-
-    // empujar mediante el eje menor
     const restitution = 0.5;
+    const physicsA = (a as any).physics;
+    const physicsB = (b as any).physics;
 
-    // Eje Y
+    // Resolver por el eje con menor penetracion
     if (overlapY < overlapX) {
-      if (Ay < By) {
-        A.y -= overlapY;
-        a.physics.vy = -a.physics.vy * restitution;
+      // Colision vertical
+      if (boundsA.y < boundsB.y) {
+        a.sprite.y -= overlapY;
+        physicsA.vy = -physicsA.vy * restitution;
       } else {
-        B.y -= overlapY;
-        b.physics.vy = -b.physics.vy * restitution;
+        b.sprite.y -= overlapY;
+        physicsB.vy = -physicsB.vy * restitution;
       }
-    } else if (Ax < Bx) {
-      // Eje X
-      A.x -= overlapX / 2;
-      B.x += overlapX / 2;
-      a.physics.vx = -a.physics.vx * restitution;
-      b.physics.vx = -b.physics.vx * restitution;
     } else {
-      A.x += overlapX / 2;
-      B.x -= overlapX / 2;
-      a.physics.vx = -a.physics.vx * restitution;
-      b.physics.vx = -b.physics.vx * restitution;
+      // Colision horizontal
+      if (boundsA.x < boundsB.x) {
+        a.sprite.x -= overlapX / 2;
+        b.sprite.x += overlapX / 2;
+      } else {
+        a.sprite.x += overlapX / 2;
+        b.sprite.x -= overlapX / 2;
+      }
+      physicsA.vx = -physicsA.vx * restitution;
+      physicsB.vx = -physicsB.vx * restitution;
     }
   }
 }

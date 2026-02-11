@@ -89,7 +89,6 @@ export class DataService {
         offsetY: 0,
         width: jsonPet.sprite.width,
         height: jsonPet.sprite.width,
-        tags: ['pet'],
       },
     };
 
@@ -115,6 +114,7 @@ export class DataService {
           id: null,
           name: object.name,
           type: object.type as ObjectType,
+          tags:[ ...object.tags],
           active: true,
           timeToLife: 1,
           nameBehaviors: [],

@@ -41,6 +41,7 @@ export class RoomButton {
   }
 
   roomChange(delta: number) {
+    this.petService.toggleInventory();
     this.roomService.changeRoom(delta);
   }
 }

@@ -7,9 +7,10 @@ import { SpriteService } from './sprites.service';
 import { hasPhysics } from '../guards/has-physics.guard';
 import { hasCollider } from '../guards/has-collider.guard';
 import { hasGrab } from '../guards/has-grab.guard';
+import { isParticle } from '../guards/is-particle.guard';
+// Model
 import { Entity } from '../models/entity/entity.model';
 import { Particle } from '../models/particle/particle.model';
-
 @Injectable({ providedIn: 'root' })
 export class PhysicsService {
   constructor(
@@ -25,27 +26,25 @@ export class PhysicsService {
     const dt = delta / 1000;
     const entities = this.entityStore.getAllEntities();
 
-    for (let i = 0; i < entities.length; i++) {
-      const e = entities[i];
+    // Aplicar fisica a todas las entidades
+    for (const element of entities) {
+      const e = element;
 
-      // Verificar si es una partícula
-      if (this.isParticle(e)) {
+      if (isParticle(e)) {
         this.applyParticlePhysics(e, dt, canvas);
-        continue;
+      } else if (hasCollider(e)) {
+        this.applyPhysics(e, dt, canvas);
       }
-
-      // Física normal para entidades con collider
-      if (!hasCollider(e)) continue;
-      this.applyPhysics(e, dt, canvas);
-      this.checkEntityCollisions(e, entities, i);
     }
-  }
 
-  /**
-   * Type guard para verificar si una entidad es una partícula
-   */
-  private isParticle(entity: Entity): entity is Particle {
-    return 'timeToLife' in entity && 'maxTimeToLife' in entity && 'behaviors' in entity;
+    // Verificar colisiones entre las entidades
+
+    for (let i = 0; i < entities.length; i++) {
+      const a = entities[i];
+      if (!hasCollider(a)) continue;
+
+      this.checkEntityCollisions(a, entities, i);
+    }
   }
 
   /**
@@ -123,9 +122,10 @@ export class PhysicsService {
   }
 
   private checkEntityCollisions(a: Entity, entities: Entity[], i: number) {
-    for (let j = i; j < entities.length; j++) {
+    for (let j = i + 1; j < entities.length; j++) {
       const b = entities[j];
-      if (a === b || !hasCollider(b)) continue;
+      if (!hasCollider(b)) continue;
+
       if (this.collisionService.areColliding(a, b)) {
         this.collisionService.resolve(a, b);
       }

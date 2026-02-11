@@ -1,37 +1,18 @@
 import { Injectable } from '@angular/core';
-// Modelos
 import { Particle } from '../../models/particle/particle.model';
 import { EntityStoreService } from '../entity-store.service';
-import { hasPhysics } from '../../guards/has-physics.guard';
 import { Entity } from '../../models/entity/entity.model';
-// servicios
 import { SpriteService } from '../sprites.service';
 import { DataService } from '../data.service';
-
-/**
- * Define la firma de un comportamiento de particula
- * Un comportamiento modifica el estado de una particula en cada update
- */
-type ParticleBehavior = (particle: Particle, deltaTime: number) => void;
+import { ParticleConfigs } from './particle-configs';
 
 @Injectable({ providedIn: 'root' })
 export class ParticleService {
-
-  /** Escala aplicada al tamano de las particulas */
   private scale: number = 1;
-
-  /** Array interno que contiene todas las particulas activas */
   private readonly particles: Particle[] = [];
-
-  /** Textura por defecto usada si no se pasa ninguna */
   private readonly texture: Record<string, HTMLImageElement> = {};
-
   activeParticleSistem: boolean = true;
 
-  /**
-   * Constructor del servicio
-   * Inicializa la textura por defecto de las particulas
-   */
   constructor(
     private readonly entityStoreService: EntityStoreService,
     private readonly spriteService: SpriteService,
@@ -40,36 +21,24 @@ export class ParticleService {
     this.texture = this.dataService.getParticleTexture();
   }
 
-  /**
-   * Inicializa el sistema de particulas
-   * Asocia el canvas y configura el contexto grafico
-   */
   init() {
     this.scale = this.spriteService.getScale();
   }
 
   /**
-   * Para el isertar particulas en la poscion asignada
-   * @param amount Cantidad de particulas
-   * @param newParticle La particula a copiar
-   * @param randomVelocity Si se quiere que las particulas salgan con distintas velocidades
+   * Método genérico para emitir partículas
    */
-  emit(amount: number, newParticle: Particle, randomVelocity = false) {
+  private emit(amount: number, particleConfig: Particle, randomVelocity = false) {
     if (!this.activeParticleSistem) {
-      console.log('El sistema de particulas esta apagado');
+      console.log('El sistema de partículas está apagado');
       return;
     }
-    for (let i = 0; i < amount; i++) {
-      // Clonar la partícula para que cada una sea independiente
-      const particle: Particle = {
-        ...newParticle,
-        physics: newParticle.physics ? { ...newParticle.physics } : undefined,
-        sprite: { ...newParticle.sprite },
-        collider: newParticle.collider ? { ...newParticle.collider } : undefined,
-      };
 
-      // Añadir variación aleatoria a la velocidad
-      if (hasPhysics(particle) && randomVelocity) {
+    for (let i = 0; i < amount; i++) {
+      const particle = this.cloneParticle(particleConfig);
+
+      // Añadir variación aleatoria a la velocidad si se requiere
+      if (particle.physics && randomVelocity) {
         particle.physics.vx = (Math.random() - 0.5) * 250;
         particle.physics.vy = -(Math.random() - 0.5) * 250;
       }
@@ -80,233 +49,88 @@ export class ParticleService {
   }
 
   /**
-   *Emite un conjunto de particulas con comportamiento de explosion
-   * Usa gravedad y desvanecimiento progresivo
-   * @param x
-   * @param y
-   * @param amount Cantidad de particulas
-   * @param timeToLife Tiempo de vida en segundos
+   * Clona una partícula para que cada una sea independiente
+   */
+  private cloneParticle(particle: Particle): Particle {
+    return {
+      ...particle,
+      physics: particle.physics ? { ...particle.physics } : undefined,
+      sprite: { ...particle.sprite },
+      collider: particle.collider ? { ...particle.collider } : undefined,
+      stickyTarget: particle.stickyTarget ? { ...particle.stickyTarget } : undefined,
+    };
+  }
+
+  // ==================== MÉTODOS PÚBLICOS ====================
+
+  /**
+   * Emite partículas de explosión
    */
   emitExplosion(
     x: number,
     y: number,
     amount: number,
     timeToLife: number,
-    texture: HTMLImageElement | null,
+    texture: HTMLImageElement | null = null,
   ) {
-    let behaviors = [fadeBehavior];
-    let newParticle: Particle = {
-      id: 0,
-      active: true,
-      timeToLife: timeToLife,
-      maxTimeToLife: timeToLife,
-      behaviors,
-      sprite: {
-        x,
-        y,
-        img: texture || this.texture['default'],
-        width: 4,
-        height: 4,
-        scale: this.scale,
-        color: null,
-        animationSprite: {},
-        currentAnimation: '',
-        currentFrame: 0,
-        frameSpeed: 0,
-        frameCounter: 0,
-        timeoutId: null,
-        alpha: 100,
-      },
-      physics: {
-        vx: 0,
-        vy: 0,
-        gravity: 100,
-        enabled: true,
-      },
-      collider: {
-        offsetX: 0,
-        offsetY: 0,
-        width: 4,
-        height: 4,
-        tags: ['particle'],
-      },
-    };
-    this.emit(amount, newParticle, true);
+    const tex = texture || this.texture['default'];
+    const config = ParticleConfigs.explosion(x, y, timeToLife, tex, this.scale);
+    this.emit(amount, config, true);
   }
 
   /**
-   * Emite particulas con comportamiento de gotas
-   * Simula caida y desaceleracion progresiva
-   * @param x
-   * @param y
-   * @param amount Cantidad de particulas
-   * @param timeToLife Tiempo de vida en segundos
-   *
+   * Emite partículas tipo gota
    */
   emitDroplets(
     x: number,
     y: number,
     amount: number,
     timeToLife: number,
-    textureName: string | null,
+    textureName: string | null = null,
   ) {
-    textureName ??= 'default';
-
-    let behaviors = [fadeBehavior, slowDownBehavior];
-    let newParticle: Particle = {
-      id: 0,
-      active: true,
-      timeToLife: timeToLife,
-      maxTimeToLife: timeToLife,
-      behaviors,
-      sprite: {
-        x,
-        y,
-        img: this.texture[textureName],
-        width: 4,
-        height: 4,
-        scale: this.scale,
-        color: null,
-        animationSprite: {},
-        currentAnimation: '',
-        currentFrame: 0,
-        frameSpeed: 0,
-        frameCounter: 0,
-        timeoutId: null,
-        alpha: 100,
-      },
-      physics: {
-        vx: 0,
-        vy: 0,
-        gravity: 100,
-        enabled: true,
-      },
-      collider: {
-        offsetX: 0,
-        offsetY: 0,
-        width: 4,
-        height: 4,
-        tags: ['particle'],
-      },
-    };
-    this.emit(amount, newParticle);
+    const tex = this.texture[textureName || 'default'];
+    const config = ParticleConfigs.droplet(x, y, timeToLife, tex, this.scale);
+    this.emit(amount, config);
   }
 
-  emitSticky(
+  /**
+   * Emite una partícula pegajosa
+   */
+  emitBubles(
     x: number,
     y: number,
     timeToLife: number,
     textureName: string | null,
     entityTarget: Entity,
   ) {
-    textureName ??= 'default';
-
-    let behaviors = [fadeBehavior, stickyBehavior];
-    let newParticle: Particle = {
-      id: 0,
-      active: true,
-      timeToLife: timeToLife,
-      maxTimeToLife: timeToLife,
-      behaviors,
-      sprite: {
-        x: 0,
-        y: 0,
-        img: this.texture[textureName],
-        width: 4,
-        height: 4,
-        scale: this.scale,
-        color: null,
-        animationSprite: {},
-        currentAnimation: '',
-        currentFrame: 0,
-        frameSpeed: 0,
-        frameCounter: 0,
-        timeoutId: null,
-        alpha: 100,
-      },
-      collider: {
-        offsetX: 0,
-        offsetY: 0,
-        width: 4,
-        height: 4,
-        tags: ['particle', 'bubles'],
-      },
-      stickyTarget: {
-        spriteTarget: entityTarget.sprite,
-        offsetX: x,
-        offsetY: y,
-      },
-    };
-    this.emit(1, newParticle);
+    const tex = this.texture[textureName || 'default'];
+    const config = ParticleConfigs.bubles(x, y, timeToLife, tex, this.scale, entityTarget);
+    this.emit(1, config);
   }
 
   /**
-   * Emite partículas de agua simulando la ducha
-   * @param x Posición x de la ducha
-   * @param y Posición y de la ducha
-   * @param amount Cantidad de partículas por tick
-   * @param timeToLife Tiempo de vida de cada partícula en segundos
+   * Emite partículas de agua de ducha
    */
   emitShowerWater(
     x: number,
     y: number,
     amount: number,
     timeToLife: number,
-    textureName: string | null,
+    textureName: string | null = null,
   ) {
-    textureName ??= 'default';
-
-    const behaviors = [fadeBehavior, slowDownBehavior];
-    const newParticle: Particle = {
-      id: 0,
-      active: true,
-      timeToLife,
-      maxTimeToLife: timeToLife,
-      behaviors,
-      sprite: {
-        x,
-        y,
-        img: this.texture[textureName],
-        width: 4,
-        height: 4,
-        scale: this.scale,
-        color: null,
-        animationSprite: {},
-        currentAnimation: '',
-        currentFrame: 0,
-        frameSpeed: 0,
-        frameCounter: 0,
-        timeoutId: null,
-        alpha: 100,
-      },
-      physics: {
-        vx: (Math.random() - 0.5) * 1000,
-        vy: Math.random() * 50,
-        gravity: 200,
-        enabled: true,
-      },
-      collider: {
-        offsetX: 0,
-        offsetY: 0,
-        width: 4,
-        height: 4,
-        tags: ['water', 'particle'],
-      },
-    };
-
-    this.emit(amount, newParticle);
+    const tex = this.texture[textureName || 'default'];
+    const config = ParticleConfigs.showerWater(x, y, timeToLife, tex, this.scale);
+    this.emit(amount, config);
   }
 
   /**
-   * Se encarga de mover y el tiempo de vida de las particulas
-   * Ahora solo maneja behaviors y timeToLife
-   * El movimiento lo maneja PhysicsService
+   * Actualiza todas las partículas activas
    */
   update(delta: number) {
     for (let i = this.particles.length - 1; i >= 0; i--) {
       const p = this.particles[i];
 
-      // Aplicar behaviors (fade, slowdown, etc.)
+      // Aplicar behaviors
       if (p.behaviors) {
         for (const behavior of p.behaviors) {
           behavior(p, delta);
@@ -324,41 +148,8 @@ export class ParticleService {
   stop() {
     this.activeParticleSistem = false;
   }
+
   start() {
     this.activeParticleSistem = true;
   }
 }
-
-// Comportamientos
-/**
- * Comportamiento de desvanecimiento
- * No modifica la particula directamente
- */
-const fadeBehavior: ParticleBehavior = (p, delta) => {
-  const dt = delta / 1000;
-
-  p.timeToLife -= dt;
-  if (p.timeToLife < 0) p.timeToLife = 0;
-
-  p.sprite.alpha = (p.timeToLife / p.maxTimeToLife) * 100;
-};
-
-/**
- * Simula que la particula este pegada al sprite que le indiquen
- */
-const stickyBehavior: ParticleBehavior = (p, delta) => {
-  if (!p.stickyTarget) return;
-
-  p.sprite.x = p.stickyTarget.spriteTarget.x + p.stickyTarget.offsetX;
-  p.sprite.y = p.stickyTarget.spriteTarget.y + p.stickyTarget.offsetY;
-};
-
-/**
- * Reduce progresivamente la velocidad de la particula
- */
-const slowDownBehavior: ParticleBehavior = (p, delta) => {
-  if (!hasPhysics(p)) return;
-  const dt = delta / 1000;
-  p.physics.vx *= Math.pow(0.95, dt * 60);
-  p.physics.vy *= Math.pow(0.95, dt * 60);
-};

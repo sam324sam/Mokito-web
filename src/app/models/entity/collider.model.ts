@@ -4,6 +4,5 @@ export interface Collider {
     offsetY: number;
     width: number;
     height: number;
-    tags: string[];
   };
 }

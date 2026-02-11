@@ -201,7 +201,7 @@ export class PetStateService {
     const offsetX = x - pet.sprite.x;
     const offsetY = y - pet.sprite.y;
 
-    this.particleService.emitSticky(offsetX, offsetY, 100, textureName, pet);
+    this.particleService.emitBubles(offsetX, offsetY, 100, textureName, pet);
     this.batingTimeout = setTimeout(() => {
       ctx.setState(PetState.Idle);
     }, 400);

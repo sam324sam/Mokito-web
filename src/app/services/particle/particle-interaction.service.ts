@@ -1,19 +1,32 @@
 import { Injectable } from '@angular/core';
-import { Particle } from '../../models/particle/particle.model';
+import { Entity } from '../../models/entity/entity.model';
+import { isParticle } from '../../guards/is-particle.guard';
+
+// Servicios
+import { PetService } from '../pet/pet.service';
 
 @Injectable({ providedIn: 'root' })
 export class ParticleInteractionService {
-  resolve(a: Particle, b: Particle) {
-    const aTags = a.collider?.tags ?? [];
-    const bTags = b.collider?.tags ?? [];
+
+  constructor(private readonly petService: PetService){}
+
+  resolve(a: Entity, b: Entity) {
+    if (!isParticle(a) || !isParticle(b)) return;
+    const aTags = a.tags;
+    const bTags = b.tags;
 
     if (
-      (aTags.includes('bubles') && bTags.includes('water')) ||
-      (bTags.includes('bubles') && aTags.includes('water'))
+      (aTags.includes('bubbles') && bTags.includes('water')) ||
+      (bTags.includes('bubbles') && aTags.includes('water'))
     ) {
-      // Decide cuál desaparece, por ejemplo siempre la de tipo 'bubles'
-      if (aTags.includes('bubles')) a.timeToLife = 0;
-      if (bTags.includes('bubles')) b.timeToLife = 0;
+      // Decide cual desaparece, por ejemplo siempre la de tipo 'bubles'
+      if (aTags.includes('bubbles')){
+        a.timeToLife = 0;
+      } 
+      if (bTags.includes('bubbles')) {
+        b.timeToLife = 0
+      }
+      this.petService.sumMinusStat('hygiene',5)
     }
   }
 }

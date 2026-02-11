@@ -1,5 +1,5 @@
 @if (rooms) {
-  <span class="flex sm:flex-col gap-3 items-center justify-center">
+  <span class="flex sm:flex-col gap-3 items-center justify-around">
     <button
       (click)="roomChange(1)"
       class="sm:rotate-180 rotate-90 bg-transparent border-none p-0 cursor-pointer mb-2 pointer-events-auto transition-transform hover:scale-110 active:scale-95 duration-200 opacity-40 hover:opacity-900"
@@ -7,10 +7,10 @@
       <img
         src="/Mokito-web/assets/icon/UI/console/arrow.png"
         alt="boton-stats"
-        class="w-16 h-9 drop-shadow-lg clickable"
+        class="sm:w-16 sm:h-9 w-5 h-5 drop-shadow-lg clickable"
       />
     </button>
-    {{ currentRoom().name }}
+    <span class="text-xs sm:text-sm">{{ currentRoom().name }}</span>
     <button
       (click)="roomChange(-1)"
       class="sm:rotate-0 -rotate-90 bg-transparent border-none p-0 cursor-pointer mb-2 pointer-events-auto transition-transform hover:scale-110 active:scale-95 duration-200 opacity-40 hover:opacity-900"
@@ -18,13 +18,13 @@
       <img
         src="/Mokito-web/assets/icon/UI/console/arrow.png"
         alt="boton-stats"
-        class="w-16 h-9 drop-shadow-lg clickable"
+        class="sm:w-16 sm:h-9 w-5 h-5 drop-shadow-lg clickable"
       />
     </button>
 
     @if (currentRoom().buttonRoom) {
       <button
-        class="pixel-box-s hover:scale-110 transition-transform duration-200 text-sm"
+        class="pixel-box-s hover:scale-110 transition-transform duration-200 text-xs sm:text-sm"
         (click)="onRoomButtonClick(currentRoom())"
       >
         {{ currentRoom().buttonRoom?.name }}

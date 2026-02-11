@@ -12,6 +12,7 @@
         {
           "name": "Mesa",
           "type": "room",
+          "tags": ["object", "room"],
           "sprite": {
             "id": null,
             "x": 0,
@@ -32,6 +33,7 @@
         {
           "name": "Silla",
           "type": "room",
+          "tags": ["object", "room"],
           "sprite": {
             "id": null,
             "x": 1000,
@@ -63,6 +65,7 @@
         {
           "name": "Cama",
           "type": "room",
+          "tags": ["object", "room"],
           "sprite": {
             "id": null,
             "x": 1000,
