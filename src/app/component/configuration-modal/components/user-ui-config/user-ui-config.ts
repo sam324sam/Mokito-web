@@ -48,7 +48,7 @@ export class UserUiConfig implements AfterViewInit {
 
     document.documentElement.style.setProperty(
       '--console-frame',
-      `url('/assets/img/icon/UI/console/${color}/frame-console.png')`
+      `url('../public/assets/img/icon/UI/console/${color}/frame-console.png')`
     );
   }
 
@@ -62,7 +62,7 @@ export class UserUiConfig implements AfterViewInit {
 
     document.documentElement.style.setProperty(
       '--screen-frame',
-      `url('/assets/img/icon/UI/console/${color}/frame-pet.png')`
+      `url('../public/assets/img/icon/UI/console/${color}/frame-pet.png')`
     );
   }
 }
