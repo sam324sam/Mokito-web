@@ -2,23 +2,23 @@
   "texture": [
     {
       "name": "default",
-      "src": "/assets/img/particle/default.png"
+      "src": "assets/img/particle/default.png"
     },
     {
       "name": "drops",
-      "src": "/assets/img/particle/drops.png"
+      "src": "assets/img/particle/drops.png"
     },
     {
       "name": "bubles1",
-      "src": "/assets/img/particle/bubles1.png"
+      "src": "assets/img/particle/bubles1.png"
     },
     {
       "name": "bubles2",
-      "src": "/assets/img/particle/bubles2.png"
+      "src": "assets/img/particle/bubles2.png"
     },
     {
       "name": "bubles3",
-      "src": "/assets/img/particle/bubles3.png"
+      "src": "assets/img/particle/bubles3.png"
     }
   ]
 }

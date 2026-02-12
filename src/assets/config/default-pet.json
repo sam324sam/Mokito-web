@@ -3,7 +3,7 @@
   "tags": ["pet"],
   "sprite": {
     "id": null,
-    "img": "/assets/img/pet/pet.png",
+    "img": "assets/img/pet/pet.png",
     "colorIndex": 0,
     "x": 0,
     "y": 0,
