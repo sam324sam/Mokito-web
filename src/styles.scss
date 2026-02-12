@@ -1,18 +1,18 @@
 :root {
-  --console-frame: url('/assets/img/icon/UI/console/purple/frame-console.png');
-  --screen-frame: url('/assets/img/icon/UI/console/purple/frame-pet.png');
+  --console-frame: url('../public/assets/img/icon/UI/console/purple/frame-console.png');
+  --screen-frame: url('../public/assets/img/icon/UI/console/purple/frame-pet.png');
 }
 
 @font-face {
   font-family: 'upheavtt';
-  src: url('/assets/fonts/upheavtt.ttf') format('truetype');
+  src: url('../public/assets/fonts/upheavtt.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 
 * {
-  cursor: url("/assets/img/cursor/cursor.png") 16 16, auto;
+  cursor: url("../public/assets/img/cursor/cursor.png") 16 16, auto;
   box-sizing: border-box;
   user-select: none;
 }
@@ -25,12 +25,12 @@ option,
 input[type="button"],
 input[type="submit"],
 .clickable {
-  cursor: url("/assets/img/cursor/cursor-pointer.png") 16 16, pointer !important;
+  cursor: url("../public/assets/img/cursor/cursor-pointer.png") 16 16, pointer !important;
 }
 
 .draggable,
 [draggable="true"] {
-  cursor: url("/assets/img/cursor/cursor-grab.png") 16 16, grab !important;
+  cursor: url("../public/assets/img/cursor/cursor-grab.png") 16 16, grab !important;
 }
 
 body,
@@ -48,14 +48,14 @@ img {
 /* Cajita */
 .pixel-box {
   border: 20px solid transparent;
-  border-image: url('/assets/img/icon/UI/border.png') 6 fill round;
+  border-image: url('../public/assets/img/icon/UI/border.png') 6 fill round;
   image-rendering: pixelated;
   border-radius: 1em;
 }
 
 .pixel-box-s {
   border: 8px solid transparent;
-  border-image: url('/assets/img/icon/UI/border-s.png') 6 fill round;
+  border-image: url('../public/assets/img/icon/UI/border-s.png') 6 fill round;
   image-rendering: pixelated;
 }
 
@@ -99,7 +99,7 @@ img {
 
 .console-name {
   border: 16px solid black;
-  border-image: url('/assets/img/icon/UI/console/console-name.png') 16 fill round;
+  border-image: url('../public/assets/img/icon/UI/console/console-name.png') 16 fill round;
   image-rendering: pixelated;
 }
 
@@ -120,7 +120,7 @@ img {
 
   .console-name {
     border: 8px solid black;
-    border-image: url('/assets/img/icon/UI/console/console-name.png') 16 fill round;
+    border-image: url('../public/assets/img/icon/UI/console/console-name.png') 16 fill round;
     image-rendering: pixelated;
   }
 }
