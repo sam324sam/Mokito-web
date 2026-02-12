@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
+import { SoundService } from '../../services/sound.service';
 
 @Component({
   selector: 'app-home-view',
@@ -17,7 +18,7 @@ export class HomeView implements OnInit {
 
   latestCommitMessage: string = "";
 
-  constructor(private readonly router: Router, private readonly http: HttpClient) {}
+  constructor(private readonly router: Router, private readonly http: HttpClient, private readonly soundService: SoundService) {}
 
   ngOnInit() {
     this.loadLatestCommit();
@@ -48,6 +49,7 @@ export class HomeView implements OnInit {
   }
 
   goToGame(): void {
+this.soundService.playMusic();
     this.router.navigate(['game']);
   }
 }

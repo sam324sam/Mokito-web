@@ -14,14 +14,12 @@ export class SoundService {
   private currentMusic: HTMLAudioElement | null = null;
   private curretnEfect: HTMLAudioElement | null = null;
 
-  musicVolume = 0.5;
+  musicVolume = 0.2;
   sfxVolume = 1;
 
   // ========= Musica
-
-  playMusic(key: string, loop = true): void {
-    const src = this.music.get(key);
-    if (!src) return;
+  playMusic(name: string = 'default', loop = true): void {
+    const src = this.music.get(name);
 
     if (this.currentMusic) {
       this.currentMusic.pause();
@@ -42,7 +40,6 @@ export class SoundService {
   }
 
   // ========== Efectos
-
   playEfects(key: string): void {
     const src = this.efects.get(key);
     if (!src) return;
