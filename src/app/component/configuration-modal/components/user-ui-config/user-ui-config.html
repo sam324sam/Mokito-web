@@ -17,14 +17,14 @@
         (click)="setConsoleScreenColor(color)"
       >
         <img
-          [src]="'/assets/img/icon/UI/console/' + color + '/frame-pet.png'"
+          [src]="'assets/img/icon/UI/console/' + color + '/frame-pet.png'"
           [alt]="'frame-' + color"
           class="w-full h-auto"
         />
 
         @if (colorScreenSelected === color) {
         <img
-          src="/assets/img/icon/configuration/check.png"
+          src="assets/img/icon/configuration/check.png"
           alt="Seleccionado"
           class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 sm:w-5 md:w-6 pointer-events-none drop-shadow-lg"
         />
@@ -44,14 +44,14 @@
         (click)="setConsoleBodyColor(color)"
       >
         <img
-          [src]="'/assets/img/icon/UI/console/' + color + '/frame-console.png'"
+          [src]="'assets/img/icon/UI/console/' + color + '/frame-console.png'"
           [alt]="'frame-' + color"
           class="w-full h-auto"
         />
 
         @if (colorBodySelected === color) {
         <img
-          src="/assets/img/icon/configuration/check.png"
+          src="assets/img/icon/configuration/check.png"
           alt="Seleccionado"
           class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 sm:w-5 md:w-6 pointer-events-none drop-shadow-lg"
         />
@@ -74,7 +74,7 @@
 
           <nav class="flex gap-4 items-center">
             <img
-              src="/assets/img/icon/configuration/configuration.png"
+              src="assets/img/icon/configuration/configuration.png"
               alt="Config"
               class="select-none sm:w-16 sm:h-16"
             />
