@@ -14,16 +14,16 @@ export class CursorService {
   resetCanvasCursor() {
     const canvas = this.spriteService.getCanvas();
     if (!canvas) return;
-    canvas.style.cursor = `url("assets/cursor/cursor.png") 16 16, auto`;
+    canvas.style.cursor = `url("assets/img/cursor/cursor.png") 16 16, auto`;
   }
 
   @HostListener('document:mousedown')
   onMouseDown() {
-    document.body.style.cursor = `url("/assets/cursor/cursor-grab.png"), pointer`;
+    document.body.style.cursor = `url("/assets/img/cursor/cursor-grab.png"), pointer`;
   }
 
   @HostListener('document:mouseup')
   onMouseUp() {
-    document.body.style.cursor = `url("/assets/cursor/cursor.png"), pointer`;
+    document.body.style.cursor = `url("/assets/img/cursor/cursor.png"), pointer`;
   }
 }

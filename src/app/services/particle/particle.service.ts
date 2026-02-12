@@ -12,6 +12,7 @@ export class ParticleService {
   private readonly particles: Particle[] = [];
   private readonly texture: Record<string, HTMLImageElement> = {};
   activeParticleSistem: boolean = true;
+  private status: boolean = false
 
   constructor(
     private readonly entityStoreService: EntityStoreService,
@@ -22,6 +23,8 @@ export class ParticleService {
   }
 
   init() {
+    if (this.status) return;
+    this.status = true
     this.scale = this.spriteService.getScale();
   }
 

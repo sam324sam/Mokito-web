@@ -1,10 +1,12 @@
 <header
   class="text-[black] py-2 px-6 flex justify-between items-center cursor-auto sm:flex sm:flex-col gap-2"
 >
-  <h1 class="sm:text-xl text-sm font-semibold select-none text-center console-name">
-    Mokito <br />
-    web
-  </h1>
+  <a routerLink="">
+    <h1 class="sm:text-xl text-sm font-semibold select-none text-center console-name">
+      Mokito <br />
+      web
+    </h1></a
+  >
   <nav class="flex gap-4 items-center">
     <a
       href="#"
@@ -12,7 +14,7 @@
       (click)="toggleConfiguration($event)"
     >
       <img
-        src="assets/icon/configuration/configuration.png"
+        src="assets/img/icon/configuration/configuration.png"
         alt="Config"
         class="select-none sm:w-16 sm:h-16 clickable"
       />
@@ -22,9 +24,9 @@
 
 <!-- Solo renderiza el modal cuando se ha abierto al menos una vez -->
 @if (isOpenConfiguration) {
-<app-configuration-modal
-  [isOpenConfiguration]="isOpenConfiguration"
-  (toggleConfiguration)="handleModalToggle($event)"
->
-</app-configuration-modal>
+  <app-configuration-modal
+    [isOpenConfiguration]="isOpenConfiguration"
+    (toggleConfiguration)="handleModalToggle($event)"
+  >
+  </app-configuration-modal>
 }

@@ -27,7 +27,11 @@ export class GameLoopService {
 
   start() {
     // Evitar el doble loop
-    if (this.running) stop();
+    if (this.running) {
+      stop();
+      return;
+    }
+    console.log("servicio game loop cargado")
     this.running = true;
     this.frameId = requestAnimationFrame(this.loop.bind(this));
   }
@@ -41,6 +45,10 @@ export class GameLoopService {
     }
     // resetear para el delta al restablecer el servicio
     this.lastTime = 0;
+  }
+
+  getStatus(){
+    return this.running;
   }
 
   private loop(time: number) {

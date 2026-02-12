@@ -2,52 +2,52 @@
   "animations": [
     {
       "name": "default",
-      "baseUrl": "assets/pet/default/",
+      "baseUrl": "/assets/img/pet/default/",
       "frames": 1,
       "animationType": "loop"
     },
 
     {
       "name": "tutsitutsi",
-      "baseUrl": "assets/pet/tutsitutsi/",
+      "baseUrl": "/assets/img/pet/tutsitutsi/",
       "frames": 20,
       "animationType": "once"
     },
 
-    { "name": "grab", "baseUrl": "assets/pet/grab/", "frames": 11, "animationType": "loop" },
-    { "name": "right", "baseUrl": "assets/pet/Right/", "frames": 12, "animationType": "once" },
-    { "name": "left", "baseUrl": "assets/pet/Left/", "frames": 12, "animationType": "once" },
-    { "name": "up", "baseUrl": "assets/pet/Up/", "frames": 12, "animationType": "once" },
-    { "name": "down", "baseUrl": "assets/pet/Down/", "frames": 12, "animationType": "once" },
+    { "name": "grab", "baseUrl": "assets/img/pet/grab/", "frames": 11, "animationType": "loop" },
+    { "name": "right", "baseUrl": "assets/img/pet/Right/", "frames": 12, "animationType": "once" },
+    { "name": "left", "baseUrl": "assets/img/pet/Left/", "frames": 12, "animationType": "once" },
+    { "name": "up", "baseUrl": "assets/img/pet/Up/", "frames": 12, "animationType": "once" },
+    { "name": "down", "baseUrl": "assets/img/pet/Down/", "frames": 12, "animationType": "once" },
 
     {
       "name": "happiness100",
-      "baseUrl": "assets/pet/happiness100/",
+      "baseUrl": "/assets/img/pet/happiness100/",
       "frames": 30,
       "animationType": "loop"
     },
 
     {
       "name": "happiness65",
-      "baseUrl": "assets/pet/happiness65/",
+      "baseUrl": "/assets/img/pet/happiness65/",
       "frames": 21,
       "animationType": "loop"
     },
     {
       "name": "happiness15",
-      "baseUrl": "assets/pet/happiness15/",
+      "baseUrl": "/assets/img/pet/happiness15/",
       "frames": 21,
       "animationType": "loop"
     },
     {
       "name": "sleep",
-      "baseUrl": "assets/pet/sleep/",
+      "baseUrl": "/assets/img/pet/sleep/",
       "frames": 1,
       "animationType": "loop"
     },
     {
       "name": "eat",
-      "baseUrl": "assets/pet/eat/",
+      "baseUrl": "/assets/img/pet/eat/",
       "frames": 18,
       "animationType": "once"
     }

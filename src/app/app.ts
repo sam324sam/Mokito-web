@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
-import { PetView } from './views/pet-view/pet-view';
-import { Header } from './component/header/header';
-import { RoomButton } from "./component/room-button/room-button";
+import { RouterOutlet } from "@angular/router";
 
 @Component({
   selector: 'app-root',
-  imports: [PetView, Header, RoomButton],
+  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })

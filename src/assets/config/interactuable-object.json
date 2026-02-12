@@ -14,7 +14,7 @@
       "currentFrame": 0,
       "frameSpeed": 100,
       "color": "...",
-      "img": "./assets/objects/cosafea.png",
+      "img": "/assets/img/objects/cosafea.png",
       "animationSprite": {},
       "frameCounter": 0,
       "timeoutId": null
@@ -36,7 +36,7 @@
       "currentFrame": 0,
       "frameSpeed": 100,
       "color": "...",
-      "img": "./assets/objects/burger.png",
+      "img": "/assets/img/objects/burger.png",
       "animationSprite": {},
       "frameCounter": 0,
       "timeoutId": null
@@ -58,7 +58,7 @@
       "currentFrame": 0,
       "frameSpeed": 100,
       "color": "...",
-      "img": "./assets/objects/popcorn.png",
+      "img": "/assets/img/objects/popcorn.png",
       "animationSprite": {},
       "frameCounter": 0,
       "timeoutId": null
@@ -80,7 +80,7 @@
       "currentFrame": 0,
       "frameSpeed": 100,
       "color": "...",
-      "img": "./assets/objects/milk.png",
+      "img": "/assets/img/objects/milk.png",
       "animationSprite": {},
       "frameCounter": 0,
       "timeoutId": null
@@ -102,7 +102,7 @@
       "currentFrame": 0,
       "frameSpeed": 100,
       "color": "...",
-      "img": "./assets/objects/soap.png",
+      "img": "/assets/img/objects/soap.png",
       "animationSprite": {},
       "frameCounter": 0,
       "timeoutId": null
@@ -124,7 +124,7 @@
       "currentFrame": 0,
       "frameSpeed": 100,
       "color": "...",
-      "img": "./assets/objects/shower.png",
+      "img": "/assets/img/objects/shower.png",
       "animationSprite": {},
       "frameCounter": 0,
       "timeoutId": null

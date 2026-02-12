@@ -7,8 +7,7 @@ import { AnimationType } from '../models/sprites/animation-sprite.model';
 import { Room } from '../models/room/room.model';
 import { InteractuableObject, ObjectType } from '../models/object/interactuable-object.model';
 import { PetRuntime } from '../models/pet/pet-runtime.model';
-// Servicios
-import { EntityStoreService } from './entity-store.service';
+
 // Json de datos
 import petDefault from '../../assets/config/default-pet.json';
 import animationsPet from '../../assets/config/animations-pet.json';
@@ -16,6 +15,8 @@ import colorsJson from '../../assets/config/color-pet.json';
 import roomsJson from '../../assets/config/room-pet.json';
 import objectsJson from '../../assets/config/interactuable-object.json';
 import particleTextureJson from '../../assets/config/particle-texture.json';
+import musicJson from '../../assets/sound/music.json';
+import efectsJson from '../../assets/sound/efects.json';
 
 @Injectable({ providedIn: 'root' })
 export class DataService {
@@ -33,17 +34,14 @@ export class DataService {
 
   particleTexture: Record<string, HTMLImageElement> = {};
 
-  constructor(private readonly entityStoreService: EntityStoreService) {
-    this.initData();
-  }
+  music: Map<string, string> = new Map();
+  efects: Map<string, string> = new Map();
 
-  /**
-   * Inicializa los datos directamente sin JSON
-   */
-  initData() {
+  constructor() {
+    /**
+     * Inicializa los datos directamente sin JSON
+     */
     this.loadFromJson();
-    // Agregar la mascota al entity store
-    //this.entityStoreService.add(this.petRuntime);
   }
 
   /**
@@ -78,7 +76,7 @@ export class DataService {
         timeoutId: null,
         alpha: 100,
       },
-      // runtime components
+      // runtime cambiar luego a otro sitio
       grab: {
         isGrabbed: false,
         grabOffsetX: 0,
@@ -114,7 +112,7 @@ export class DataService {
           id: null,
           name: object.name,
           type: object.type as ObjectType,
-          tags:[ ...object.tags],
+          tags: [...object.tags],
           active: true,
           timeToLife: 1,
           nameBehaviors: [],
@@ -168,10 +166,26 @@ export class DataService {
 
       this.particleTexture[tex.name] = img;
     }
+
+    // Cargar los ejectos de sonido y musica
+    for (const element of musicJson) {
+      this.music.set(element.name, element.src);
+    }
+    for (const element of efectsJson) {
+      this.efects.set(element.name, element.src);
+    }
   }
 
   getParticleTexture(): Record<string, HTMLImageElement> {
     return this.particleTexture;
+  }
+
+  getMusic(): Map<string, string> {
+    return this.music;
+  }
+
+  getEfects(): Map<string, string> {
+    return this.efects;
   }
 
   // Devuelve la mascota

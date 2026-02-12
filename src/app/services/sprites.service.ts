@@ -15,7 +15,7 @@ export class SpriteService {
   private readonly BASE_WIDTH = 200;
   private readonly BASE_HEIGHT = 200;
   spriteScale = 6;
-  debugColliders: boolean = true;
+  debugColliders: boolean = false;
 
   constructor(
     private readonly animationService: AnimationService,
@@ -24,6 +24,9 @@ export class SpriteService {
 
   init(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
+
+    // se puede ejecutar lo que sea para setear el canva a dibujar luego cambiar nombre a set o algo
+
     this.ctx = canvas.getContext('2d')!;
     this.ctx.imageSmoothingEnabled = false;
 
@@ -58,6 +61,7 @@ export class SpriteService {
   }
 
   render() {
+    
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     const entities = this.entityStoreService.getAllEntities();
@@ -68,7 +72,6 @@ export class SpriteService {
 
       const frame = this.animationService.getFrame(sprite) ?? sprite.img;
       if (!frame) continue;
-
       this.ctx.save();
       this.limitToCanvas(sprite);
       this.ctx.imageSmoothingEnabled = false;

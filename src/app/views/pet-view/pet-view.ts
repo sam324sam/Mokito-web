@@ -53,7 +53,7 @@ export class PetView implements AfterViewInit, OnDestroy {
   ) {
     this.rooms = this.roomService.getRooms();
   }
-  
+
   @HostListener('window:resize')
   onResize() {
     // Algun dia esto funcionara
@@ -96,7 +96,7 @@ export class PetView implements AfterViewInit, OnDestroy {
     // Registrar eventos de puntero directamente en el canvas
     this.canvas.addEventListener('pointerdown', (event: PointerEvent) => {
       this.grabService.handlePressDown(event);
-      this.cursorService.setCanvasCursor('assets/cursor/cursor-grab.png');
+      this.cursorService.setCanvasCursor('assets/img/cursor/cursor-grab.png');
     });
 
     this.canvas.addEventListener('pointermove', (event: PointerEvent) => {

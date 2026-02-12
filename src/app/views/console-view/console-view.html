@@ -1,0 +1,23 @@
+<div class="flex w-full h-dvh items-center justify-center">
+  <!-- Carcasa -->
+  <div class="console-body w-[95%] h-[95dvh] z-1 ">
+    <!-- Dentro de la consola -->
+    <div class="console-frame sm:flex w-full h-full p-4">
+      <div>
+        <app-header class="sm:w-[20%] w-full"></app-header>
+        <app-room-button class="sm:block hidden"></app-room-button>
+      </div>
+      <!-- contenido de la pet o del inicio -->
+      <div class="flex flex-1 flex-col justify-center gap-3">
+        <div
+          class="console-screen flex sm:size-full w-full h-[70dvh] ml-auto mr-auto sm:ml-0 sm:mr-0"
+        >
+          <app-pet-view class="size-full"></app-pet-view>
+        </div>
+      </div>
+      <div class="sm:hidden mt-2">
+        <app-room-button></app-room-button>
+      </div>
+    </div>
+  </div>
+</div>

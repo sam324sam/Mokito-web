@@ -1,18 +1,18 @@
 :root {
-  --console-frame: url('/Mokito-web/assets/icon/UI/console/purple/frame-console.png');
-  --screen-frame: url('/Mokito-web/assets/icon/UI/console/purple/frame-pet.png');
+  --console-frame: url('/assets/img/icon/UI/console/purple/frame-console.png');
+  --screen-frame: url('/assets/img/icon/UI/console/purple/frame-pet.png');
 }
 
 @font-face {
   font-family: 'upheavtt';
-  src: url('/Mokito-web/assets/fonts/upheavtt.ttf') format('woff2');
+  src: url('/assets/fonts/upheavtt.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 
 * {
-  cursor: url("/Mokito-web/assets/cursor/cursor.png") 16 16, auto;
+  cursor: url("/assets/img/cursor/cursor.png") 16 16, auto;
   box-sizing: border-box;
   user-select: none;
 }
@@ -25,14 +25,13 @@ option,
 input[type="button"],
 input[type="submit"],
 .clickable {
-  cursor: url("/Mokito-web/assets/cursor/cursor-pointer.png") 16 16, pointer !important;
+  cursor: url("/assets/img/cursor/cursor-pointer.png") 16 16, pointer !important;
 }
 
 .draggable,
 [draggable="true"] {
-  cursor: url("/Mokito-web/assets/cursor/cursor-grab.png") 16 16, grab !important;
+  cursor: url("/assets/img/cursor/cursor-grab.png") 16 16, grab !important;
 }
-
 
 body,
 html {
@@ -43,53 +42,48 @@ html {
 
 img {
   image-rendering: pixelated;
-  /* por compatibilidad con algunos navegadores */
-  image-rendering: crisp-edges;
+  image-rendering: crisp-edges; /* compatibilidad con algunos navegadores */
 }
 
-// Cajita
+/* Cajita */
 .pixel-box {
   border: 20px solid transparent;
-  border-image: url('/Mokito-web/assets/icon/UI/border.png') 6 fill round;
+  border-image: url('/assets/img/icon/UI/border.png') 6 fill round;
   image-rendering: pixelated;
   border-radius: 1em;
 }
 
 .pixel-box-s {
   border: 8px solid transparent;
-  border-image: url('/Mokito-web/assets/icon/UI/border-s.png') 6 fill round;
+  border-image: url('/assets/img/icon/UI/border-s.png') 6 fill round;
   image-rendering: pixelated;
 }
 
-// Scroll
+/* Scroll */
 ::-webkit-scrollbar {
   width: 16px;
   height: 16px;
   background: #000000;
 }
 
-/* Pista del scroll (track) */
 ::-webkit-scrollbar-track {
   background: #1e1e1e;
   border: 2px solid #000;
   box-shadow: inset 0 0 0 3px #2d2d2d;
 }
 
-/* Thumb la parte que se mueve */
 ::-webkit-scrollbar-thumb {
   background: #155dfc;
   border: 3px solid #1e1e1e;
   box-shadow: inset 0 0 0 3px rgb(19, 59, 105);
 }
 
-/* Hover mas brillante */
 ::-webkit-scrollbar-thumb:hover {
   background: #296dff;
   box-shadow: inset 0 0 0 3px rgb(59, 110, 163);
 }
 
-
-/*Seccion del cuerpo de la consola*/
+/* Sección del cuerpo de la consola */
 .console-body {
   border: 16px solid black;
   border-image: var(--console-frame) 16 fill round;
@@ -105,7 +99,7 @@ img {
 
 .console-name {
   border: 16px solid black;
-  border-image: url('/Mokito-web/assets/icon/UI/console/console-name.png') 16 fill round;
+  border-image: url('/assets/img/icon/UI/console/console-name.png') 16 fill round;
   image-rendering: pixelated;
 }
 
@@ -126,7 +120,7 @@ img {
 
   .console-name {
     border: 8px solid black;
-    border-image: url('/Mokito-web/assets/icon/UI/console/console-name.png') 16 fill round;
+    border-image: url('/assets/img/icon/UI/console/console-name.png') 16 fill round;
     image-rendering: pixelated;
   }
 }

@@ -43,6 +43,8 @@ export class PetService {
   // Signal para notificar cambios en stats
   statsChanged = signal<Stats[]>([]);
 
+  private status:boolean = false;
+
   constructor(
     private readonly entityStoreService: EntityStoreService,
     private readonly animationService: AnimationService,
@@ -63,6 +65,9 @@ export class PetService {
    * Carga datos, colores, animaciones e inicializa servicios dependientes
    */
   initPetService(canvas: HTMLCanvasElement): void {
+    if (this.status) return;
+    this.status = true
+    
     this.pet = this.dataService.getPetRuntime();
 
     this.colors = this.dataService.getColors();

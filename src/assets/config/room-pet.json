@@ -2,7 +2,7 @@
   "rooms": [
     {
       "name": "sala",
-      "img": "assets/room/background/living-room.png",
+      "img": "/assets/img/room/background/living-room.png",
       "music": "",
       "buttonRoom": {
         "name": "Inventario",
@@ -24,7 +24,7 @@
             "currentFrame": 0,
             "frameSpeed": 100,
             "color": "#000000",
-            "img": "assets/room/objects/table.png",
+            "img": "/assets/img/room/objects/table.png",
             "animationSprite": {},
             "frameCounter": 0,
             "timeoutId": null
@@ -45,7 +45,7 @@
             "currentFrame": 0,
             "frameSpeed": 100,
             "color": "#000000",
-            "img": "assets/room/objects/chair.png",
+            "img": "/assets/img/room/objects/chair.png",
             "animationSprite": {},
             "frameCounter": 0,
             "timeoutId": null
@@ -55,7 +55,7 @@
     },
     {
       "name": "dormitorio",
-      "img": "assets/room/background/dormitory.png",
+      "img": "/assets/img/room/background/dormitory.png",
       "music": "",
       "buttonRoom": {
         "name": "Dormir",
@@ -77,7 +77,7 @@
             "currentFrame": 0,
             "frameSpeed": 100,
             "color": "#000000",
-            "img": "assets/room/objects/bed.png",
+            "img": "/assets/img/room/objects/bed.png",
             "animationSprite": {},
             "frameCounter": 0,
             "timeoutId": null
@@ -87,7 +87,7 @@
     },
     {
       "name": "baño",
-      "img": "assets/room/background/bathroom.png",
+      "img": "/assets/img/room/background/bathroom.png",
       "music": "",
       "buttonRoom": {
         "name": "Higiene",
@@ -97,7 +97,7 @@
     },
     {
       "name": "jardin",
-      "img": "assets/room/background/garden.png",
+      "img": "/assets/img/room/background/garden.png",
       "music": "",
       "buttonRoom": {
         "name": "Regar",

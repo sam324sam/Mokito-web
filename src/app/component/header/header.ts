@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 // Componente
 import { ConfigurationModal } from '../configuration-modal/configuration-modal';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-header',
-  imports: [ConfigurationModal],
+  imports: [ConfigurationModal, RouterLink],
   templateUrl: './header.html',
   styleUrl: './header.scss',
   standalone: true,
