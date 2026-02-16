@@ -1,6 +1,7 @@
 [
   {
     "name": "default",
-    "src": "assets/sound/music/default-music.ogg"
+    "src": "assets/sound/music/default-music.ogg",
+    "creditos": "Yo"
   }
 ]

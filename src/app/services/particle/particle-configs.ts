@@ -148,6 +148,17 @@ export const ParticleConfigs = {
       offsetX: x,
       offsetY: y,
     },
+    sprite: {
+      ...baseParticleConfig(0, 0, timeToLife, texture, scale).sprite,
+      width: 8,
+      height: 8,
+    },
+    collider: {
+      offsetX: 0,
+      offsetY: 0,
+      width: 8,
+      height: 8,
+    }
   }),
 
   /**

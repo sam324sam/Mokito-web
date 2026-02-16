@@ -40,9 +40,19 @@ html {
   overflow-y: hidden;
 }
 
+body {
+  background:
+    repeating-linear-gradient(0deg,
+      rgba(0, 0, 0, 0.15),
+      rgba(0, 0, 0, 0.15) 1px,
+      transparent 1px,
+      transparent 2px);
+}
+
 img {
   image-rendering: pixelated;
-  image-rendering: crisp-edges; /* compatibilidad con algunos navegadores */
+  image-rendering: crisp-edges;
+  /* compatibilidad con algunos navegadores */
 }
 
 /* Cajita */

@@ -1,134 +1,115 @@
-<div class="flex w-full h-dvh items-center justify-center">
-  <!-- Contenedor principal tipo consola -->
-  <div class="console-body w-[95%] h-[95dvh] z-1">
-    <!-- Marco exterior de la consola -->
-    <div class="p-8 sm:p-12">
-      <!-- Pantalla interna -->
-      <div class="console-screen relative overflow-hidden">
-        <!-- Contenido de la pantalla -->
-        <div
-          class="relative z-10 flex sm:flex-row flex-col gap-8 items-center justify-center p-6 sm:p-8 min-h-[70vh]"
-        >
-          <!-- Mascota con animaciones -->
-          <div class="sm:flex-1 flex justify-center items-center">
-            <div class="relative">
-              <!-- Imagen de la mascota -->
-              <img
-                src="assets/img/icon/home/pet.gif"
-                alt="Saludo de mokito"
-                class="animate-bounce relative w-48 h-48 sm:w-64 sm:h-64 object-contain drop-shadow-2xl pixel-render hover:scale-110 transition-transform duration-300"
-              />
+<div class="flex w-full h-dvh overflow-hidden px-3 sm:px-6">
+  <div class="console-body w-full max-w-7xl mx-auto p-3 sm:p-6 lg:p-8 h-full">
+    <div class="console-screen relative rounded-2xl h-full">
+      <div class="relative z-10 flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8 items-center justify-center p-3 sm:p-6 h-full">
+        
+        <div class="flex-1 flex justify-center items-center w-full">
+          <img
+            src="assets/img/icon/home/pet.gif"
+            alt="Saludo de mokito"
+            class="animate-bounce w-16 h-16 sm:w-32 sm:h-32 lg:w-40 lg:h-40 object-contain drop-shadow-2xl pixel-render hover:scale-105 transition-transform duration-300"
+          />
+        </div>
+
+        <div class="flex-1 flex flex-col gap-4 sm:gap-6 w-full max-w-md">
+          <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl animate-glow text-center">
+            MOKITO
+          </h1>
+
+          <button
+            (click)="goToGame()"
+            class="w-full text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold py-2 sm:py-3"
+          >
+            <span class="flex items-center justify-center gap-2">
+              <span class="text-base sm:text-lg animate-pulse">▶</span>
+              PLAY
+              <span class="text-base sm:text-lg animate-pulse">◀</span>
+            </span>
+          </button>
+
+          <div class="flex flex-col gap-3 sm:gap-4 p-3 sm:p-4 lg:p-6 bg-black/50 backdrop-blur-sm rounded-xl border border-gray-600 max-h-[45vh] sm:max-h-[50vh] lg:max-h-[55vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-transparent">
+            
+            <div class="border-b border-gray-700 pb-3">
+              <button
+                (click)="howPlayToggle()"
+                class="w-full text-left flex items-center justify-between py-2 px-3 rounded-lg hover:bg-gray-800 transition-colors duration-200"
+              >
+                <span class="font-semibold text-sm sm:text-base text-gray-200">¿Como jugar?</span>
+                <span class="transform transition-transform duration-300 text-gray-400" [class.rotate-90]="howPlay">▶</span>
+              </button>
+
+              @if (howPlay) {
+                <div class="mt-3 p-3 sm:p-4 bg-gray-900 rounded-lg border-l-4 border-gray-500">
+                  <ul class="text-xs sm:text-sm leading-relaxed space-y-2 text-gray-300">
+                    <li class="flex items-start gap-2">
+                      <span class="text-gray-400 mt-1">•</span>
+                      <span>Navega entre habitaciones usando los botones inferiores</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="text-gray-400 mt-1">•</span>
+                      <span>Observa las estadisticas de Mokito en la cabecera</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="text-gray-400 mt-1">•</span>
+                      <span>Usa el inventario para darle comida, juguetes y mas</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="text-gray-400 mt-1">•</span>
+                      <span>Configura la apariencia a tu gusto en el menu</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="text-gray-400 mt-1">•</span>
+                      <span>Manten a Mokito feliz, limpio y alimentado</span>
+                    </li>
+                  </ul>
+                </div>
+              }
             </div>
-          </div>
 
-          <div class="sm:flex-1 space-y-6 relative w-full max-w-md">
-            <div class="mb-8 text-center">
-              <h1 class="text-4xl sm:text-5xl mb-2 animate-glow">MOKITO</h1>
+            <div class="border-b border-gray-700 pb-3">
+              <button
+                (click)="whatNewToggle()"
+                class="w-full text-left flex items-center justify-between py-2 px-3 rounded-lg hover:bg-gray-800 transition-colors duration-200"
+              >
+                <span class="font-semibold text-sm sm:text-base text-gray-200">¿Que hay de nuevo?</span>
+                <span class="transform transition-transform duration-300 text-gray-400" [class.rotate-90]="whatNew">▶</span>
+              </button>
+
+              @if (whatNew) {
+                <div class="mt-3 p-3 sm:p-4 bg-gray-900 rounded-lg border-l-4 border-gray-500">
+                  <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                    {{ latestCommitMessage }}
+                  </p>
+                </div>
+              }
             </div>
 
-            <button
-              (click)="goToGame()"
-              class="w-full text-2xl sm:text-3xl font-bold relative group overflow-hidden"
-            >
-              <span class="relative z-10 flex items-center justify-center gap-3">
-                <span class="text-xl animate-pulse">▶</span>
-                PLAY
-                <span class="text-xl animate-pulse">◀</span>
-              </span>
-            </button>
+            <div>
+              <button
+                (click)="creditsToggle()"
+                class="w-full text-left flex items-center justify-between py-2 px-3 rounded-lg hover:bg-gray-800 transition-colors duration-200"
+              >
+                <span class="font-semibold text-sm sm:text-base text-gray-200">Creditos</span>
+                <span class="transform transition-transform duration-300 text-gray-400" [class.rotate-90]="credits">▶</span>
+              </button>
 
-            <div class="space-y-2 p-4 sm:p-6 min-h-50 max-h-50 overflow-y-auto overflow-x-hidden">
-              <!-- Como jugar? -->
-              <div class="">
-                <button
-                  (click)="howPlayToggle()"
-                  class="w-full text-left flex items-center justify-between group"
-                >
-                  <span class="flex items-center gap-2"> ¿Cómo jugar?</span>
-
-                  <span
-                    class="transform transition-transform duration-300"
-                    [class.rotate-90]="howPlay"
-                    >▶</span
-                  >
-                </button>
-
-                @if (howPlay) {
-                  <div class="mt-3 p-4">
-                    <ul class="text-xs sm:text-sm leading-relaxed space-y-2 text-gray-200">
-                      <li>• Navega entre habitaciones usando los botones inferiores</li>
-                      <li>• Observa las estadísticas de Mokito en la cabecera</li>
-                      <li>• Usa el inventario para darle comida, juguetes y más</li>
-                      <li>• Configura la apariencia a tu gusto en el menú</li>
-                      <li>• ¡Mantén a Mokito feliz, limpio y alimentado!</li>
-                    </ul>
-                  </div>
-                }
-              </div>
-
-              <!-- que hay de nuevo? -->
-              <div class="">
-                <button
-                  (click)="whatNewToggle()"
-                  class="w-full text-left flex items-center justify-between group"
-                >
-                  <span class="flex items-center gap-2">
-                    <span>¿Qué hay de nuevo?</span>
-                  </span>
-                  <span
-                    class="transform transition-transform duration-300"
-                    [class.rotate-90]="whatNew"
-                    >▶</span
-                  >
-                </button>
-
-                @if (whatNew) {
-                  <div class="mt-3 p-4">
-                    <p class="text-xs text-gray-200">
-                      {{ latestCommitMessage }}
-                    </p>
-                  </div>
-                }
-              </div>
-
-              <!-- Creditos -->
-              <div class="">
-                <button
-                  (click)="creditsToggle()"
-                  class="w-full text-left flex items-center justify-between group"
-                >
-                  <span class="flex items-center gap-2">
-                    <span>Créditos</span>
-                  </span>
-                  <span
-                    class="transform transition-transform duration-300"
-                    [class.rotate-90]="credits"
-                    >▶</span
-                  >
-                </button>
-
-                @if (credits) {
-                  <div class="mt-3 p-4 text-center">
-                    <p class="text-xs text-gray-200 mb-4">Creado por</p>
-                    <div class="flex justify-center">
-                      <a
-                        href="https://github.com/sam324sam"
-                        target="_blank"
-                        class="credit-link inline-block"
-                      >
-                        <img
-                          src="https://github.com/sam324sam.png"
-                          width="80"
-                          height="80"
-                          alt="Samuel Moniz Pereira"
-                          class="rounded-lg border-2 border-indigo-400 mb-2 hover:scale-110 transition-transform"
-                        />
-                        <div class="text-xs text-indigo-300">Samuel Moniz</div>
-                      </a>
+              @if (credits) {
+                <div class="mt-3 p-3 sm:p-4 bg-gray-900 rounded-lg text-center">
+                  <p class="text-xs text-gray-400 mb-4 font-semibold">Creado por</p>
+                  <a href="https://github.com/sam324sam" target="_blank" class="inline-block group">
+                    <img
+                      src="https://github.com/sam324sam.png"
+                      width="100"
+                      height="100"
+                      alt="Samuel Moniz Pereira"
+                      class="perfil rounded-xl border-2 border-gray-500 mb-2 group-hover:scale-105 group-hover:border-gray-300 transition-all duration-300 shadow-lg"
+                    />
+                    <div class="text-sm font-medium text-gray-300 group-hover:text-white transition-colors">
+                      Samuel Moniz
                     </div>
-                  </div>
-                }
-              </div>
+                  </a>
+                </div>
+              }
             </div>
           </div>
         </div>
