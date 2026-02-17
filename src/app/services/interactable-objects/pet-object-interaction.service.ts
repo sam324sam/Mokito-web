@@ -9,6 +9,7 @@ import { PetService } from '../pet/pet.service';
 import { Entity } from '../../models/entity/entity.model';
 import { isPet } from '../../guards/is-pet.guard';
 import { isInteractuableObject } from '../../guards/is-interactuable-object.guard';
+import { hasGrab } from '../../guards/has-grab.guard';
 
 @Injectable({ providedIn: 'root' })
 export class PetObjectInteractionService {
@@ -25,6 +26,14 @@ export class PetObjectInteractionService {
       this.petEat(pet, obj);
     } else if (obj.type == ObjectType.Bathroom) {
       this.petBathing(pet, obj);
+    } else if (obj.type == ObjectType.Room) {
+      this.onPetTouchRoomObject(pet, obj);
+    }
+  }
+
+  private onPetTouchRoomObject(pet: Pet, obj: InteractuableObjectRuntime) {
+    if (hasGrab(pet) && obj.tags.includes('bed') && pet.grab.isGrabbed) {
+      this.petService.setState(PetState.Sleeping);
     }
   }
 

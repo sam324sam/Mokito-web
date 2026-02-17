@@ -1,0 +1,66 @@
+.pixel-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    writing-mode: bt-lr;
+    -webkit-writing-mode: bt-lr;
+    background: transparent;
+    width: 90%;
+}
+
+/* Track (la línea del slider) */
+.pixel-slider::-webkit-slider-runnable-track {
+    background: #334155;
+    border-radius: 0;
+    image-rendering: pixelated;
+}
+
+.pixel-slider::-moz-range-track {
+    width: 100%;
+    height: 12px;
+    background: #334155;
+    border: 2px solid #0f172a;
+    border-radius: 0;
+    image-rendering: pixelated;
+}
+
+/* Thumb (el botón deslizante) */
+.pixel-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #38bdf8;
+    border: 2px solid #0c4a6e;
+    border-radius: 0;
+    cursor: grab;
+    image-rendering: pixelated;
+}
+
+.pixel-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: #a2cfe2;
+    border: 2px solid #0c4a6e;
+    border-radius: 0;
+    cursor: grab;
+    image-rendering: pixelated;
+}
+
+.pixel-slider::-webkit-slider-thumb:active {
+    cursor: grabbing;
+    background: #0ea5e9;
+}
+
+.pixel-slider::-moz-range-thumb:active {
+    cursor: grabbing;
+    background: #0ea5e9;
+}
+
+/* Hover effect */
+.pixel-slider:hover::-webkit-slider-thumb {
+    background: #7dd3fc;
+}
+
+.pixel-slider:hover::-moz-range-thumb {
+    background: #7dd3fc;
+}

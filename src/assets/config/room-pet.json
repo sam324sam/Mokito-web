@@ -57,15 +57,12 @@
       "name": "dormitorio",
       "img": "assets/img/room/background/dormitory.png",
       "music": "",
-      "buttonRoom": {
-        "name": "Dormir",
-        "buttonBehavior": "sleep"
-      },
+      "buttonRoom": null,
       "objects": [
         {
           "name": "Cama",
           "type": "room",
-          "tags": ["object", "room"],
+          "tags": ["object", "room", "bed"],
           "sprite": {
             "id": null,
             "x": 1000,
