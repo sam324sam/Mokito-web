@@ -8,8 +8,9 @@
   <!-- Contenedor absoluto en la parte inferior -->
   <div class="absolute top-0 left-0 right-0 flex flex-col items-center pb-4 pointer-events-none">
     <!-- Stats bar con animacion de entrada/salida -->
+
     <div
-      class="w-full max-w-sm pt-2 pb-2 px-4 pointer-events-auto transition-all duration-300 ease-in-out"
+      class="w-full max-w-sm pt-2 pb-2 px-4 pointer-events-none transition-all duration-300 ease-in-out"
       [class.max-h-0]="!isOpenStats"
       [class.max-h-96]="isOpenStats"
       [class.opacity-0]="!isOpenStats"
@@ -21,6 +22,7 @@
     >
       <app-stats-bar></app-stats-bar>
     </div>
+
     <!-- Boton con pointer-events habilitado -->
     <button
       (click)="toggleStats()"

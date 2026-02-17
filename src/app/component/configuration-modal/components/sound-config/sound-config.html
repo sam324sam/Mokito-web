@@ -1,0 +1,58 @@
+<div
+  class="overflow-hidden transition-all duration-300 ease-in-out mb-2"
+  [class.max-h-0]="!isSoundSectionOpen"
+  [class.max-h-[500px]]="isSoundSectionOpen"
+  [class.opacity-0]="!isSoundSectionOpen"
+  [class.opacity-100]="isSoundSectionOpen"
+>
+  <div class="mb-3 p-4 bg-slate-700/50 rounded-lg text-center pixel-box-s">
+
+    <div class="flex flex-col justify-center gap-4">
+
+      <!-- 🎵 Música -->
+      <div class="flex items-center gap-3 justify-center">
+        <img
+          src="/Mokito-web/assets/img/icon/configuration/music.png"
+          alt="music"
+          class="sm:w-10 sm:h-10 w-5 h-5 object-contain"
+        />
+
+        <input
+          type="range"
+          min="0"
+          max="100"
+          [value]="musicVolume"
+          class="pixel-slider pixel-box-s flex-1"
+          (input)="setMusicVolume($event)"
+        />
+
+        <span class="text-sm font-medium w-10">
+          {{ musicVolume }}%
+        </span>
+      </div>
+
+      <!-- 🔊 Efectos -->
+      <div class="flex items-center gap-3 justify-center">
+        <img
+          src="/Mokito-web/assets/img/icon/configuration/sfx.png"
+          alt="sfx"
+          class="sm:w-10 sm:h-10 w-5 h-5 object-contain"
+        />
+
+        <input
+          type="range"
+          min="0"
+          max="100"
+          [value]="sfxVolume"
+          class="pixel-slider pixel-box-s flex-1"
+          (input)="setSfxVolume($event)"
+        />
+
+        <span class="text-sm font-medium w-10">
+          {{ sfxVolume }}%
+        </span>
+      </div>
+
+    </div>
+  </div>
+</div>

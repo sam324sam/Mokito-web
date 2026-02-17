@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { DataService } from './data.service';
 @Injectable({ providedIn: 'root' })
 export class SoundService {
-  music: Map<string, string> = new Map();
-  efects: Map<string, string> = new Map();
+  private readonly music: Map<string, string> = new Map();
+  private readonly efects: Map<string, string> = new Map();
 
   constructor(private readonly dataService: DataService) {
     this.music = this.dataService.getMusic();
@@ -14,8 +14,28 @@ export class SoundService {
   private currentMusic: HTMLAudioElement | null = null;
   private curretnEfect: HTMLAudioElement | null = null;
 
-  musicVolume = 0.2;
-  sfxVolume = 1;
+  private musicVolume = 0.1;
+  private sfxVolume = 0.1;
+
+  getMusicVolume() {
+    return this.musicVolume;
+  }
+
+  getSfxVolume() {
+    return this.sfxVolume;
+  }
+
+  setMusicVolume(musicVolume: number) {
+    this.musicVolume = musicVolume;
+
+    if (this.currentMusic) {
+      this.currentMusic.volume = musicVolume;
+    }
+  }
+
+  setSfxVolume(sfxVolume: number) {
+    this.sfxVolume = sfxVolume;
+  }
 
   // ========= Musica
   playMusic(name: string = 'default', loop = true): void {
