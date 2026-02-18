@@ -5,6 +5,8 @@ import { Sprite } from '../models/sprites/sprites.model';
 import { AnimationService } from './animation.service';
 import { EntityStoreService } from './entity-store.service';
 import { hasCollider } from '../guards/has-collider.guard';
+import { Entity } from '../models/entity/entity.model';
+import { isMessage } from '../guards/is-mesage.guard';
 
 @Injectable({ providedIn: 'root' })
 export class SpriteService {
@@ -61,12 +63,15 @@ export class SpriteService {
   }
 
   render() {
-    
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     const entities = this.entityStoreService.getAllEntities();
 
     for (const e of entities) {
+      if (isMessage(e)) {
+        this.renderText(e);
+        continue;
+      }
       const sprite: Sprite = e.sprite;
       sprite.scale = this.spriteScale;
 
@@ -136,6 +141,45 @@ export class SpriteService {
 
       this.ctx.strokeRect(x, y, w, h);
     }
+
+    this.ctx.restore();
+  }
+
+  /**
+   * Renderizar si la entidad es tipo mensaje
+   */
+  private renderText(message: Entity) {
+    if (!isMessage(message)) return;
+
+    const scale = this.spriteScale;
+    const padding = 4 * scale;
+
+    this.ctx.save();
+    this.ctx.globalAlpha = message.sprite.alpha / 100;
+
+    this.ctx.font = `${10 * scale}px EmojiFont`;
+    this.ctx.textAlign = 'center';
+    this.ctx.textBaseline = 'middle';
+
+    const text = message.body;
+    const metrics = this.ctx.measureText(text);
+
+    const textWidth = metrics.width;
+    const textHeight = 10 * scale;
+
+    const boxWidth = textWidth + padding * 2;
+    const boxHeight = textHeight + padding * 2;
+
+    const x = message.sprite.x;
+    const y = message.sprite.y;
+
+    // Fondo blanco luego cambiar por sprite
+    this.ctx.fillStyle = 'white';
+    this.ctx.fillRect(x - boxWidth / 2, y - boxHeight / 2, boxWidth, boxHeight);
+
+    // Dibujar texto negro encima
+    this.ctx.fillStyle = 'black';
+    this.ctx.fillText(text, x, y);
 
     this.ctx.restore();
   }

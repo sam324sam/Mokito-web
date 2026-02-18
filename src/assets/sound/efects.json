@@ -1,6 +1,10 @@
 [
   {
-    "name": "",
-    "src": ""
+    "name": "tutsitutsi",
+    "src": "assets/sound/efects/tutsitutsi.ogg"
+  },
+  {
+    "name": "message-sound",
+    "src": "assets/sound/efects/message-sound.ogg"
   }
 ]

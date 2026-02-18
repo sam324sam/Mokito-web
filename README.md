@@ -89,17 +89,31 @@ src/
 - **Lenguaje**: TypeScript
 - **Despliegue**: GitHub Pages
 
-## Programas usados
-- **Libresprite**: Para las animaciones y dibujos en pixelart.
-
-
 ## 📝 Licencia
 
 Este proyecto está bajo la Licencia MIT.
 
-## 🤝 Contribuciones
+## Programas usados
 
-Las contribuciones son bienvenidas. Por favor, abre un issue o envía un pull request.
+### Pixel Art
+
+  <a href="https://github.com/LibreSprite/LibreSprite">
+    <img src="https://github.com/LibreSprite.png" alt="LibreSprite Logo" width="50">
+  </a>
+
+**LibreSprite**  
+Creacion y animacion de sprites en pixel art.
+
+---
+
+### Musica y Sonido
+
+  <a href="https://github.com/YuriSizov/boscaceoil-blue">
+    <img src="https://raw.githubusercontent.com/YuriSizov/boscaceoil-blue/main/icon.png" alt="Bosca Ceoil Blue Logo" width="50">
+  </a>
+
+**Bosca Ceoil Blue**  
+Creacion de musica y efectos retro.
 
 ---
 

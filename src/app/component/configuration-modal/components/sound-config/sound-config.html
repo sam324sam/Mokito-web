@@ -6,10 +6,8 @@
   [class.opacity-100]="isSoundSectionOpen"
 >
   <div class="mb-3 p-4 bg-slate-700/50 rounded-lg text-center pixel-box-s">
-
     <div class="flex flex-col justify-center gap-4">
-
-      <!-- 🎵 Música -->
+      <!-- Musica -->
       <div class="flex items-center gap-3 justify-center">
         <img
           src="/Mokito-web/assets/img/icon/configuration/music.png"
@@ -26,12 +24,10 @@
           (input)="setMusicVolume($event)"
         />
 
-        <span class="text-sm font-medium w-10">
-          {{ musicVolume }}%
-        </span>
+        <span class="text-sm font-medium w-10"> {{ musicVolume }}% </span>
       </div>
 
-      <!-- 🔊 Efectos -->
+      <!-- Efectos -->
       <div class="flex items-center gap-3 justify-center">
         <img
           src="/Mokito-web/assets/img/icon/configuration/sfx.png"
@@ -48,11 +44,8 @@
           (input)="setSfxVolume($event)"
         />
 
-        <span class="text-sm font-medium w-10">
-          {{ sfxVolume }}%
-        </span>
+        <span class="text-sm font-medium w-10"> {{ sfxVolume }}% </span>
       </div>
-
     </div>
   </div>
 </div>

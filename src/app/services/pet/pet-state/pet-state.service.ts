@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { Pet, PetState } from '../../../models/pet/pet.model';
 import { PetStateContext } from './pet-state.context';
 import { ParticleService } from '../../particle/particle.service';
+import { SoundService } from '../../sound.service';
+import { MessageService } from '../../mesage/message.service';
 
 type PetStateHandler = {
   onEnter?: (pet: Pet, ctx: PetStateContext) => void;
@@ -43,8 +45,11 @@ export class PetStateService {
     },
     [PetState.Bathing]: {
       onEnter: (p, c) => this.enterBathing(p, c),
-      update: (p, c) => this.updateBathing(p, c),
       onExit: (p, c) => this.exitBathing(p, c),
+    },
+    [PetState.Talking]: {
+      onEnter: (p, c) => this.enterTalking(p, c),
+      onExit: (p, c) => this.exitTalking(p, c),
     },
   };
 
@@ -54,8 +59,13 @@ export class PetStateService {
   private reactingTimeout: any = null;
   private eatTimeout: any = null;
   private batingTimeout: any = null;
+  private talkingTimeout: any = null;
 
-  constructor(private readonly particleService: ParticleService) {}
+  constructor(
+    private readonly particleService: ParticleService,
+    private readonly soundService: SoundService,
+    private readonly messageService: MessageService,
+  ) {}
 
   // ==================== Metodos publicos ====================
 
@@ -106,6 +116,7 @@ export class PetStateService {
   /// ====================== Reacting
   enterReacting(pet: Pet, ctx: PetStateContext): void {
     if (this.lastState == PetState.Sleeping) return;
+    this.soundService.playEfects('tutsitutsi');
     ctx.setAnimation('tutsitutsi');
     ctx.sumMinusStat('happiness', 5);
 
@@ -123,7 +134,11 @@ export class PetStateService {
     this.clearTimer(this.reactingTimeout);
 
     this.reactingTimeout = setTimeout(() => {
-      ctx.setState(PetState.Idle);
+      if (this.messageService.addMessage('ij', '', pet.sprite, pet.sprite.x, pet.sprite.y)) {
+        ctx.setState(PetState.Talking);
+      } else {
+        ctx.setState(PetState.Idle);
+      }
     }, durationMs);
   }
 
@@ -149,6 +164,7 @@ export class PetStateService {
     // limpiar timeout anterior
 
     ctx.setAnimation('eat');
+    // this.soundService.playEfects('ñanñan')
     const durationMs = ctx.getAnimationDuration(pet.sprite, 'eat');
     this.clearTimer(this.eatTimeout);
     this.eatTimeout = setTimeout(() => {
@@ -207,12 +223,21 @@ export class PetStateService {
     }, 400);
   }
 
-  /**
-   *
-   */
-  private updateBathing(pet: Pet, d: number) {}
-
   private exitBathing(pet: Pet, ctx: PetStateContext): void {
-    this.clearTimer(this.batingTimeout)
+    this.clearTimer(this.batingTimeout);
+  }
+
+  //============================ Hablando
+  exitTalking(pet: Pet, ctx: PetStateContext): void {}
+  enterTalking(pet: Pet, ctx: PetStateContext): void {
+    ctx.setAnimation('talking');
+    this.soundService.playEfects('message-sound');
+    const durationMs = ctx.getAnimationDuration(pet.sprite, 'tutsitutsi');
+
+    this.clearTimer(this.talkingTimeout);
+
+    this.talkingTimeout = setTimeout(() => {
+      ctx.setState(PetState.Idle);
+    }, durationMs);
   }
 }

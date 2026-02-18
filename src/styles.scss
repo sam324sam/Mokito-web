@@ -11,6 +11,14 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'EmojiFont';
+  src: url('/assets/fonts/EmojiFont.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 * {
   cursor: url("../public/assets/img/cursor/cursor.png") 16 16, auto;
   box-sizing: border-box;

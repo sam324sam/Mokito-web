@@ -29,11 +29,11 @@ export class ParticleService {
   }
 
   /**
-   * Método genérico para emitir partículas
+   * Metodo generico para emitir particulas
    */
   private emit(amount: number, particleConfig: Particle, randomVelocity = false) {
     if (!this.activeParticleSistem) {
-      console.log('El sistema de partículas está apagado');
+      console.log('El sistema de particulas esta apagado');
       return;
     }
 
@@ -52,7 +52,7 @@ export class ParticleService {
   }
 
   /**
-   * Clona una partícula para que cada una sea independiente
+   * Clona una particula para que cada una sea independiente
    */
   private cloneParticle(particle: Particle): Particle {
     return {
@@ -64,10 +64,10 @@ export class ParticleService {
     };
   }
 
-  // ==================== MÉTODOS PÚBLICOS ====================
+  // ==================== Metodos publicos
 
   /**
-   * Emite partículas de explosión
+   * Emite particulas de explosión
    */
   emitExplosion(
     x: number,
@@ -82,7 +82,7 @@ export class ParticleService {
   }
 
   /**
-   * Emite partículas tipo gota
+   * Emite particulas tipo gota
    */
   emitDroplets(
     x: number,
@@ -97,7 +97,7 @@ export class ParticleService {
   }
 
   /**
-   * Emite una partícula pegajosa
+   * Emite una particula pegajosa
    */
   emitBubles(
     x: number,
@@ -112,7 +112,7 @@ export class ParticleService {
   }
 
   /**
-   * Emite partículas de agua de ducha
+   * Emite particulas de agua de ducha
    */
   emitShowerWater(
     x: number,
@@ -127,7 +127,7 @@ export class ParticleService {
   }
 
   /**
-   * Actualiza todas las partículas activas
+   * Actualiza todas las particulas activas
    */
   update(delta: number) {
     for (let i = this.particles.length - 1; i >= 0; i--) {
@@ -140,7 +140,7 @@ export class ParticleService {
         }
       }
 
-      // Remover partículas muertas
+      // Remover particulas muertas
       if (p.timeToLife <= 0) {
         this.particles.splice(i, 1);
         this.entityStoreService.removeEntity(p.id);

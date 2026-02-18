@@ -90,7 +90,29 @@
         "name": "Higiene",
         "buttonBehavior": "openInventoryBathroom"
       },
-      "objects": []
+      "objects": [
+        {
+          "name": "Bañera",
+          "type": "room",
+          "tags": ["object", "room"],
+          "sprite": {
+            "id": null,
+            "x": 0,
+            "y": 1000,
+            "width": 60,
+            "height": 40,
+            "scale": 1,
+            "currentAnimation": "idle",
+            "currentFrame": 0,
+            "frameSpeed": 100,
+            "color": "#000000",
+            "img": "assets/img/room/objects/bathtub.png",
+            "animationSprite": {},
+            "frameCounter": 0,
+            "timeoutId": null
+          }
+        }
+      ]
     },
     {
       "name": "jardin",

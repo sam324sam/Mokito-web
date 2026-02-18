@@ -50,6 +50,12 @@
       "baseUrl": "assets/img/pet/eat/",
       "frames": 18,
       "animationType": "once"
+    },
+    {
+      "name": "talking",
+      "baseUrl": "assets/img/pet/talking/",
+      "frames": 15,
+      "animationType": "once"
     }
   ]
 }

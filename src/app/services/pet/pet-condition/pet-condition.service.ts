@@ -1,16 +1,20 @@
 import { Injectable } from '@angular/core';
 // Modelos
-import { Pet, PetState, PetCondition} from '../../../models/pet/pet.model';
+import { Pet, PetState, PetCondition } from '../../../models/pet/pet.model';
 import { ParticleService } from '../../particle/particle.service';
 
 //Context
 import { PetConditionContext } from './pet-condition.context';
+import { MessageService } from '../../mesage/message.service';
 
 export type PetConditionBehavior = (pet: Pet, deltaTime: number, ctx: PetConditionContext) => void;
 
 @Injectable({ providedIn: 'root' })
 export class PetConditionService {
-  constructor(private readonly particleService: ParticleService) {}
+  constructor(
+    private readonly particleService: ParticleService,
+    private readonly messageService: MessageService,
+  ) {}
 
   update(pet: Pet, delta: number, ctx: PetConditionContext): void {
     for (const condition of pet.conditions) {
@@ -23,6 +27,7 @@ export class PetConditionService {
   conditionProcess(pet: Pet, ctx: PetConditionContext) {
     this.energyProcess(pet, ctx);
     this.happyProcess(pet, ctx);
+    this.hungerProcess(pet, ctx);
   }
 
   // ==================== Metodos que se ejecutan segun las condiciones de la pet ====================
@@ -35,9 +40,26 @@ export class PetConditionService {
     console.log('');
   }
 
-  private hungry(pet: Pet, delta: number, ctx: PetConditionContext): void {
-    console.log('');
-  }
+  private hungerCooldown: number = 0;
+
+  private readonly hungry: PetConditionBehavior = (pet, delta, ctx) => {
+    this.hungerCooldown -= delta;
+
+    if (this.hungerCooldown > 0) return;
+    if (pet.state == PetState.Idle) {
+      const hunger = ctx.getStat('hunger');
+      if (!hunger) return;
+      const hungerFactor = Math.min(hunger.porcent / 100, 1);
+      const probability = 0.02 + (1 - hungerFactor) * 0.3;
+
+      if (Math.random() < probability) {
+        if(this.messageService.addMessage('lauy', '', pet.sprite, pet.sprite.x, pet.sprite.y)){
+          ctx.setState(PetState.Talking);
+        }
+      }
+    }
+    this.hungerCooldown = 1000;
+  };
 
   private happy(pet: Pet, delta: number, ctx: PetConditionContext): void {
     if (pet.state == PetState.Idle) {
@@ -81,8 +103,14 @@ export class PetConditionService {
 
       const x = pet.sprite.x + Math.random() * width;
       const y = pet.sprite.y + Math.random() * height;
-
-      this.particleService.emitDroplets(x, y, 1, 2, 'drops');
+      if (pet.state !== PetState.Sleeping) {
+        this.particleService.emitDroplets(x, y, 1, 2, 'drops');
+        if (Math.random() < 0.08) {
+          if(this.messageService.addMessage('olty', '', pet.sprite, pet.sprite.x, pet.sprite.y)){
+            ctx.setState(PetState.Talking);
+          }
+        }
+      }
       this.energyCooldown = 1000;
     }
   };
@@ -127,6 +155,16 @@ export class PetConditionService {
       pet.conditions.add(PetCondition.Depressed);
       pet.conditions.delete(PetCondition.Sad);
       pet.conditions.delete(PetCondition.Happy);
+    }
+  }
+
+  private hungerProcess(pet: Pet, ctx: PetConditionContext) {
+    const hunger = ctx.getStat('hunger');
+    if (!hunger) return;
+    if (hunger.porcent <= 40) {
+      pet.conditions.add(PetCondition.Hungry);
+    } else if (pet.conditions.has(PetCondition.Hungry)) {
+      pet.conditions.delete(PetCondition.Hungry);
     }
   }
 }

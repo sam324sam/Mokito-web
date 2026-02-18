@@ -6,6 +6,7 @@ import { AnimationService } from './animation.service';
 import { ParticleService } from './particle/particle.service';
 import { PhysicsService } from './physics.service';
 import { InteractableObjectsService } from './interactable-objects/interactable-objects.service';
+import { MessageService } from './mesage/message.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +24,7 @@ export class GameLoopService {
     private readonly particleService: ParticleService,
     private readonly interactableObjectsService: InteractableObjectsService,
     private readonly physicsService: PhysicsService,
+    private readonly messageService: MessageService
   ) {}
 
   start() {
@@ -71,6 +73,7 @@ export class GameLoopService {
     this.interactableObjectsService.update(delta);
     this.particleService.update(delta);
     this.physicsService.update(delta);
+    this.messageService.update(delta);
   }
 
   private render() {

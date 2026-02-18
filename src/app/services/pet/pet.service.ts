@@ -43,7 +43,7 @@ export class PetService {
   // Signal para notificar cambios en stats
   statsChanged = signal<Stats[]>([]);
 
-  private status:boolean = false;
+  private status: boolean = false;
 
   constructor(
     private readonly entityStoreService: EntityStoreService,
@@ -66,8 +66,8 @@ export class PetService {
    */
   initPetService(canvas: HTMLCanvasElement): void {
     if (this.status) return;
-    this.status = true
-    
+    this.status = true;
+
     this.pet = this.dataService.getPetRuntime();
 
     this.colors = this.dataService.getColors();
@@ -238,7 +238,8 @@ export class PetService {
     setState: (state) => this.setState(state),
     getStat: (name) => this.getStatPet(name),
     setAnimation: (name) => this.setAnimation(name),
-    getAnimationDuration: (sprite, name) => this.animationService.getAnimationDuration(sprite, name), 
+    getAnimationDuration: (sprite, name) =>
+      this.animationService.getAnimationDuration(sprite, name),
     getDirection: () => this.petIaService.getDirection(),
     clearDirection: () => this.petIaService.clearDirection(),
     sumMinusStat: (name, value) => this.sumMinusStat(name, value),
@@ -252,6 +253,7 @@ export class PetService {
   private readonly petConditionContext: PetConditionContext = {
     getStat: (name) => this.getStatPet(name),
     setAnimation: (name) => this.setAnimation(name),
+    setState: (state) => this.setState(state),
   };
 
   /**

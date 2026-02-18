@@ -117,8 +117,8 @@ export class InteractableObjectsService {
   }
 
   deleteInteractuableObject(obj: InteractuableObject) {
-    this.entityStoreService.removeEntity(obj.id);
     if (obj.id == null) return;
+    this.entityStoreService.removeEntity(obj.id);
     this.activeObjects = this.activeObjects.filter((activeObj) => activeObj.id !== obj.id);
   }
 
