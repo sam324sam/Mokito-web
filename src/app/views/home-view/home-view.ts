@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
@@ -9,19 +9,27 @@ import { SoundService } from '../../services/sound.service';
   templateUrl: './home-view.html',
   styleUrl: './home-view.scss',
 })
-export class HomeView implements OnInit {
+export class HomeView implements OnInit, AfterViewInit {
   howPlay = false;
   whatNew = false;
   credits = false;
 
-  apiUrl: string = "https://api.github.com/repos/sam324sam/Mokito-web/commits";
+  apiUrl: string = 'https://api.github.com/repos/sam324sam/Mokito-web/commits';
 
-  latestCommitMessage: string = "";
+  latestCommitMessage: string = '';
 
-  constructor(private readonly router: Router, private readonly http: HttpClient, private readonly soundService: SoundService) {}
+  constructor(
+    private readonly router: Router,
+    private readonly http: HttpClient,
+    private readonly soundService: SoundService,
+  ) {}
 
   ngOnInit() {
     this.loadLatestCommit();
+  }
+
+  ngAfterViewInit() {
+    this.soundService.playMusic();
   }
 
   async loadLatestCommit() {
@@ -49,7 +57,7 @@ export class HomeView implements OnInit {
   }
 
   goToGame(): void {
-this.soundService.playMusic();
+    this.soundService.playMusic();
     this.router.navigate(['game']);
   }
 }

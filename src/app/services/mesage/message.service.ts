@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Message } from '../../models/message/message.model';
 import { EntityStoreService } from '../entity-store.service';
 import { Sprite } from '../../models/sprites/sprites.model';
-import { SoundService } from '../sound.service';
 @Injectable({ providedIn: 'root' })
 export class MessageService {
   defaultMesage: Message = {

@@ -41,12 +41,13 @@ export class SoundService {
   playMusic(name: string = 'default', loop = true): void {
     const src = this.music.get(name);
 
+    const audio = new Audio(src);
+    // Comprobar que no se este ejecutando esa musica para no cambiarla
     if (this.currentMusic) {
+      if (this.currentMusic.src == audio.src) return;
       this.currentMusic.pause();
       this.currentMusic = null;
     }
-
-    const audio = new Audio(src);
     audio.loop = loop;
     audio.volume = this.musicVolume;
     audio.play().catch(() => {});
