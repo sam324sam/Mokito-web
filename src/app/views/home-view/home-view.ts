@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
@@ -9,7 +9,7 @@ import { SoundService } from '../../services/sound.service';
   templateUrl: './home-view.html',
   styleUrl: './home-view.scss',
 })
-export class HomeView implements OnInit, AfterViewInit {
+export class HomeView implements OnInit {
   howPlay = false;
   whatNew = false;
   credits = false;
@@ -26,10 +26,6 @@ export class HomeView implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.loadLatestCommit();
-  }
-
-  ngAfterViewInit() {
-    this.soundService.playMusic();
   }
 
   async loadLatestCommit() {

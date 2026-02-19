@@ -122,13 +122,6 @@ export class PetStateService {
 
     // Emitir particulas de felicidad
     const sprite = pet.sprite;
-    const scale = pet.sprite.scale;
-
-    const centerX = sprite.x + (sprite.width * scale) / 2;
-    const centerY = sprite.y + (sprite.height * scale) / 2;
-
-    this.particleService.emitExplosion(centerX, centerY, 15, 2, null);
-
     const durationMs = ctx.getAnimationDuration(sprite, 'tutsitutsi');
 
     this.clearTimer(this.reactingTimeout);
