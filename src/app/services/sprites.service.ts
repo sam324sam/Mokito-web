@@ -173,7 +173,7 @@ export class SpriteService {
     const x = message.sprite.x;
     const y = message.sprite.y;
 
-    // Fondo blanco luego cambiar por sprite
+    // sprite y si no tiene lo carga con fondo blanco pitero
     this.ctx.fillStyle = 'white';
     this.ctx.fillRect(x - boxWidth / 2, y - boxHeight / 2, boxWidth, boxHeight);
 

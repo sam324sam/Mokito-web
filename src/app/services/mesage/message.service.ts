@@ -10,8 +10,8 @@ export class MessageService {
     sprite: {
       x: 0,
       y: 0,
-      width: 0,
-      height: 0,
+      width: 24,
+      height: 24,
       scale: 1,
       img: new Image(),
       color: null,
@@ -31,12 +31,12 @@ export class MessageService {
     maxTimeToLife: 4000,
   };
 
+  constructor(private readonly entityStoreService: EntityStoreService) {}
+
   messages: Message[] = [];
 
   private messageCooldown: number = 0;
   private readonly cooldownTime: number = 10000;
-
-  constructor(private readonly entityStoreService: EntityStoreService) {}
 
   addMessage(body: string, type: string, spriteTarget: Sprite, x: number, y: number): boolean {
     if (this.messageCooldown > 0) return false;
