@@ -130,3 +130,9 @@ Creacion de musica y efectos retro.
     </td>
   </tr>
 </table>
+
+## Autores de las tipografía
+
+Tipografía de la web: [Ænigma](https://www.dafont.com/aenigma.d188)
+
+Tipografía de mokito: [Dahaba](https://www.dafont.com/regina-dahaba.d11214)
