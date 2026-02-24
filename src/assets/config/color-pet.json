@@ -1,5 +1,6 @@
 {
   "colors": [
+    { "name": "Blanco", "color": "rgba(0, 0, 0, 0)" },
     { "name": "Azul", "color": "rgba(80, 120, 255, 0.25)" },
     { "name": "Rojo", "color": "rgba(255, 80, 80, 0.25)" },
     { "name": "Verde", "color": "rgba(80, 255, 150, 0.25)" },

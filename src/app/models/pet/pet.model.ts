@@ -32,10 +32,11 @@ export enum PetState {
   Reacting = 'reacting',
   Eating = 'eating',
   Bathing = 'bathing',
-  Talking= 'talking'
+  Talking = 'talking',
 }
 
 export enum PetCondition {
+  Dirty = 'dirty', // hygene < 15
   Tired = 'tired', // energia < 30
   Exhausted = 'exhausted', // energia < 15
   Happy = 'happy', // felicidad > 70

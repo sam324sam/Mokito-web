@@ -126,6 +126,22 @@ export class ParticleService {
     this.emit(amount, config);
   }
 
+
+  /**
+   * Particulas de olor sucio
+   */
+  emitDirty(
+    x: number,
+    y: number,
+    amount: number,
+    timeToLife: number,
+    textureName: string | null = null,
+  ) {
+    const tex = this.texture[textureName || 'default'];
+    const config = ParticleConfigs.dirty(x, y, timeToLife, tex, this.scale);
+    this.emit(amount, config);
+  }
+
   /**
    * Actualiza todas las particulas activas
    */

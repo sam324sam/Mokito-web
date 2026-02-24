@@ -28,6 +28,7 @@ export class PetConditionService {
     this.energyProcess(pet, ctx);
     this.happyProcess(pet, ctx);
     this.hungerProcess(pet, ctx);
+    this.hygieneProcess(pet, ctx);
   }
 
   // ==================== Metodos que se ejecutan segun las condiciones de la pet ====================
@@ -67,9 +68,9 @@ export class PetConditionService {
   }
 
   private sadCooldown: number = 0;
-  private sad(pet: Pet, delta: number, ctx: PetConditionContext): void {
+  private readonly sad: PetConditionBehavior = (pet, delta, ctx) => {
     if (pet.state == PetState.Idle) {
-      this.hungerCooldown -= delta;
+      this.sadCooldown -= delta;
       ctx.setAnimation('happiness65');
       if (this.sadCooldown > 0) return;
       if (pet.state == PetState.Idle) {
@@ -86,7 +87,7 @@ export class PetConditionService {
       }
       this.sadCooldown = 1500;
     }
-  }
+  };
 
   private depressed(pet: Pet, delta: number, ctx: PetConditionContext): void {
     if (pet.state == PetState.Idle) {
@@ -129,6 +130,38 @@ export class PetConditionService {
     }
   };
 
+  private dirtyCooldown: number = 0
+  private readonly dirty: PetConditionBehavior = (pet, delta, ctx) => {
+
+    
+
+    this.dirtyCooldown -= delta;
+
+    if (this.dirtyCooldown > 0) return;
+
+    const energy = ctx.getStat('energy');
+    if (!energy) return;
+    const energyFactor = Math.min(energy.porcent / 100, 0.5);
+    const probability = 0.5 + energyFactor;
+
+    if (Math.random() > probability) {
+      const width = pet.sprite.width * pet.sprite.scale;
+      const height = pet.sprite.height * pet.sprite.scale;
+
+      const x = pet.sprite.x + Math.random() * width;
+      const y = pet.sprite.y + Math.random() * height;
+      const number = Math.floor(Math.random() * 3) + 1;
+      const textureName = 'bubles' + number;
+        this.particleService.emitDirty(x, y, 1, 2, textureName);
+        if (Math.random() < 0.08) {
+          if (this.messageService.addMessage('olty', '', pet.sprite, pet.sprite.x, pet.sprite.y)) {
+            ctx.setState(PetState.Talking);
+          }
+        }
+      this.dirtyCooldown = 1000;
+    }
+  };
+
   private readonly behaviors: Map<PetCondition, PetConditionBehavior> = new Map([
     [PetCondition.Exhausted, this.exhausted],
     [PetCondition.Tired, this.tired],
@@ -137,6 +170,7 @@ export class PetConditionService {
     [PetCondition.Happy, this.happy],
     [PetCondition.Sad, this.sad],
     [PetCondition.Depressed, this.depressed],
+    [PetCondition.Dirty, this.dirty],
   ]);
 
   // ==================== Lo que genera la condicion de la pet ====================¡
@@ -175,10 +209,20 @@ export class PetConditionService {
   private hungerProcess(pet: Pet, ctx: PetConditionContext) {
     const hunger = ctx.getStat('hunger');
     if (!hunger) return;
-    if (hunger.porcent <= 40) {
+    if (hunger.porcent <= 15) {
       pet.conditions.add(PetCondition.Hungry);
     } else if (pet.conditions.has(PetCondition.Hungry)) {
       pet.conditions.delete(PetCondition.Hungry);
+    }
+  }
+
+  private hygieneProcess(pet: Pet, ctx: PetConditionContext) {
+    const hygiene = ctx.getStat('hunger');
+    if (!hygiene) return;
+    if (hygiene.porcent <= 40) {
+      pet.conditions.add(PetCondition.Dirty);
+    } else if (pet.conditions.has(PetCondition.Dirty)) {
+      pet.conditions.delete(PetCondition.Dirty);
     }
   }
 }

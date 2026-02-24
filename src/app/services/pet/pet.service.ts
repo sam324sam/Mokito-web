@@ -114,7 +114,7 @@ export class PetService {
    * Detiene la IA si la mascota es agarrada
    */
   setState(state: PetState): void {
-    if (this.pet.state === state) return;
+    if (this.pet.state === state || this.pet.cheats.godMode) return;
     //console.log("Estado de la pet", this.pet.state)
     this.pet.state = state;
     console.log(state);
@@ -124,6 +124,7 @@ export class PetService {
    * Actualiza el signal de stats para notificar cambios a la UI
    */
   setStats(stats: Stats[]): void {
+    if (this.pet.cheats.godMode) return;
     this.statsChanged.set(stats);
   }
 

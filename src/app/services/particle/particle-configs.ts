@@ -183,6 +183,23 @@ export const ParticleConfigs = {
       enabled: true,
     },
   }),
+  dirty: (
+    x: number,
+    y: number,
+    timeToLife: number,
+    texture: HTMLImageElement,
+    scale: number,
+  ): Particle => ({
+    ...baseParticleConfig(x, y, timeToLife, texture, scale),
+    tags: ['particle', 'dirty'],
+    behaviors: [fadeBehavior],
+    physics: {
+      vx: (Math.random() - 0.5) * 100,
+      vy: Math.random() * 10,
+      gravity: -200,
+      enabled: true,
+    },
+  }),
 };
 
 // ==================== Tipos de datos que retornan
