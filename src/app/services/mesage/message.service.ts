@@ -22,6 +22,7 @@ export class MessageService {
       frameSpeed: 0,
       frameCounter: 0,
       timeoutId: null,
+      zIndex: -1,
     },
     active: true,
     tags: ['message'],

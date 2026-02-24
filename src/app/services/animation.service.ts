@@ -14,7 +14,7 @@ export class AnimationService {
   constructor(private readonly entityStoreService: EntityStoreService) {}
 
   update(deltaTime: number) {
-    const entities = this.entityStoreService.getAllEntities();
+    const entities = this.entityStoreService.getZOrder();
     for (const entitie of entities) {
       const anim = entitie.sprite.animationSprite[entitie.sprite.currentAnimation];
       if (!anim) continue;

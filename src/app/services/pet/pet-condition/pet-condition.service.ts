@@ -41,7 +41,6 @@ export class PetConditionService {
   }
 
   private hungerCooldown: number = 0;
-
   private readonly hungry: PetConditionBehavior = (pet, delta, ctx) => {
     this.hungerCooldown -= delta;
 
@@ -53,7 +52,7 @@ export class PetConditionService {
       const probability = 0.02 + (1 - hungerFactor) * 0.3;
 
       if (Math.random() < probability) {
-        if(this.messageService.addMessage('lauy', '', pet.sprite, pet.sprite.x, pet.sprite.y)){
+        if (this.messageService.addMessage('lauy', '', pet.sprite, pet.sprite.x, pet.sprite.y)) {
           ctx.setState(PetState.Talking);
         }
       }
@@ -67,9 +66,25 @@ export class PetConditionService {
     }
   }
 
+  private sadCooldown: number = 0;
   private sad(pet: Pet, delta: number, ctx: PetConditionContext): void {
     if (pet.state == PetState.Idle) {
+      this.hungerCooldown -= delta;
       ctx.setAnimation('happiness65');
+      if (this.sadCooldown > 0) return;
+      if (pet.state == PetState.Idle) {
+        const happiness = ctx.getStat('happiness');
+        if (!happiness) return;
+        const happinessFactor = Math.min(happiness.porcent / 100, 1);
+        const probability = 0.02 + (1 - happinessFactor) * 0.3;
+
+        if (Math.random() < probability) {
+          if (this.messageService.addMessage('lEj?', '', pet.sprite, pet.sprite.x, pet.sprite.y)) {
+            ctx.setState(PetState.Talking);
+          }
+        }
+      }
+      this.sadCooldown = 1500;
     }
   }
 
@@ -93,7 +108,6 @@ export class PetConditionService {
 
     const energy = ctx.getStat('energy');
     if (!energy) return;
-
     const energyFactor = Math.min(energy.porcent / 100, 0.5);
     const probability = 0.5 + energyFactor;
 
@@ -106,7 +120,7 @@ export class PetConditionService {
       if (pet.state !== PetState.Sleeping) {
         this.particleService.emitDroplets(x, y, 1, 2, 'drops');
         if (Math.random() < 0.08) {
-          if(this.messageService.addMessage('olty', '', pet.sprite, pet.sprite.x, pet.sprite.y)){
+          if (this.messageService.addMessage('olty', '', pet.sprite, pet.sprite.x, pet.sprite.y)) {
             ctx.setState(PetState.Talking);
           }
         }

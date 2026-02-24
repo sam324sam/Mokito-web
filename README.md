@@ -133,6 +133,24 @@ Creacion de musica y efectos retro.
 
 ## Autores de las tipografía
 
-Tipografía de la web: [Ænigma](https://www.dafont.com/aenigma.d188)
+Tipografía de la web: [Ænigma](https://www.dafont.com/aenigma.d188) <spa class="nigma">¡Hola mundo!</span>
 
-Tipografía de mokito: [Dahaba](https://www.dafont.com/regina-dahaba.d11214)
+Tipografía de mokito: [Dahaba](https://www.dafont.com/regina-dahaba.d11214) <spa class="Dahaba">¡Hola mundo!</span>
+
+<style>
+@font-face {
+  font-family: 'upheavtt';
+  src: url('./public/assets/fonts/upheavtt.ttf') format('truetype');
+}
+.nigma {
+  font-family: 'upheavtt', sans-serif;
+}
+
+@font-face {
+  font-family: 'EmojiFont';
+  src: url('./public/assets/fonts/EmojiFont.ttf') format('truetype');
+}
+.Dahaba {
+  font-family: 'EmojiFont', sans-serif;
+}
+</style>   

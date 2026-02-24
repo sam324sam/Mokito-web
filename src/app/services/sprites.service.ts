@@ -65,7 +65,7 @@ export class SpriteService {
   render() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    const entities = this.entityStoreService.getAllEntities();
+    const entities = this.entityStoreService.getZOrder();
 
     for (const e of entities) {
       if (isMessage(e)) {
@@ -124,7 +124,7 @@ export class SpriteService {
   private renderColliders() {
     if (!this.ctx) return;
 
-    const entities = this.entityStoreService.getAllEntities();
+    const entities = this.entityStoreService.getZOrder();
     this.ctx.save();
     this.ctx.strokeStyle = 'red';
     this.ctx.lineWidth = 1;

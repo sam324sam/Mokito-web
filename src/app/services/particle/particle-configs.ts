@@ -13,10 +13,10 @@ export type ParticleBehavior = (particle: Particle, deltaTime: number) => void;
  */
 export const fadeBehavior: ParticleBehavior = (p, delta) => {
   const dt = delta / 1000;
-  
+
   p.timeToLife -= dt;
   if (p.timeToLife < 0) p.timeToLife = 0;
-  
+
   p.sprite.alpha = (p.timeToLife / p.maxTimeToLife) * 100;
 };
 
@@ -25,7 +25,7 @@ export const fadeBehavior: ParticleBehavior = (p, delta) => {
  */
 export const stickyBehavior: ParticleBehavior = (p, delta) => {
   if (!p.stickyTarget) return;
-  
+
   p.sprite.x = p.stickyTarget.spriteTarget.x + p.stickyTarget.offsetX;
   p.sprite.y = p.stickyTarget.spriteTarget.y + p.stickyTarget.offsetY;
 };
@@ -35,7 +35,7 @@ export const stickyBehavior: ParticleBehavior = (p, delta) => {
  */
 export const slowDownBehavior: ParticleBehavior = (p, delta) => {
   if (!('physics' in p) || !p.physics) return;
-  
+
   const dt = delta / 1000;
   p.physics.vx *= Math.pow(0.95, dt * 60);
   p.physics.vy *= Math.pow(0.95, dt * 60);
@@ -52,7 +52,7 @@ const baseParticleConfig = (
   y: number,
   timeToLife: number,
   texture: HTMLImageElement,
-  scale: number
+  scale: number,
 ): Particle => ({
   id: 0,
   active: true,
@@ -73,6 +73,7 @@ const baseParticleConfig = (
     frameCounter: 0,
     timeoutId: null,
     alpha: 100,
+    zIndex: -1,
   },
   collider: {
     offsetX: 0,
@@ -80,7 +81,7 @@ const baseParticleConfig = (
     width: 5,
     height: 5,
   },
-  tags: []
+  tags: [],
 });
 
 export const ParticleConfigs = {
@@ -93,7 +94,7 @@ export const ParticleConfigs = {
     y: number,
     timeToLife: number,
     texture: HTMLImageElement,
-    scale: number
+    scale: number,
   ): Particle => ({
     ...baseParticleConfig(x, y, timeToLife, texture, scale),
     tags: ['particle', 'explosion'],
@@ -115,7 +116,7 @@ export const ParticleConfigs = {
     y: number,
     timeToLife: number,
     texture: HTMLImageElement,
-    scale: number
+    scale: number,
   ): Particle => ({
     ...baseParticleConfig(x, y, timeToLife, texture, scale),
     tags: ['particle', 'droplet'],
@@ -138,7 +139,7 @@ export const ParticleConfigs = {
     timeToLife: number,
     texture: HTMLImageElement,
     scale: number,
-    entityTarget: Entity
+    entityTarget: Entity,
   ): Particle => ({
     ...baseParticleConfig(0, 0, timeToLife, texture, scale),
     tags: ['particle', 'bubbles'],
@@ -158,7 +159,7 @@ export const ParticleConfigs = {
       offsetY: 0,
       width: 8,
       height: 8,
-    }
+    },
   }),
 
   /**
@@ -170,7 +171,7 @@ export const ParticleConfigs = {
     y: number,
     timeToLife: number,
     texture: HTMLImageElement,
-    scale: number
+    scale: number,
   ): Particle => ({
     ...baseParticleConfig(x, y, timeToLife, texture, scale),
     tags: ['particle', 'water'],

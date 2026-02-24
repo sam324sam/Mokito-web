@@ -24,4 +24,6 @@ export interface Sprite {
 
   // para el temporizador de cambiar a animacion idle
   timeoutId: number | null;
+
+  zIndex: number;
 }

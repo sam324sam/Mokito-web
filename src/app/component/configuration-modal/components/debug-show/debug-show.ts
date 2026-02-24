@@ -12,6 +12,6 @@ export class DebugShow {
   @Input() isDebugSectionOpen: boolean = false;
   entityDebug: Entity[] = [];
   constructor(private readonly entityStoreService: EntityStoreService) {
-    this.entityDebug = this.entityStoreService.getAllEntities();
+    this.entityDebug = this.entityStoreService.getZOrder();
   }
 }

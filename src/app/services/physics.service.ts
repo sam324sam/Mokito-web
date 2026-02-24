@@ -24,7 +24,7 @@ export class PhysicsService {
     if (!canvas) return;
 
     const dt = delta / 1000;
-    const entities = this.entityStore.getAllEntities();
+    const entities = this.entityStore.getZOrder();
 
     // Aplicar fisica a todas las entidades
     for (const element of entities) {

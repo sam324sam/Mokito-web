@@ -118,6 +118,7 @@ export class DataService {
           nameBehaviors: [],
           sprite: {
             ...object.sprite,
+            zIndex: 1,
             color: null,
             img: spriteImage,
             animationSprite: {},
@@ -145,6 +146,7 @@ export class DataService {
         type: element.type as ObjectType,
         sprite: {
           ...element.sprite,
+          zIndex: 1,
           color: null,
           img,
           animationSprite: {},

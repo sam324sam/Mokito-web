@@ -62,7 +62,7 @@ export class GrabService {
   }
 
   private getGrabbedEntity(): (Entity & Grab) | null {
-    const entities = this.entityStore.getAllEntities();
+    const entities = this.entityStore.getZOrder();
     const grabbed = entities.find((e) => hasGrab(e) && e.grab.isGrabbed) as
       | (Entity & Grab)
       | undefined;
@@ -78,7 +78,7 @@ export class GrabService {
     event: PointerEvent,
   ): (Entity & { grab: { isGrabbed: boolean; grabOffsetX: number; grabOffsetY: number } }) | null {
     const mouse = this.getMousePos(event);
-    const entities = this.entityStore.getAllEntities();
+    const entities = this.entityStore.getZOrder();
 
     for (let i = entities.length - 1; i >= 0; i--) {
       const e = entities[i];

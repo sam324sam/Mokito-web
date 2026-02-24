@@ -104,7 +104,7 @@ export class InteractableObjectsService {
   }
 
   spawnLocation(runtimeObj: InteractuableObjectRuntime) {
-    const entities = this.entityStoreService.getAllEntities();
+    const entities = this.entityStoreService.getZOrder();
 
     if (runtimeObj.type == ObjectType.Food) {
       const table = entities.filter(isInteractuableObject).find((e) => e.name === 'Mesa');
