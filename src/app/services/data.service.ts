@@ -75,6 +75,7 @@ export class DataService {
         frameCounter: 0,
         timeoutId: null,
         alpha: 100,
+        rotation: null,
       },
       // runtime cambiar luego a otro sitio
       grab: {
@@ -125,6 +126,7 @@ export class DataService {
             frameCounter: 0,
             timeoutId: null,
             alpha: 100,
+            rotation: null,
           },
         };
       }
@@ -146,13 +148,14 @@ export class DataService {
         type: element.type as ObjectType,
         sprite: {
           ...element.sprite,
-          zIndex: 1,
+          zIndex: element.sprite.zIndex ? element.sprite.zIndex : 1,
           color: null,
           img,
           animationSprite: {},
           frameCounter: 0,
           timeoutId: null,
           alpha: 100,
+          rotation: null,
         },
         timeToLife: objTimeToLife,
         active: true,

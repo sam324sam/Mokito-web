@@ -32,6 +32,7 @@ import { hasGrab } from '../../guards/has-grab.guard';
 @Injectable({ providedIn: 'root' })
 export class PetService {
   // Datos de la mascota y entorno
+  // Cambiar esto a privado luego
   pet: Pet = {} as Pet;
   colors: Color[] = [];
   rooms: Room[] = {} as Room[];
@@ -114,7 +115,7 @@ export class PetService {
    * Detiene la IA si la mascota es agarrada
    */
   setState(state: PetState): void {
-    if (this.pet.state === state || this.pet.cheats.godMode) return;
+    if (this.pet.state === state) return;
     //console.log("Estado de la pet", this.pet.state)
     this.pet.state = state;
     console.log(state);
@@ -214,7 +215,7 @@ export class PetService {
    */
   sumMinusStat(name: string, value: number): void {
     const stat = this.getStatPet(name);
-    if (!stat) return;
+    if (!stat || this.pet.cheats.godMode) return;
 
     stat.porcent = Math.min(100, Math.max(0, stat.porcent + value));
   }

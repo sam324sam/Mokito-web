@@ -64,7 +64,7 @@ export class CollisionService {
       return;
     }
 
-    // Particle y Pet 
+    // Particle y Pet
     if (
       (this.hasTag(a, 'particle') && this.hasTag(b, 'pet')) ||
       (this.hasTag(b, 'particle') && this.hasTag(a, 'pet'))
@@ -139,7 +139,12 @@ export class CollisionService {
    * Resuelve la colision entre una particula y un objeto
    */
   private resolveParticleObjectCollision(particle: Entity, object: Entity): void {
-    if (!hasCollider(particle) || !hasCollider(object) || !hasPhysics(particle)) {
+    if (
+      !hasCollider(particle) ||
+      !hasCollider(object) ||
+      !hasPhysics(particle) ||
+      this.hasTag(particle, 'gas')
+    ) {
       return;
     }
 

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Sprite } from '../models/sprites/sprites.model';
 import { AnimationSet } from '../models/sprites/animation-set.model';
 import { AnimationSprite } from '../models/sprites/animation-sprite.model';
-import { Pet } from '../models/pet/pet.model';
+import { Entity } from '../models/entity/entity.model';
 // Servicio
 import { EntityStoreService } from './entity-store.service';
 
@@ -79,9 +79,9 @@ export class AnimationService {
   }
 
   /**
-   * para las cargar las animaciones
+   * para las cargar las animaciones (se deve cambiar para poder meter animaciones a cualquier entidad)
    */
-  loadAnimations(pet: Pet, animations: AnimationSet[]) {
+  loadAnimations(entity: Entity, animations: AnimationSet[]) {
     for (const anim of animations) {
       const frames: HTMLImageElement[] = [];
 
@@ -96,7 +96,7 @@ export class AnimationService {
         animationType: anim.animationType,
       };
 
-      pet.sprite.animationSprite[anim.name] = animation;
+      entity.sprite.animationSprite[anim.name] = animation;
     }
   }
 }

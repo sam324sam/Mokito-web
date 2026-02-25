@@ -16,7 +16,8 @@
   },
   "cheats": {
     "godMode": false,
-    "noMoreMove": false
+    "noMoreMove": false,
+    "noConditionProcces": false
   },
 
   "state": "idle",

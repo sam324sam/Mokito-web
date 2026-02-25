@@ -68,6 +68,7 @@ export class SpriteService {
     const entities = this.entityStoreService.getZOrder();
 
     for (const e of entities) {
+      this.ctx.save();
       if (isMessage(e)) {
         this.renderText(e);
         continue;
@@ -77,11 +78,14 @@ export class SpriteService {
 
       const frame = this.animationService.getFrame(sprite) ?? sprite.img;
       if (!frame) continue;
-      this.ctx.save();
+
       this.limitToCanvas(sprite);
       this.ctx.imageSmoothingEnabled = false;
       this.ctx.globalAlpha = sprite.alpha / 100;
-      if (
+
+      if (sprite.rotation !== null) {
+        this.renderRotateSprite(sprite, frame);
+      } else if (
         frame instanceof HTMLImageElement &&
         frame.complete &&
         frame.naturalWidth > 0 &&
@@ -110,7 +114,6 @@ export class SpriteService {
           sprite.height * this.spriteScale,
         );
       }
-
       this.ctx.restore();
     }
     // Dibujar colliders solo si esta activado
@@ -118,6 +121,34 @@ export class SpriteService {
       this.renderColliders();
     }
   }
+
+  /**
+   * Renderiza los objetos que se estan rotando
+   */
+  private renderRotateSprite(sprite: Sprite, frame: HTMLImageElement) {
+    if (sprite.rotation == null) return;
+    this.ctx.save();
+    // Mover el origen al centro del sprite
+    this.ctx.translate(sprite.x, sprite.y);
+    this.ctx.rotate(sprite.rotation);
+
+    if (
+      frame instanceof HTMLImageElement &&
+      frame.complete &&
+      frame.naturalWidth > 0 &&
+      frame.naturalHeight > 0 &&
+      Number.isFinite(sprite.width) &&
+      Number.isFinite(sprite.height)
+    ) {
+      const width = sprite.width * this.spriteScale;
+      const height = sprite.height * this.spriteScale;
+
+      // Dibujar centrado
+      this.ctx.drawImage(frame, -width / 2, -height / 2, width, height);
+    }
+    this.ctx.restore();
+  }
+
   /**
    * Renderiza los colliders de todas las entidades para depuracion
    */
@@ -150,11 +181,10 @@ export class SpriteService {
    */
   private renderText(message: Entity) {
     if (!isMessage(message)) return;
-
+    this.ctx.save();
     const scale = this.spriteScale;
     const padding = 4 * scale;
 
-    this.ctx.save();
     this.ctx.globalAlpha = message.sprite.alpha / 100;
 
     this.ctx.font = `${10 * scale}px EmojiFont`;

@@ -23,6 +23,7 @@ export class MessageService {
       frameCounter: 0,
       timeoutId: null,
       zIndex: -1,
+      rotation: null
     },
     active: true,
     tags: ['message'],

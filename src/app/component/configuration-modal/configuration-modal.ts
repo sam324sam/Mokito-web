@@ -7,12 +7,13 @@ import { DataConfig } from './components/data-config/data-config';
 import { Cheats } from './components/cheats/cheats';
 import { UserUiConfig } from "./components/user-ui-config/user-ui-config";
 import { DebugShow } from "./components/debug-show/debug-show";
+import { DebugPet } from "./components/debug-pet/debug-pet";
 
 @Component({
   selector: 'app-configuration-modal',
   templateUrl: './configuration-modal.html',
   styleUrl: './configuration-modal.scss',
-  imports: [SoundConfig, ColorSelector, DataConfig, Cheats, UserUiConfig, DebugShow],
+  imports: [SoundConfig, ColorSelector, DataConfig, Cheats, UserUiConfig, DebugShow, DebugPet],
 })
 export class ConfigurationModal {
   @Input() isOpenConfiguration: boolean = false;
@@ -25,6 +26,7 @@ export class ConfigurationModal {
   isSaveSectionOpen = false;
   isUserUiSectionOpen = false;
   isDebugSectionOpen = false;
+  idDebugPetSectionOpen = false;
 
   toggleSoundSection() {
     this.isSoundSectionOpen = !this.isSoundSectionOpen;
@@ -48,6 +50,10 @@ export class ConfigurationModal {
 
   togleDebugSection(){
     this.isDebugSectionOpen = !this.isDebugSectionOpen;
+  }
+
+  togleDebugPetSection(){
+    this.idDebugPetSectionOpen = !this.idDebugPetSectionOpen;
   }
 
   close() {

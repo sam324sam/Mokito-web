@@ -41,6 +41,16 @@ export const slowDownBehavior: ParticleBehavior = (p, delta) => {
   p.physics.vy *= Math.pow(0.95, dt * 60);
 };
 
+/**
+ * Rotar el sprite de una particula
+ */
+export const rotateBehavior: ParticleBehavior = (p, delta) => {
+  if (p.sprite.rotation == null) return;
+
+  const speed = Math.PI / 180;
+  p.sprite.rotation += speed * delta;
+};
+
 // =================== Configuracion base
 
 /**
@@ -74,6 +84,7 @@ const baseParticleConfig = (
     timeoutId: null,
     alpha: 100,
     zIndex: -1,
+    rotation: null,
   },
   collider: {
     offsetX: 0,
@@ -119,7 +130,7 @@ export const ParticleConfigs = {
     scale: number,
   ): Particle => ({
     ...baseParticleConfig(x, y, timeToLife, texture, scale),
-    tags: ['particle', 'droplet'],
+    tags: ['particle', 'droplet', 'gas'],
     behaviors: [fadeBehavior, slowDownBehavior],
     physics: {
       vx: 0,
@@ -183,6 +194,7 @@ export const ParticleConfigs = {
       enabled: true,
     },
   }),
+
   dirty: (
     x: number,
     y: number,
@@ -191,8 +203,12 @@ export const ParticleConfigs = {
     scale: number,
   ): Particle => ({
     ...baseParticleConfig(x, y, timeToLife, texture, scale),
-    tags: ['particle', 'dirty'],
-    behaviors: [fadeBehavior],
+    tags: ['particle', 'dirty', 'gas'],
+    behaviors: [fadeBehavior, rotateBehavior],
+    sprite: {
+      ...baseParticleConfig(x, y, timeToLife, texture, scale).sprite,
+      rotation: 0,
+    },
     physics: {
       vx: (Math.random() - 0.5) * 100,
       vy: Math.random() * 10,

@@ -21,7 +21,9 @@ export class PetConditionService {
       const behavior = this.behaviors.get(condition);
       behavior?.(pet, delta, ctx);
     }
-    this.conditionProcess(pet, ctx);
+    if (!pet.cheats.noConditionProcces) {
+      this.conditionProcess(pet, ctx);
+    }
   }
 
   conditionProcess(pet: Pet, ctx: PetConditionContext) {
@@ -33,13 +35,9 @@ export class PetConditionService {
 
   // ==================== Metodos que se ejecutan segun las condiciones de la pet ====================
 
-  private exhausted(pet: Pet, delta: number, ctx: PetConditionContext): void {
-    console.log('');
-  }
+  private readonly exhausted: PetConditionBehavior = (pet, delta, ctx) => {};
 
-  private energetic(pet: Pet, delta: number, ctx: PetConditionContext): void {
-    console.log('');
-  }
+  private readonly energetic: PetConditionBehavior = (pet, delta, ctx) => {};
 
   private hungerCooldown: number = 0;
   private readonly hungry: PetConditionBehavior = (pet, delta, ctx) => {
@@ -80,7 +78,7 @@ export class PetConditionService {
         const probability = 0.02 + (1 - happinessFactor) * 0.3;
 
         if (Math.random() < probability) {
-          if (this.messageService.addMessage('lEj?', '', pet.sprite, pet.sprite.x, pet.sprite.y)) {
+          if (this.messageService.addMessage('lE?', '', pet.sprite, pet.sprite.x, pet.sprite.y)) {
             ctx.setState(PetState.Talking);
           }
         }
@@ -130,18 +128,15 @@ export class PetConditionService {
     }
   };
 
-  private dirtyCooldown: number = 0
+  private dirtyCooldown: number = 0;
   private readonly dirty: PetConditionBehavior = (pet, delta, ctx) => {
-
-    
-
     this.dirtyCooldown -= delta;
 
     if (this.dirtyCooldown > 0) return;
 
-    const energy = ctx.getStat('energy');
-    if (!energy) return;
-    const energyFactor = Math.min(energy.porcent / 100, 0.5);
+    const hygiene = ctx.getStat('hygiene');
+    if (!hygiene) return;
+    const energyFactor = Math.min(hygiene.porcent / 100, 0.5);
     const probability = 0.5 + energyFactor;
 
     if (Math.random() > probability) {
@@ -151,13 +146,13 @@ export class PetConditionService {
       const x = pet.sprite.x + Math.random() * width;
       const y = pet.sprite.y + Math.random() * height;
       const number = Math.floor(Math.random() * 3) + 1;
-      const textureName = 'bubles' + number;
-        this.particleService.emitDirty(x, y, 1, 2, textureName);
-        if (Math.random() < 0.08) {
-          if (this.messageService.addMessage('olty', '', pet.sprite, pet.sprite.x, pet.sprite.y)) {
-            ctx.setState(PetState.Talking);
-          }
+      const textureName = 'dirty' + number;
+      this.particleService.emitDirty(x, y, 1, 2, textureName);
+      if (Math.random() < 0.08) {
+        if (this.messageService.addMessage('olt?', '', pet.sprite, pet.sprite.x, pet.sprite.y)) {
+          ctx.setState(PetState.Talking);
         }
+      }
       this.dirtyCooldown = 1000;
     }
   };
@@ -217,7 +212,7 @@ export class PetConditionService {
   }
 
   private hygieneProcess(pet: Pet, ctx: PetConditionContext) {
-    const hygiene = ctx.getStat('hunger');
+    const hygiene = ctx.getStat('hygiene');
     if (!hygiene) return;
     if (hygiene.porcent <= 40) {
       pet.conditions.add(PetCondition.Dirty);

@@ -15,6 +15,7 @@ export interface Pet extends Entity {
 export interface Cheats {
   godMode: boolean;
   noMoreMove: boolean;
+  noConditionProcces: boolean;
 }
 
 export interface Stats {

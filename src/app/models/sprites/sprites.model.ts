@@ -24,6 +24,8 @@ export interface Sprite {
 
   // para el temporizador de cambiar a animacion idle
   timeoutId: number | null;
-
+  // Para diferenciar que objetos van encima de otros
   zIndex: number;
+  // Si lo imagen rota
+  rotation: number | null;
 }
