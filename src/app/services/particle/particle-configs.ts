@@ -65,6 +65,7 @@ const baseParticleConfig = (
   scale: number,
 ): Particle => ({
   id: 0,
+  name: "particleBase",
   active: true,
   timeToLife,
   maxTimeToLife: timeToLife,

@@ -1,0 +1,20 @@
+{
+  "images": [
+    "assets/img/icon/UI/console/purple/frame-console.png",
+    "assets/img/icon/UI/console/purple/frame-pet.png",
+    "assets/img/cursor/cursor.png",
+    "assets/img/cursor/cursor-pointer.png",
+    "assets/img/cursor/cursor-grab.png",
+    "assets/img/icon/UI/border.png",
+    "assets/img/icon/UI/border-s.png",
+    "assets/img/icon/UI/console/console-name.png",
+
+    "assets/img/icon/configuration/xmark.png",
+    "assets/img/icon/configuration/sound.png",
+    "assets/img/icon/configuration/color.png",
+    "assets/img/icon/configuration/Ui-config.png",
+    "assets/img/icon/configuration/data.png",
+    "assets/img/icon/configuration/cheats.png",
+    "assets/img/icon/configuration/debug.png"
+  ]
+}

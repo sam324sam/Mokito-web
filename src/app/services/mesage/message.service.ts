@@ -7,6 +7,7 @@ import { Sprite } from '../../models/sprites/sprites.model';
 export class MessageService {
   defaultMesage: Message = {
     id: 0,
+    name: "message",
     sprite: {
       x: 0,
       y: 0,

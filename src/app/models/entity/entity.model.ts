@@ -1,7 +1,8 @@
-import { Sprite } from "../sprites/sprites.model";
+import { Sprite } from '../sprites/sprites.model';
 
 export interface Entity {
   id: number | null;
+  name: string;
   sprite: Sprite;
   active: boolean;
   tags: string[];

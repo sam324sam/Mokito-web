@@ -5,7 +5,7 @@
 
 @font-face {
   font-family: 'upheavtt';
-  src: url('../public/assets/fonts/upheavtt.ttf') format('truetype');
+  src: url('../public/assets/fonts/upheavtt.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -13,7 +13,7 @@
 
 @font-face {
   font-family: 'EmojiFont';
-  src: url('../public/assets/fonts/EmojiFont.ttf') format('truetype');
+  src: url('../public/assets/fonts/EmojiFont.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -66,14 +66,14 @@ img {
 /* Cajita */
 .pixel-box {
   border: 20px solid transparent;
-  border-image: url('../public/assets/img/icon/UI/border.png') 6 fill round;
+  border-image: url('/assets/img/icon/UI/border.png') 6 fill round;
   image-rendering: pixelated;
   border-radius: 1em;
 }
 
 .pixel-box-s {
   border: 8px solid transparent;
-  border-image: url('../public/assets/img/icon/UI/border-s.png') 6 fill round;
+  border-image: url('/assets/img/icon/UI/border-s.png') 6 fill round;
   image-rendering: pixelated;
 }
 
@@ -98,6 +98,7 @@ img {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #296dff;
+  
   box-shadow: inset 0 0 0 3px rgb(59, 110, 163);
 }
 
@@ -117,7 +118,7 @@ img {
 
 .console-name {
   border: 16px solid black;
-  border-image: url('../public/assets/img/icon/UI/console/console-name.png') 16 fill round;
+  border-image: url('/assets/img/icon/UI/console/console-name.png') 16 fill round;
   image-rendering: pixelated;
 }
 
@@ -138,7 +139,7 @@ img {
 
   .console-name {
     border: 8px solid black;
-    border-image: url('../public/assets/img/icon/UI/console/console-name.png') 16 fill round;
+    border-image: url('/assets/img/icon/UI/console/console-name.png') 16 fill round;
     image-rendering: pixelated;
   }
 }

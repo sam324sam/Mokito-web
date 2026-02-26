@@ -7,7 +7,7 @@ export interface Sprite {
   width: number;
   height: number;
   scale: number;
-  // imagen base opcional
+  // imagen base
   img: HTMLImageElement;
   color: Color | null;
   alpha: number;
