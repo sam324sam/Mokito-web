@@ -17,68 +17,42 @@ import objectsJson from '../../assets/config/interactuable-object.json';
 import particleTextureJson from '../../assets/config/particle-texture.json';
 import musicJson from '../../assets/sound/music.json';
 import efectsJson from '../../assets/sound/efects.json';
-import doom from '../../assets/config/img/dom.json';
 import { Entity } from '../models/entity/entity.model';
-
-/**
- * Interfaz para los datos de animación crudos del JSON
- * No incluye petId ya que se agrega programáticamente
- */
-interface RawAnimationSet {
-  name: string;
-  baseUrl: string;
-  frames: number;
-  animationType: string;
-}
 
 @Injectable({ providedIn: 'root' })
 export class DataService {
-  // Colores predefinidos
-  colors: Color[] = {} as Color[];
 
+  // Datos principales
+  colors: Color[] = {} as Color[];
   pet: Pet = {} as Pet;
   petRuntime!: PetRuntime;
   objects: InteractuableObject[] = [];
-
-  // Luego cargar la config de la particula para cargarla
-  particleTexture: Record<string, HTMLImageElement> = {};
-
-  animationsCache: Record<number, AnimationSet[]> = {};
   rooms: Room[] = [];
 
+  // Recursos en memoria
+  particleTexture: Record<string, HTMLImageElement> = {};
+  animationsCache: Record<number, AnimationSet[]> = {};
   music: Map<string, string> = new Map();
   efects: Map<string, string> = new Map();
 
+  /**
+   * Carga todos los assets iniciales de la aplicacion
+   * Inicializa datos desde json y precarga animaciones
+   */
   async loadAllAssets(): Promise<void> {
-    // pet, rooms, objects
     this.loadFromJson();
-    // imagenes del DOM
-    await this.preloadImagesFromJson();
 
-    // Preload de animaciones
     await this.loadAnimations(this.petRuntime);
+
     for (const object of this.objects) {
       await this.loadAnimations(object);
     }
   }
 
   /**
-   *Precarga de imagenes del doom
+   * Carga una imagen y devuelve una promesa
+   * Se utiliza para precargar recursos graficos
    */
-  async preloadImagesFromJson(): Promise<void> {
-    const promises: Promise<void>[] = doom.images.map((src) =>
-      this.loadImage(src)
-        .then(() => {
-          // se cargo la img
-        })
-        .catch((err) => {
-          console.warn(`No se pudo cargar la imagen: ${src}`, err);
-        }),
-    );
-
-    await Promise.all(promises);
-  }
-
   private loadImage(src: string): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -89,21 +63,23 @@ export class DataService {
   }
 
   /**
-   * Cargar los datos del json por defecto
+   * Inicializa todos los datos base desde los json
+   * Colores, pet, rooms, objetos, particulas y sonidos
    */
   private loadFromJson() {
-    // Cargar los colores
+
+    // Colores
     this.colors = [...colorsJson.colors];
-    // Cargar mascota
-    // Mascota
+
+    // Mascota base
     const jsonPet = petDefault;
     const rawState = jsonPet.state;
-    const petState: PetState = Object.values(PetState).includes(rawState as PetState)
-      ? (rawState as PetState)
-      : PetState.Idle;
+    const petState: PetState =
+      Object.values(PetState).includes(rawState as PetState)
+        ? (rawState as PetState)
+        : PetState.Idle;
 
-    // Imagen default
-    let imgDefault = new Image();
+    const imgDefault = new Image();
     imgDefault.src = jsonPet.sprite.img;
 
     this.petRuntime = {
@@ -121,7 +97,6 @@ export class DataService {
         alpha: 100,
         rotation: null,
       },
-      // runtime cambiar luego a otro sitio
       grab: {
         isGrabbed: false,
         grabOffsetX: 0,
@@ -135,7 +110,7 @@ export class DataService {
       },
     };
 
-    // cargar room
+    // Rooms y objetos internos
     this.rooms = roomsJson.rooms.map((room) => {
       const objects: Record<string, InteractuableObject> = {};
 
@@ -164,16 +139,19 @@ export class DataService {
           },
         };
       }
-      // Precargar la imgen de la room para que deje de popear al cambiar de una vez
+
+      // Precarga imagen de la room
       this.loadImage(room.img);
+
       return {
         ...room,
         objects,
       };
     });
 
-    // cargar los objetos
+    // Objetos globales
     const objTimeToLife = 50000;
+
     this.objects = objectsJson.map((element) => {
       const img = new Image();
       img.src = element.sprite.img;
@@ -198,34 +176,37 @@ export class DataService {
       };
     });
 
-    // Carga las texturas de las particulas
+    // Texturas de particulas
     for (const tex of particleTextureJson.texture) {
       if (!tex.name) continue;
 
       const img = new Image();
       img.src = tex.src;
-
       this.particleTexture[tex.name] = img;
     }
 
-    // Cargar los ejectos de sonido y musica
+    // Musica
     for (const element of musicJson) {
       this.music.set(element.name, element.src);
     }
+
+    // Efectos
     for (const element of efectsJson) {
       this.efects.set(element.name, element.src);
     }
   }
 
   /**
-   * para las cargar las animaciones (se deve cambiar para poder meter animaciones a cualquier entidad)
-   * @param entity - La entidad a la que se le cargarán las animaciones
-   * @param rawAnimations - Array de animaciones crudas del JSON (sin petId)
-   * @param petId - ID de la mascota para asociar las animaciones
+   * Carga todas las animaciones asociadas a una entidad
+   * Busca las animaciones en el json por nombre
    */
   async loadAnimations(entity: Entity): Promise<void> {
+
     entity.sprite.animationSprite = {};
-    const rawAnimations = animations.find((o) => o.name === entity.name)?.animations;
+
+    const rawAnimations =
+      animations.find((o) => o.name === entity.name)?.animations;
+
     if (!rawAnimations) return;
 
     const promises: Promise<number>[] = [];
@@ -235,11 +216,14 @@ export class DataService {
 
       for (let i = 0; i < anim.frames; i++) {
         const frameSrc = `${anim.baseUrl}pixil-frame-${i}.png`;
-        const promise = this.loadImage(frameSrc).then((img) => frames.push(img));
+
+        const promise = this
+          .loadImage(frameSrc)
+          .then((img) => frames.push(img));
+
         promises.push(promise);
       }
 
-      // Guardar el AnimationSprite temporalmente
       entity.sprite.animationSprite[anim.name] = {
         frameImg: frames,
         animationType: anim.animationType as AnimationType,
@@ -249,37 +233,57 @@ export class DataService {
     await Promise.all(promises);
   }
 
+  /**
+   * Devuelve las texturas de particulas
+   */
   getParticleTexture(): Record<string, HTMLImageElement> {
     return this.particleTexture;
   }
 
+  /**
+   * Devuelve el mapa de musica
+   */
   getMusic(): Map<string, string> {
     return this.music;
   }
 
+  /**
+   * Devuelve el mapa de efectos
+   */
   getEfects(): Map<string, string> {
     return this.efects;
   }
 
-  // Devuelve la mascota
+  /**
+   * Devuelve el runtime actual de la mascota
+   */
   getPetRuntime(): Pet {
     return this.petRuntime;
   }
 
+  /**
+   * Devuelve los colores disponibles
+   */
   getColors(): Color[] {
     return this.colors;
   }
 
+  /**
+   * Devuelve las rooms cargadas
+   */
   getRooms(): Room[] {
     return this.rooms;
   }
 
+  /**
+   * Devuelve los objetos globales
+   */
   getObjects(): InteractuableObject[] {
     return this.objects;
   }
 
   /**
-   * Devuelve las animaciones de la mascota
+   * Devuelve animaciones cacheadas por id
    */
   getAnimations(petId: number): AnimationSet[] {
     console.log('Animaciones en cache', this.animationsCache[petId]);
