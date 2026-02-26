@@ -66,14 +66,14 @@ img {
 /* Cajita */
 .pixel-box {
   border: 20px solid transparent;
-  border-image: url('/assets/img/icon/UI/border.png') 6 fill round;
+  border-image: url('../public/assets/img/icon/UI/border.png') 6 fill round;
   image-rendering: pixelated;
   border-radius: 1em;
 }
 
 .pixel-box-s {
   border: 8px solid transparent;
-  border-image: url('/assets/img/icon/UI/border-s.png') 6 fill round;
+  border-image: url('../public/assets/img/icon/UI/border-s.png') 6 fill round;
   image-rendering: pixelated;
 }
 
@@ -98,7 +98,6 @@ img {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #296dff;
-  
   box-shadow: inset 0 0 0 3px rgb(59, 110, 163);
 }
 
@@ -118,7 +117,7 @@ img {
 
 .console-name {
   border: 16px solid black;
-  border-image: url('/assets/img/icon/UI/console/console-name.png') 16 fill round;
+  border-image: url('../public/assets/img/icon/UI/console/console-name.png') 16 fill round;
   image-rendering: pixelated;
 }
 
@@ -139,7 +138,7 @@ img {
 
   .console-name {
     border: 8px solid black;
-    border-image: url('/assets/img/icon/UI/console/console-name.png') 16 fill round;
+    border-image: url('../public/assets/img/icon/UI/console/console-name.png') 16 fill round;
     image-rendering: pixelated;
   }
 }
