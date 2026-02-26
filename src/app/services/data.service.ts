@@ -281,12 +281,4 @@ export class DataService {
   getObjects(): InteractuableObject[] {
     return this.objects;
   }
-
-  /**
-   * Devuelve animaciones cacheadas por id
-   */
-  getAnimations(petId: number): AnimationSet[] {
-    console.log('Animaciones en cache', this.animationsCache[petId]);
-    return this.animationsCache[petId] || [];
-  }
 }

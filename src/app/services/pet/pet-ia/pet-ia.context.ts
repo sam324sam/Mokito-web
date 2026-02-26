@@ -8,6 +8,5 @@ export interface PetIaContext {
   modifyStat(name: string, amount: number): void;
   getStat(name: string): Stats | null;
   sumMinusStat(name:string, n:number): void;
-  setIdleAnimation(name: string): void;
   emitParticle(x: number, y: number): void;
 }

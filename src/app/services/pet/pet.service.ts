@@ -36,7 +36,6 @@ export class PetService {
   pet: Pet = {} as Pet;
   colors: Color[] = [];
   rooms: Room[] = {} as Room[];
-  animations: AnimationSet[] = [];
 
   // Control de IA
   activeIa = true;
@@ -72,11 +71,7 @@ export class PetService {
     this.pet = this.dataService.getPetRuntime();
 
     this.colors = this.dataService.getColors();
-
-    this.animations = this.dataService.getAnimations(this.pet.id);
-    this.animationService.loadAnimations(this.pet, this.animations);
     console.log('La pet', this.pet);
-    this.setIdleAnimation('happiness100');
 
     // Meter la entidad cargada alentity
     this.entityStoreService.addEntity(this.pet);
@@ -152,32 +147,6 @@ export class PetService {
   }
 
   // ==================== Metodos publicos para las animaciones ====================
-
-  /**
-   * Establece la animacion idle para los diferentes estados
-   * Fallback a 'default' si no encuentra la animacion solicitada
-   */
-  setIdleAnimation(animationName: string): void {
-    let animation = this.pet.sprite.animationSprite[animationName];
-
-    if (!animation) {
-      console.log(
-        'Animacion idle no encontrada con nombre',
-        animationName,
-        'Array de animaciones',
-        this.animations,
-        'Colocando animacion idle default',
-      );
-      this.pet.sprite.animationSprite['idle'] = this.pet.sprite.animationSprite['default'];
-      return;
-    }
-
-    this.pet.sprite.animationSprite['idle'] = animation;
-
-    if (!this.pet.sprite.animationSprite['idle']) {
-      this.setAnimation('idle');
-    }
-  }
 
   /**
    * Cambia la animacion actual del sprite
@@ -264,9 +233,6 @@ export class PetService {
    */
   private readonly petStatContext: PetStatContext = {
     getStat: (name) => this.getStatPet(name),
-    setIdleAnimation: (name) => {
-      this.pet.sprite.animationSprite['idle'] = this.pet.sprite.animationSprite[name];
-    },
     setStats: (stat) => this.setStats(stat),
   };
 
@@ -285,9 +251,6 @@ export class PetService {
     },
     modifyStat: (name, amount) => this.sumMinusStat(name, amount),
     getStat: (name) => this.getStatPet(name),
-    setIdleAnimation: (name) => {
-      this.pet.sprite.animationSprite['idle'] = this.pet.sprite.animationSprite[name];
-    },
     setState: (state: PetState) => this.setState(state),
     emitParticle: (x, y) => this.particleService.emitDroplets(x, y, 1, 120, null),
     sumMinusStat: (name, value) => this.sumMinusStat(name, value),
