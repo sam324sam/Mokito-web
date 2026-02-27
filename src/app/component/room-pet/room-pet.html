@@ -1,0 +1,12 @@
+@for (room of rooms; track $index) {
+  @for (room of rooms; track $index) {
+    @for (room of rooms; track $index) {
+      <div
+        class="absolute inset-0 -z-1 background-pet transition-opacity duration-300"
+        [style.borderImageSource]="'url(' + room.img + ')'"
+        [style.opacity]="activeRoom(room) ? 1 : 0"
+        [style.pointerEvents]="activeRoom(room) ? 'auto' : 'none'"
+      ></div>
+    }
+  }
+}

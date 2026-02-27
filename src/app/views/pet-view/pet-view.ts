@@ -1,14 +1,11 @@
 import {
   AfterViewInit,
   Component,
-  computed,
   ElementRef,
   HostListener,
   OnDestroy,
   ViewChild,
 } from '@angular/core';
-// Modelos
-import { Room } from '../../models/room/room.model';
 // Service
 import { GameLoopService } from '../../services/game-loop.service';
 import { SpriteService } from '../../services/sprites.service';
@@ -16,13 +13,13 @@ import { PetService } from '../../services/pet/pet.service';
 import { CursorService } from '../../services/cursor.service';
 import { GrabService } from '../../services/grab.service';
 import { ParticleService } from '../../services/particle/particle.service';
-import { RoomService } from '../../services/room.service';
 // Componentes
 import { StatsBar } from '../../component/stats-bar/stats-bar';
 import { InventoryModal } from '../../component/inventory-modal/inventory-modal';
+import { RoomPet } from '../../component/room-pet/room-pet';
 @Component({
   selector: 'app-pet-view',
-  imports: [StatsBar, InventoryModal],
+  imports: [StatsBar, InventoryModal, RoomPet],
   templateUrl: './pet-view.html',
   styleUrl: './pet-view.scss',
   standalone: true,
@@ -35,13 +32,6 @@ export class PetView implements AfterViewInit, OnDestroy {
   // Para las stats
   isOpenStats: boolean = false;
 
-  // para room
-  rooms: Room[] = [];
-  currentIndex = computed(() => this.roomService.getCurrentIndex());
-
-  // Computed para obtener la room actual del array
-  currentRoom = computed(() => this.rooms[this.currentIndex()]);
-
   constructor(
     private readonly spriteService: SpriteService,
     private readonly petService: PetService,
@@ -49,10 +39,7 @@ export class PetView implements AfterViewInit, OnDestroy {
     private readonly grabService: GrabService,
     private readonly gameLoopService: GameLoopService,
     private readonly particleService: ParticleService,
-    private readonly roomService: RoomService,
-  ) {
-    this.rooms = this.roomService.getRooms();
-  }
+  ) {}
 
   @HostListener('window:resize')
   onResize() {

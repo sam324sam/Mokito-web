@@ -1,9 +1,6 @@
 <!-- Contenedor relativo para posicionamiento absoluto -->
 <div class="relative w-full h-full overflow-hidden">
-  <div
-    class="absolute inset-0 -z-1 background-pet"
-    [style.borderImageSource]="'url(' + currentRoom().img + ')'"
-  ></div>
+  <app-room-pet></app-room-pet>
 
   <!-- Contenedor absoluto en la parte inferior -->
   <div class="absolute top-0 left-0 right-0 flex flex-col items-center pb-4 pointer-events-none">
