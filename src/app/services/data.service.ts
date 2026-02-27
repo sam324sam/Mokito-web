@@ -21,7 +21,6 @@ import { Entity } from '../models/entity/entity.model';
 
 @Injectable({ providedIn: 'root' })
 export class DataService {
-
   // Datos principales
   colors: Color[] = {} as Color[];
   pet: Pet = {} as Pet;
@@ -67,17 +66,15 @@ export class DataService {
    * Colores, pet, rooms, objetos, particulas y sonidos
    */
   private loadFromJson() {
-
     // Colores
     this.colors = [...colorsJson.colors];
 
     // Mascota base
     const jsonPet = petDefault;
     const rawState = jsonPet.state;
-    const petState: PetState =
-      Object.values(PetState).includes(rawState as PetState)
-        ? (rawState as PetState)
-        : PetState.Idle;
+    const petState: PetState = Object.values(PetState).includes(rawState as PetState)
+      ? (rawState as PetState)
+      : PetState.Idle;
 
     const imgDefault = new Image();
     imgDefault.src = jsonPet.sprite.img;
@@ -201,11 +198,9 @@ export class DataService {
    * Busca las animaciones en el json por nombre
    */
   async loadAnimations(entity: Entity): Promise<void> {
-
     entity.sprite.animationSprite = {};
 
-    const rawAnimations =
-      animations.find((o) => o.name === entity.name)?.animations;
+    const rawAnimations = animations.find((o) => o.name === entity.name)?.animations;
 
     if (!rawAnimations) return;
 
@@ -217,9 +212,7 @@ export class DataService {
       for (let i = 0; i < anim.frames; i++) {
         const frameSrc = `${anim.baseUrl}pixil-frame-${i}.png`;
 
-        const promise = this
-          .loadImage(frameSrc)
-          .then((img) => frames.push(img));
+        const promise = this.loadImage(frameSrc).then((img) => frames.push(img));
 
         promises.push(promise);
       }
@@ -231,6 +224,13 @@ export class DataService {
     }
 
     await Promise.all(promises);
+    Object.entries(entity.sprite.animationSprite).forEach(([name, animation]) => {
+      console.group(`Animacion: ${name}`);
+      animation.frameImg.forEach((img, i) => {
+        console.log(`  ${i}: ${img.src}`);
+      });
+      console.groupEnd();
+    });
   }
 
   /**
