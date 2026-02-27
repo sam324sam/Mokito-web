@@ -2,19 +2,19 @@
   {
   "name": "pet",
   "animations": [
-    { "name": "default", "baseUrl": "assets/img/pet/default/", "frames": 1, "animationType": "loop" },
-    { "name": "tutsitutsi", "baseUrl": "assets/img/pet/tutsitutsi/", "frames": 20, "animationType": "once" },
-    { "name": "grab", "baseUrl": "assets/img/pet/grab/", "frames": 11, "animationType": "loop" },
-    { "name": "right", "baseUrl": "assets/img/pet/Right/", "frames": 12, "animationType": "once" },
-    { "name": "left", "baseUrl": "assets/img/pet/Left/", "frames": 12, "animationType": "once" },
-    { "name": "up", "baseUrl": "assets/img/pet/Up/", "frames": 12, "animationType": "once" },
-    { "name": "down", "baseUrl": "assets/img/pet/Down/", "frames": 12, "animationType": "once" },
-    { "name": "happiness100", "baseUrl": "assets/img/pet/happiness100/", "frames": 30, "animationType": "loop" },
-    { "name": "happiness65", "baseUrl": "assets/img/pet/happiness65/", "frames": 21, "animationType": "loop" },
-    { "name": "happiness15", "baseUrl": "assets/img/pet/happiness15/", "frames": 21, "animationType": "loop" },
-    { "name": "sleep", "baseUrl": "assets/img/pet/sleep/", "frames": 1, "animationType": "loop" },
-    { "name": "eat", "baseUrl": "assets/img/pet/eat/", "frames": 18, "animationType": "once" },
-    { "name": "talking", "baseUrl": "assets/img/pet/talking/", "frames": 15, "animationType": "once" }
+    { "name": "default", "src": "assets/img/pet/default.png", "frames": 1, "animationType": "loop" },
+    { "name": "tutsitutsi", "src": "assets/img/pet/tutsitutsi.png", "frames": 20, "animationType": "once" },
+    { "name": "grab", "src": "assets/img/pet/grab.png", "frames": 11, "animationType": "loop" },
+    { "name": "right", "src": "assets/img/pet/Right.png", "frames": 12, "animationType": "once" },
+    { "name": "left", "src": "assets/img/pet/Left.png", "frames": 12, "animationType": "once" },
+    { "name": "up", "src": "assets/img/pet/Up.png", "frames": 12, "animationType": "once" },
+    { "name": "down", "src": "assets/img/pet/Down.png", "frames": 12, "animationType": "once" },
+    { "name": "happiness100", "src": "assets/img/pet/happiness100.png", "frames": 30, "animationType": "loop" },
+    { "name": "happiness65", "src": "assets/img/pet/happiness65.png", "frames": 21, "animationType": "loop" },
+    { "name": "happiness15", "src": "assets/img/pet/happiness15.png", "frames": 21, "animationType": "loop" },
+    { "name": "sleep", "src": "assets/img/pet/sleep.png", "frames": 1, "animationType": "loop" },
+    { "name": "eat", "src": "assets/img/pet/eat.png", "frames": 18, "animationType": "once" },
+    { "name": "talking", "src": "assets/img/pet/talking.png", "frames": 15, "animationType": "once" }
     ]
   }
 ]

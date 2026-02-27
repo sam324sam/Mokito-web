@@ -76,27 +76,30 @@ export class SpriteService {
       const sprite: Sprite = e.sprite;
       sprite.scale = this.spriteScale;
 
-      const frame = this.animationService.getFrame(sprite) ?? sprite.img;
-      if (!frame) continue;
-
+      const animation = this.animationService.getAnimation(sprite);
       this.limitToCanvas(sprite);
       this.ctx.imageSmoothingEnabled = false;
       this.ctx.globalAlpha = sprite.alpha / 100;
+      if (animation?.image.complete) {
+        const frameIndex = sprite.currentFrame;
+        // mueve la casilla en la se encuentra el fotograma a ver
+        const sx = frameIndex * animation.frameWidth;
+        const sy = 0;
 
-      if (sprite.rotation !== null) {
-        this.renderRotateSprite(sprite, frame);
-      } else if (
-        frame instanceof HTMLImageElement &&
-        frame.complete &&
-        frame.naturalWidth > 0 &&
-        frame.naturalHeight > 0 &&
-        Number.isFinite(sprite.x) &&
-        Number.isFinite(sprite.y) &&
-        Number.isFinite(sprite.width) &&
-        Number.isFinite(sprite.height)
-      ) {
         this.ctx.drawImage(
-          frame,
+          animation.image,
+          sx,
+          sy,
+          animation.frameWidth,
+          animation.frameHeight,
+          sprite.x,
+          sprite.y,
+          animation.frameWidth * this.spriteScale,
+          animation.frameHeight * this.spriteScale,
+        );
+      } else if (sprite.img) {
+        this.ctx.drawImage(
+          sprite.img,
           sprite.x,
           sprite.y,
           sprite.width * this.spriteScale,

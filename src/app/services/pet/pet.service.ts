@@ -252,7 +252,6 @@ export class PetService {
     modifyStat: (name, amount) => this.sumMinusStat(name, amount),
     getStat: (name) => this.getStatPet(name),
     setState: (state: PetState) => this.setState(state),
-    emitParticle: (x, y) => this.particleService.emitDroplets(x, y, 1, 120, null),
     sumMinusStat: (name, value) => this.sumMinusStat(name, value),
   };
 

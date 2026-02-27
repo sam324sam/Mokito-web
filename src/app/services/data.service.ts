@@ -3,14 +3,14 @@ import { Injectable } from '@angular/core';
 import { Pet, PetState } from '../models/pet/pet.model';
 import { Color } from '../models/sprites/color.model';
 import { AnimationSet } from '../models/sprites/animation-set.model';
-import { AnimationType } from '../models/sprites/animation-sprite.model';
+import { AnimationSprite, AnimationType } from '../models/sprites/animation-sprite.model';
 import { Room } from '../models/room/room.model';
 import { InteractuableObject, ObjectType } from '../models/object/interactuable-object.model';
 import { PetRuntime } from '../models/pet/pet-runtime.model';
 
 // Json de datos
 import petDefault from '../../assets/config/default-pet.json';
-import animations from '../../assets/config/animations.json';
+import animationsJson from '../../assets/config/animations.json';
 import colorsJson from '../../assets/config/color-pet.json';
 import roomsJson from '../../assets/config/room-pet.json';
 import objectsJson from '../../assets/config/interactuable-object.json';
@@ -41,24 +41,11 @@ export class DataService {
   async loadAllAssets(): Promise<void> {
     this.loadFromJson();
 
-    await this.loadAnimations(this.petRuntime);
+    this.loadAnimations(this.petRuntime);
 
     for (const object of this.objects) {
-      await this.loadAnimations(object);
+      this.loadAnimations(object);
     }
-  }
-
-  /**
-   * Carga una imagen y devuelve una promesa
-   * Se utiliza para precargar recursos graficos
-   */
-  private async loadImage(src: string): Promise<HTMLImageElement> {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.src = src;
-      img.onload = () => resolve(img);
-      img.onerror = reject;
-    });
   }
 
   /**
@@ -137,9 +124,6 @@ export class DataService {
         };
       }
 
-      // Precarga imagen de la room
-      this.loadImage(room.img);
-
       return {
         ...room,
         objects,
@@ -197,25 +181,22 @@ export class DataService {
    * Carga todas las animaciones asociadas a una entidad
    * Busca las animaciones en el json por nombre
    */
-  async loadAnimations(entity: Entity): Promise<void> {
-    entity.sprite.animationSprite = {};
-
-    const rawAnimations = animations.find((o) => o.name === entity.name)?.animations;
-
+  loadAnimations(entity: Entity) {
+    const rawAnimations = animationsJson.find((o) => o.name === entity.name)?.animations;
     if (!rawAnimations) return;
     for (const anim of rawAnimations) {
-      const frames: HTMLImageElement[] = [];
+      const img = new Image();
+      img.src = anim.src;
 
-      for (let i = 0; i < anim.frames; i++) {
-        const frameSrc = `${anim.baseUrl}pixil-frame-${i}.png`;
-
-        await this.loadImage(frameSrc).then((img) => frames.push(img));
-      }
-
-      entity.sprite.animationSprite[anim.name] = {
-        frameImg: frames,
+      const animation: AnimationSprite = {
+        image: img,
+        frameWidth: entity.sprite.width,
+        frameHeight: entity.sprite.height,
+        frameCount: anim.frames,
         animationType: anim.animationType as AnimationType,
       };
+
+      entity.sprite.animationSprite[anim.name] = animation;
     }
   }
 

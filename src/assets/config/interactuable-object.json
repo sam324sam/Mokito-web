@@ -14,10 +14,11 @@
       "currentFrame": 0,
       "frameSpeed": 100,
       "color": "...",
-      "img": "assets/img/objects/cosafea.png",
+      "img": "assets/img/objects/strawberry.png",
       "animationSprite": {},
       "frameCounter": 0,
-      "timeoutId": null
+      "timeoutId": null,
+      "zIndex": -1
     },
     "nameBehaviors": [""]
   },
@@ -39,7 +40,8 @@
       "img": "assets/img/objects/burger.png",
       "animationSprite": {},
       "frameCounter": 0,
-      "timeoutId": null
+      "timeoutId": null,
+      "zIndex": -1
     },
     "nameBehaviors": [""]
   },
@@ -61,7 +63,8 @@
       "img": "assets/img/objects/popcorn.png",
       "animationSprite": {},
       "frameCounter": 0,
-      "timeoutId": null
+      "timeoutId": null,
+      "zIndex": -1
     },
     "nameBehaviors": [""]
   },
@@ -83,7 +86,8 @@
       "img": "assets/img/objects/milk.png",
       "animationSprite": {},
       "frameCounter": 0,
-      "timeoutId": null
+      "timeoutId": null,
+      "zIndex": -1
     },
     "nameBehaviors": [""]
   },
@@ -128,7 +132,8 @@
       "img": "assets/img/objects/shower.png",
       "animationSprite": {},
       "frameCounter": 0,
-      "timeoutId": null
+      "timeoutId": null,
+      "zIndex": -1
     },
     "nameBehaviors": ["dropWater"]
   }

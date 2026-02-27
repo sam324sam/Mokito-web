@@ -117,7 +117,7 @@ export class PetConditionService {
       const x = pet.sprite.x + Math.random() * width;
       const y = pet.sprite.y + Math.random() * height;
       if (pet.state !== PetState.Sleeping) {
-        this.particleService.emitDroplets(x, y, 1, 2, 'drops');
+        this.particleService.emitSweatDrops(x, y, 1, 2, 'sweat-drops');
         if (Math.random() < 0.08) {
           if (this.messageService.addMessage('olty', '', pet.sprite, pet.sprite.x, pet.sprite.y)) {
             ctx.setState(PetState.Talking);

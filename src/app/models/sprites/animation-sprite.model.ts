@@ -1,10 +1,13 @@
 // El name esta en el record
 export interface AnimationSprite {
-  frameImg: HTMLImageElement[];
+  image: HTMLImageElement;
+  frameWidth: number;
+  frameHeight: number;
+  frameCount: number;
   animationType: AnimationType;
 }
 
 export enum AnimationType {
-  loop = "loop",
-  once = "once"
+  loop = 'loop',
+  once = 'once',
 }

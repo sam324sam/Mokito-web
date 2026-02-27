@@ -8,12 +8,17 @@
     @if (!pet) {
       <div class="text-slate-400 italic">No se ha encontrado la pet</div>
     } @else {
-
       <!-- General -->
       <div class="space-y-1">
         <div class="text-xs uppercase tracking-widest text-slate-500 mb-1">General</div>
-        <div class="flex gap-2"><span class="text-slate-400 w-16">ID</span><span class="text-slate-100">{{ pet.id }}</span></div>
-        <div class="flex gap-2"><span class="text-slate-400 w-16">Active</span><span class="text-slate-100">{{ pet.active }}</span></div>
+        <div class="flex gap-2">
+          <span class="text-slate-400 w-16">NAME</span
+          ><span class="text-slate-100">{{ pet.name }}</span>
+        </div>
+        <div class="flex gap-2">
+          <span class="text-slate-400 w-16">Active</span
+          ><span class="text-slate-100">{{ pet.active }}</span>
+        </div>
       </div>
 
       <div class="border-t border-slate-700"></div>
@@ -23,7 +28,10 @@
         <div class="text-xs uppercase tracking-widest text-slate-500 mb-1">Tags</div>
         <div class="flex flex-wrap gap-1">
           @for (item of pet.tags; track $index) {
-            <span class="px-2 py-0.5 bg-slate-700 border border-slate-600 rounded text-xs text-slate-300">{{ item }}</span>
+            <span
+              class="px-2 py-0.5 bg-slate-700 border border-slate-600 rounded text-xs text-slate-300"
+              >{{ item }}</span
+            >
           } @empty {
             <span class="text-slate-500 italic text-xs">Sin tags</span>
           }
@@ -35,16 +43,47 @@
       <!-- condiciones -->
       <div class="space-y-1">
         <div class="text-xs uppercase tracking-widest text-slate-500 mb-1">Conditions</div>
+
         <label class="flex items-center gap-2 text-slate-300 cursor-pointer mb-2">
-          <input type="checkbox" class="w-4 h-4 accent-emerald-400" [checked]="getNoConditionProcces()" (change)="setNoConditionProcces($event)" />
+          <input
+            type="checkbox"
+            class="w-4 h-4 accent-emerald-400"
+            [checked]="getNoConditionProcces()"
+            (change)="setNoConditionProcces($event)"
+          />
           No process
         </label>
-        @for (item of allConditions; track $index) {
-          <label class="flex items-center gap-2 text-slate-300 cursor-pointer hover:text-slate-100">
-            <input type="checkbox" class="w-4 h-4 accent-emerald-400" [checked]="activeCondition(item)" (change)="onConditionChange($event, item)" />
-            {{ item }}
-          </label>
-        }
+
+        <!-- Contenedor relativo -->
+        <div class="relative">
+          <!-- Overlay cuando NO está activo -->
+          @if (!getNoConditionProcces()) {
+            <div
+              class="absolute inset-0 bg-black/70 rounded flex items-center justify-center z-10 text-center px-3"
+            >
+              <span class="text-xs uppercase tracking-widest text-slate-200">
+                Activa "No process" para modificar las condiciones
+              </span>
+            </div>
+          }
+
+          <!-- Lista de condiciones -->
+          <div class="space-y-1">
+            @for (item of allConditions; track $index) {
+              <label
+                class="flex items-center gap-2 text-slate-300 cursor-pointer hover:text-slate-100"
+              >
+                <input
+                  type="checkbox"
+                  class="w-4 h-4 accent-emerald-400"
+                  [checked]="activeCondition(item)"
+                  (change)="onConditionChange($event, item)"
+                />
+                {{ item }}
+              </label>
+            }
+          </div>
+        </div>
       </div>
 
       <div class="border-t border-slate-700"></div>
@@ -53,9 +92,22 @@
       <div class="space-y-1">
         <div class="text-xs uppercase tracking-widest text-slate-500 mb-1">Sprite</div>
         <div class="flex gap-4 items-start">
-          <img [src]="pet.sprite.img.src" alt="sprite" class="w-14 h-14 image-rendering-pixelated border border-slate-600 bg-slate-900 rounded" />
+          <img
+            [src]="pet.sprite.img.src"
+            alt="sprite"
+            class="w-14 h-14 image-rendering-pixelated border border-slate-600 bg-slate-900 rounded"
+          />
           <div class="space-y-1">
-            @for (entry of [['X', pet.sprite.x], ['Y', pet.sprite.y], ['W', pet.sprite.width], ['H', pet.sprite.height], ['Z', pet.sprite.zIndex]]; track $index) {
+            @for (
+              entry of [
+                ['X', pet.sprite.x],
+                ['Y', pet.sprite.y],
+                ['W', pet.sprite.width],
+                ['H', pet.sprite.height],
+                ['Z', pet.sprite.zIndex],
+              ];
+              track $index
+            ) {
               <div class="flex gap-2">
                 <span class="text-slate-400 w-4">{{ entry[0] }}</span>
                 <span class="text-slate-100">{{ entry[1] }}</span>
@@ -64,7 +116,6 @@
           </div>
         </div>
       </div>
-
     }
   </div>
 </div>

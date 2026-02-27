@@ -123,7 +123,7 @@ export const ParticleConfigs = {
    * Particula tipo gota
    * Simula caida y desaceleracion progresiva
    */
-  droplet: (
+  sweat_drops: (
     x: number,
     y: number,
     timeToLife: number,
@@ -131,7 +131,7 @@ export const ParticleConfigs = {
     scale: number,
   ): Particle => ({
     ...baseParticleConfig(x, y, timeToLife, texture, scale),
-    tags: ['particle', 'droplet', 'gas'],
+    tags: ['particle', 'sweat_drops', 'gas'],
     behaviors: [fadeBehavior, slowDownBehavior],
     physics: {
       vx: 0,

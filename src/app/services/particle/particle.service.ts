@@ -84,7 +84,7 @@ export class ParticleService {
   /**
    * Emite particulas tipo gota
    */
-  emitDroplets(
+  emitSweatDrops(
     x: number,
     y: number,
     amount: number,
@@ -92,7 +92,7 @@ export class ParticleService {
     textureName: string | null = null,
   ) {
     const tex = this.texture[textureName || 'default'] || this.texture['default'];
-    const config = ParticleConfigs.droplet(x, y, timeToLife, tex, this.scale);
+    const config = ParticleConfigs.sweat_drops(x, y, timeToLife, tex, this.scale);
     this.emit(amount, config);
   }
 
