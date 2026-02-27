@@ -52,7 +52,7 @@ export class DataService {
    * Carga una imagen y devuelve una promesa
    * Se utiliza para precargar recursos graficos
    */
-  private loadImage(src: string): Promise<HTMLImageElement> {
+  private async loadImage(src: string): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.src = src;
@@ -203,18 +203,13 @@ export class DataService {
     const rawAnimations = animations.find((o) => o.name === entity.name)?.animations;
 
     if (!rawAnimations) return;
-
-    const promises: Promise<number>[] = [];
-
     for (const anim of rawAnimations) {
       const frames: HTMLImageElement[] = [];
 
       for (let i = 0; i < anim.frames; i++) {
         const frameSrc = `${anim.baseUrl}pixil-frame-${i}.png`;
 
-        const promise = this.loadImage(frameSrc).then((img) => frames.push(img));
-
-        promises.push(promise);
+        await this.loadImage(frameSrc).then((img) => frames.push(img));
       }
 
       entity.sprite.animationSprite[anim.name] = {
@@ -222,15 +217,6 @@ export class DataService {
         animationType: anim.animationType as AnimationType,
       };
     }
-
-    await Promise.all(promises);
-    Object.entries(entity.sprite.animationSprite).forEach(([name, animation]) => {
-      console.group(`Animacion: ${name}`);
-      animation.frameImg.forEach((img, i) => {
-        console.log(`  ${i}: ${img.src}`);
-      });
-      console.groupEnd();
-    });
   }
 
   /**
