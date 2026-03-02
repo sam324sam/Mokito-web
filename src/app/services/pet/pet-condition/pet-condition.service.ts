@@ -33,11 +33,53 @@ export class PetConditionService {
     this.hygieneProcess(pet, ctx);
   }
 
-  // ==================== Metodos que se ejecutan segun las condiciones de la pet ====================
+  // ==================== Metodos para la condicion de la pet
 
-  private readonly exhausted: PetConditionBehavior = (pet, delta, ctx) => {};
+  /**
+   * Gestiona efectos visuales de agotamiento extremo (exhausted)
+   * Mas severo que tired - mas particulas de sudor y mensajes de agotamiento
+   */
+  private exhaustedCooldown: number = 0;
+  private readonly exhausted: PetConditionBehavior = (pet, delta, ctx) => {
+    const energy = ctx.getStat('energy');
+    if (!energy) return;
 
-  private readonly energetic: PetConditionBehavior = (pet, delta, ctx) => {};
+    const { cooldown, triggered } = this.tickCooldown(
+      this.exhaustedCooldown,
+      delta,
+      0.3 + Math.min(energy.porcent / 100, 0.3),
+    );
+    this.exhaustedCooldown = triggered ? 800 : cooldown;
+    if (!triggered) return;
+
+    if (pet.state === PetState.Idle) ctx.setAnimation('happiness15');
+
+    if (pet.state !== PetState.Sleeping) {
+      const { x, y } = this.getRandomSpritePosition(pet);
+      this.particleService.emitSweatDrops(x, y, 2, 4, 'sweat-drops');
+      this.tryEmitMessage(pet, ctx, 'olty', 0.15);
+    }
+  };
+
+  /**
+   * Gestiona efectos visuales de energia positiva (energetic)
+   * 
+   */
+  private energeticCooldown: number = 0;
+  private readonly energetic: PetConditionBehavior = (pet, delta, ctx) => {
+    const energy = ctx.getStat('energy');
+    if (!energy) return;
+
+    const { cooldown, triggered } = this.tickCooldown(
+      this.energeticCooldown,
+      delta,
+      0.6 + (energy.porcent / 100) * 0.4,
+    );
+    this.energeticCooldown = triggered ? 1500 : cooldown;
+    if (!triggered) return;
+
+    this.tryEmitMessage(pet, ctx, 'lauy', 0.05);
+  };
 
   private hungerCooldown: number = 0;
   private readonly hungry: PetConditionBehavior = (pet, delta, ctx) => {
@@ -93,68 +135,48 @@ export class PetConditionService {
     }
   }
 
-  // Cooldown para emision de particulas de energia
-  private energyCooldown: number = 0;
   /**
    * Gestiona efectos visuales de particulas basados en energia
    * Emite gotas aleatorias con probabilidad inversamente proporcional a la energia
    * Menos energia = mas probabilidad de emitir particulas (cansancio visual)
    */
+  private energyCooldown: number = 0;
   private readonly tired: PetConditionBehavior = (pet, delta, ctx) => {
-    this.energyCooldown -= delta;
-
-    if (this.energyCooldown > 0) return;
-
     const energy = ctx.getStat('energy');
     if (!energy) return;
-    const energyFactor = Math.min(energy.porcent / 100, 0.5);
-    const probability = 0.5 + energyFactor;
 
-    if (Math.random() > probability) {
-      const width = pet.sprite.width * pet.sprite.scale;
-      const height = pet.sprite.height * pet.sprite.scale;
+    const { cooldown, triggered } = this.tickCooldown(
+      this.energyCooldown,
+      delta,
+      0.5 + Math.min(energy.porcent / 100, 0.5),
+    );
+    this.energyCooldown = triggered ? 1000 : cooldown;
+    if (!triggered) return;
 
-      const x = pet.sprite.x + Math.random() * width;
-      const y = pet.sprite.y + Math.random() * height;
-      if (pet.state !== PetState.Sleeping) {
-        this.particleService.emitSweatDrops(x, y, 1, 2, 'sweat-drops');
-        if (Math.random() < 0.08) {
-          if (this.messageService.addMessage('olty', '', pet.sprite, pet.sprite.x, pet.sprite.y)) {
-            ctx.setState(PetState.Talking);
-          }
-        }
-      }
-      this.energyCooldown = 1000;
+    if (pet.state !== PetState.Sleeping) {
+      const { x, y } = this.getRandomSpritePosition(pet);
+      this.particleService.emitSweatDrops(x, y, 1, 2, 'sweat-drops');
+      this.tryEmitMessage(pet, ctx, 'olty', 0.08);
     }
   };
 
   private dirtyCooldown: number = 0;
   private readonly dirty: PetConditionBehavior = (pet, delta, ctx) => {
-    this.dirtyCooldown -= delta;
-
-    if (this.dirtyCooldown > 0) return;
-
     const hygiene = ctx.getStat('hygiene');
     if (!hygiene) return;
-    const energyFactor = Math.min(hygiene.porcent / 100, 0.5);
-    const probability = 0.5 + energyFactor;
 
-    if (Math.random() > probability) {
-      const width = pet.sprite.width * pet.sprite.scale;
-      const height = pet.sprite.height * pet.sprite.scale;
+    const { cooldown, triggered } = this.tickCooldown(
+      this.dirtyCooldown,
+      delta,
+      0.5 + Math.min(hygiene.porcent / 100, 0.5),
+    );
+    this.dirtyCooldown = triggered ? 1000 : cooldown;
+    if (!triggered) return;
 
-      const x = pet.sprite.x + Math.random() * width;
-      const y = pet.sprite.y + Math.random() * height;
-      const number = Math.floor(Math.random() * 3) + 1;
-      const textureName = 'dirty' + number;
-      this.particleService.emitDirty(x, y, 1, 2, textureName);
-      if (Math.random() < 0.08) {
-        if (this.messageService.addMessage('olt?', '', pet.sprite, pet.sprite.x, pet.sprite.y)) {
-          ctx.setState(PetState.Talking);
-        }
-      }
-      this.dirtyCooldown = 1000;
-    }
+    const { x, y } = this.getRandomSpritePosition(pet);
+    const textureName = 'dirty' + (Math.floor(Math.random() * 3) + 1);
+    this.particleService.emitDirty(x, y, 1, 2, textureName);
+    this.tryEmitMessage(pet, ctx, 'olt?', 0.08);
   };
 
   private readonly behaviors: Map<PetCondition, PetConditionBehavior> = new Map([
@@ -171,15 +193,32 @@ export class PetConditionService {
   // ==================== Lo que genera la condicion de la pet ====================¡
 
   /**
-   * Calcula cuando poner y quitar la condicion de cansado
+   * Calcula cuando poner y quitar la condicion de cansado y agotado
    */
   private energyProcess(pet: Pet, ctx: PetConditionContext): void {
     const energy = ctx.getStat('energy');
     if (!energy) return;
+
+    // Exhausted: energia < 15
+    if (energy.porcent <= 15) {
+      pet.conditions.add(PetCondition.Exhausted);
+      pet.conditions.delete(PetCondition.Tired);
+    } else if (pet.conditions.has(PetCondition.Exhausted)) {
+      pet.conditions.delete(PetCondition.Exhausted);
+    }
+
+    // Tired: energia < 40
     if (energy.porcent <= 40) {
       pet.conditions.add(PetCondition.Tired);
     } else if (pet.conditions.has(PetCondition.Tired)) {
       pet.conditions.delete(PetCondition.Tired);
+    }
+
+    // Energetic: energia > 70
+    if (energy.porcent >= 70) {
+      pet.conditions.add(PetCondition.Energetic);
+    } else if (pet.conditions.has(PetCondition.Energetic)) {
+      pet.conditions.delete(PetCondition.Energetic);
     }
   }
 
@@ -219,5 +258,51 @@ export class PetConditionService {
     } else if (pet.conditions.has(PetCondition.Dirty)) {
       pet.conditions.delete(PetCondition.Dirty);
     }
+  }
+
+  // ==================== metodos reutilizables
+
+  /**
+   * Calcula una posicion aleatoria dentro del sprite de la pet
+   */
+  private getRandomSpritePosition(pet: Pet): { x: number; y: number } {
+    const width = pet.sprite.width * pet.sprite.scale;
+    const height = pet.sprite.height * pet.sprite.scale;
+    return {
+      x: pet.sprite.x + Math.random() * width,
+      y: pet.sprite.y + Math.random() * height,
+    };
+  }
+
+  /**
+   * Intenta mostrar un mensaje con cierta probabilidad.
+   * Si se muestra, cambia el estado a Talking.
+   */
+  private tryEmitMessage(
+    pet: Pet,
+    ctx: PetConditionContext,
+    messageKey: string,
+    probability: number,
+  ): void {
+    if (Math.random() < probability) {
+      if (this.messageService.addMessage(messageKey, '', pet.sprite, pet.sprite.x, pet.sprite.y)) {
+        ctx.setState(PetState.Talking);
+      }
+    }
+  }
+
+  /**
+   * Ejecuta un behavior basado en cooldown con probabilidad configurable.
+   * Retorna true si el tick fue procesado (cooldown llego a 0 y se supero la probabilidad).
+   */
+  private tickCooldown(
+    cooldown: number,
+    delta: number,
+    probability: number,
+  ): { cooldown: number; triggered: boolean } {
+    const updated = cooldown - delta;
+    if (updated > 0) return { cooldown: updated, triggered: false };
+    const triggered = Math.random() > probability;
+    return { cooldown: triggered ? 0 : updated, triggered };
   }
 }
