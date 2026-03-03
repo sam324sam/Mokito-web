@@ -12,6 +12,7 @@ export interface InteractuableObject extends Entity{
 export enum ObjectType {
   Food = 'food',
   Bathroom = 'bathroom',
+  Garden = 'garden',
   Default = 'default',
   Room = 'room'
 }

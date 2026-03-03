@@ -136,5 +136,28 @@
       "zIndex": -1
     },
     "nameBehaviors": ["dropWater"]
+  },
+  {
+    "name": "Pelota",
+    "type": "garden",
+    "tags": ["object", "ball"],
+    "sprite": {
+      "id": null,
+      "x": 0,
+      "y": 0,
+      "width": 16,
+      "height": 16,
+      "scale": 1,
+      "currentAnimation": "idle",
+      "currentFrame": 0,
+      "frameSpeed": 100,
+      "color": "...",
+      "img": "assets/img/objects/ball.png",
+      "animationSprite": {},
+      "frameCounter": 0,
+      "timeoutId": null,
+      "zIndex": -1
+    },
+    "nameBehaviors": []
   }
 ]

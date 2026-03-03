@@ -119,8 +119,8 @@
       "img": "assets/img/room/background/garden.png",
       "music": "",
       "buttonRoom": {
-        "name": "Regar",
-        "buttonBehavior": "waterPlants"
+        "name": "Inventario",
+        "buttonBehavior": "openInventoryGarden"
       },
       "objects": []
     }

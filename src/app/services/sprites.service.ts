@@ -63,65 +63,70 @@ export class SpriteService {
   }
 
   render() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    try {
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    const entities = this.entityStoreService.getZOrder();
+      const entities = this.entityStoreService.getZOrder();
 
-    for (const e of entities) {
-      this.ctx.save();
-      if (isMessage(e)) {
-        this.renderText(e);
-        continue;
+      for (const e of entities) {
+        this.ctx.save();
+        if (isMessage(e)) {
+          this.renderText(e);
+          continue;
+        }
+        const sprite: Sprite = e.sprite;
+
+        sprite.scale = this.spriteScale;
+
+        const animation = this.animationService.getAnimation(sprite);
+        this.limitToCanvas(sprite);
+        this.ctx.imageSmoothingEnabled = false;
+        this.ctx.globalAlpha = sprite.alpha / 100;
+        if (animation?.image.complete) {
+          const frameIndex = sprite.currentFrame;
+          // mueve la casilla en la se encuentra el fotograma a ver
+          const sx = frameIndex * animation.frameWidth;
+          const sy = 0;
+
+          this.ctx.drawImage(
+            animation.image,
+            sx,
+            sy,
+            animation.frameWidth,
+            animation.frameHeight,
+            sprite.x,
+            sprite.y,
+            animation.frameWidth * this.spriteScale,
+            animation.frameHeight * this.spriteScale,
+          );
+        } else if (sprite.img) {
+          this.ctx.drawImage(
+            sprite.img,
+            sprite.x,
+            sprite.y,
+            sprite.width * this.spriteScale,
+            sprite.height * this.spriteScale,
+          );
+        }
+
+        if (sprite.color) {
+          this.ctx.globalCompositeOperation = 'source-atop';
+          this.ctx.fillStyle = sprite.color.color;
+          this.ctx.fillRect(
+            sprite.x,
+            sprite.y,
+            sprite.width * this.spriteScale,
+            sprite.height * this.spriteScale,
+          );
+        }
+        this.ctx.restore();
       }
-      const sprite: Sprite = e.sprite;
-      sprite.scale = this.spriteScale;
-
-      const animation = this.animationService.getAnimation(sprite);
-      this.limitToCanvas(sprite);
-      this.ctx.imageSmoothingEnabled = false;
-      this.ctx.globalAlpha = sprite.alpha / 100;
-      if (animation?.image.complete) {
-        const frameIndex = sprite.currentFrame;
-        // mueve la casilla en la se encuentra el fotograma a ver
-        const sx = frameIndex * animation.frameWidth;
-        const sy = 0;
-
-        this.ctx.drawImage(
-          animation.image,
-          sx,
-          sy,
-          animation.frameWidth,
-          animation.frameHeight,
-          sprite.x,
-          sprite.y,
-          animation.frameWidth * this.spriteScale,
-          animation.frameHeight * this.spriteScale,
-        );
-      } else if (sprite.img) {
-        this.ctx.drawImage(
-          sprite.img,
-          sprite.x,
-          sprite.y,
-          sprite.width * this.spriteScale,
-          sprite.height * this.spriteScale,
-        );
+      // Dibujar colliders solo si esta activado
+      if (this.debugColliders) {
+        this.renderColliders();
       }
-
-      if (sprite.color) {
-        this.ctx.globalCompositeOperation = 'source-atop';
-        this.ctx.fillStyle = sprite.color.color;
-        this.ctx.fillRect(
-          sprite.x,
-          sprite.y,
-          sprite.width * this.spriteScale,
-          sprite.height * this.spriteScale,
-        );
-      }
-      this.ctx.restore();
-    }
-    // Dibujar colliders solo si esta activado
-    if (this.debugColliders) {
-      this.renderColliders();
+    } catch (error) {
+      console.log('Error al renderizar en sprite service', error);
     }
   }
 

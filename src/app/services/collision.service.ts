@@ -161,7 +161,8 @@ export class CollisionService {
 
     const restitution = 0.5;
     const sprite = particle.sprite;
-    const physics = (particle as any).physics;
+    const physics = hasPhysics(particle) ? particle.physics : null;
+    if (physics == null) return;
 
     // Resolver por el eje con menor penetracion
     if (overlapY < overlapX) {
@@ -201,12 +202,13 @@ export class CollisionService {
     const { overlapX, overlapY } = overlap;
 
     const restitution = 0.5;
-    const physicsA = (a as any).physics;
-    const physicsB = (b as any).physics;
+    const friction = 0.8;
 
-    // Resolver por el eje con menor penetracion
+    const physicsA = a.physics;
+    const physicsB = b.physics;
+
     if (overlapY < overlapX) {
-      // Colision vertical
+      // Colision vertical (suelo/techo)
       if (boundsA.y < boundsB.y) {
         a.sprite.y -= overlapY;
         physicsA.vy = -physicsA.vy * restitution;
@@ -214,8 +216,12 @@ export class CollisionService {
         b.sprite.y -= overlapY;
         physicsB.vy = -physicsB.vy * restitution;
       }
+
+      // Friccion horizontal
+      physicsA.vx *= friction;
+      physicsB.vx *= friction;
     } else {
-      // Colision horizontal
+      // Colision horizontal (pared)
       if (boundsA.x < boundsB.x) {
         a.sprite.x -= overlapX / 2;
         b.sprite.x += overlapX / 2;
@@ -223,8 +229,13 @@ export class CollisionService {
         a.sprite.x += overlapX / 2;
         b.sprite.x -= overlapX / 2;
       }
+
       physicsA.vx = -physicsA.vx * restitution;
       physicsB.vx = -physicsB.vx * restitution;
+
+      // Friccion vertical
+      physicsA.vy *= friction;
+      physicsB.vy *= friction;
     }
   }
 }

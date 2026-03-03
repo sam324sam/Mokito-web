@@ -63,7 +63,6 @@ export class PetConditionService {
 
   /**
    * Gestiona efectos visuales de energia positiva (energetic)
-   * 
    */
   private energeticCooldown: number = 0;
   private readonly energetic: PetConditionBehavior = (pet, delta, ctx) => {

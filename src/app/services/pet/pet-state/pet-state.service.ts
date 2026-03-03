@@ -201,7 +201,7 @@ export class PetStateService {
     const halfW = (pet.sprite.width * pet.sprite.scale) / 2;
     const halfH = (pet.sprite.height * pet.sprite.scale) / 2;
 
-    const number = Math.floor(Math.random() * 3) + 1;
+    const number = Math.floor(Math.random() * 2) + 1;
     const textureName = 'bubles' + number;
 
     const x = pet.sprite.x + Math.random() * (halfW * 2);

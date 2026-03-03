@@ -3,6 +3,7 @@ import { Entity } from '../models/entity/entity.model';
 import { EntityStoreService } from './entity-store.service';
 import { hasGrab } from '../guards/has-grab.guard';
 import { Grab } from '../models/entity/grab.model';
+import { hasPhysics } from '../guards/has-physics.guard';
 
 @Injectable({ providedIn: 'root' })
 export class GrabService {
@@ -10,7 +11,8 @@ export class GrabService {
   private readonly LONG_PRESS_DURATION = 300; // ms para considerar "agarre"
   private grabOffsetX = 0;
   private grabOffsetY = 0;
-
+  // historial para el caculo de velocidad a aplicar a la entidad
+  private history: { x: number; y: number; time: number }[] = [];
   constructor(private readonly entityStore: EntityStoreService) {}
 
   handlePressDown(event: PointerEvent): void {
@@ -34,13 +36,55 @@ export class GrabService {
 
   handlePressUp(event: PointerEvent): void {
     event.preventDefault();
-
     this.clearPressTimer();
 
     const grabbed = this.getGrabbedEntity();
-    if (grabbed) {
-      grabbed.grab.isGrabbed = false;
+    if (!grabbed) return;
+
+    grabbed.grab.isGrabbed = false;
+
+    // Necesitamos al menos 2 puntos para calcular velocidad si no nadota
+    if (this.history.length < 2) {
+      this.history = [];
+      return;
     }
+
+    const first = this.history.at(0);
+    const last = this.history.at(-1);
+
+    if (!first || !last) {
+      this.history = [];
+      return;
+    }
+
+    const dx = last.x - first.x;
+    const dy = last.y - first.y;
+    // Tolerancia para no aplicar velocidad al minimo movimiento
+    const MIN_DISTANCE = 20; 
+
+    const distance = Math.hypot(dx, dy);
+
+    if (distance < MIN_DISTANCE) {
+      this.history = [];
+      return;
+    }
+    const dt = (last.time - first.time) / 1000; // esta en segundos
+
+    if (dt <= 0) {
+      this.history = [];
+      return;
+    }
+
+    const vx = dx / dt;
+    const vy = dy / dt;
+
+    if (hasPhysics(grabbed)) {
+      grabbed.physics.vx = vx;
+      grabbed.physics.vy = vy;
+    }
+
+    // Limpiar historial despues de lanzar
+    this.history = [];
   }
 
   handleMouseMove(event: PointerEvent): void {
@@ -51,6 +95,15 @@ export class GrabService {
     grabbed.sprite.x = mouse.x - this.grabOffsetX;
     grabbed.sprite.y = mouse.y - this.grabOffsetY;
 
+    const historyElement = {
+      x: mouse.x,
+      y: mouse.y,
+      time: event.timeStamp,
+    };
+    this.history.push(historyElement);
+    if (this.history.length > 5) {
+      this.history.shift();
+    }
   }
 
   private startGrabbing(entity: Entity): void {

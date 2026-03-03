@@ -10,7 +10,6 @@ import { ObjectType } from '../../models/object/interactuable-object.model';
 // Services
 import { AnimationService } from '../animation.service';
 import { DataService } from '../data.service';
-import { ParticleService } from '../particle/particle.service';
 import { InteractableObjectsService } from '../interactable-objects/interactable-objects.service';
 
 // Pet Services
@@ -52,7 +51,6 @@ export class PetService {
     private readonly interactableObjectsService: InteractableObjectsService,
     private readonly petStatService: PetStatService,
     private readonly petIaService: PetIaService,
-    private readonly particleService: ParticleService,
     private readonly petStateService: PetStateService,
     private readonly petInputService: PetInputService,
     private readonly petConditionService: PetConditionService,
@@ -265,10 +263,8 @@ export class PetService {
       this.pet.sprite.currentFrame = 0;
       this.pet.sprite.frameCounter = 0;
     },
-
     sumMinusStat: (name, value) => this.sumMinusStat(name, value),
     setState: (state: PetState) => this.setState(state),
-
     getInteractuableObject: (name) => this.interactableObjectsService.getInteractuableObject(name),
   };
 
@@ -283,8 +279,8 @@ export class PetService {
     openInventoryBathroom: () => {
       this.toggleInventory(ObjectType.Bathroom);
     },
-    waterPlants: () => {
-      console.log('Regando plantas');
+    openInventoryGarden: () => {
+      this.toggleInventory(ObjectType.Garden);
     },
   };
 
