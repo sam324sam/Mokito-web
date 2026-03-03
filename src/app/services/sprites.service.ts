@@ -24,7 +24,7 @@ export class SpriteService {
     private readonly entityStoreService: EntityStoreService,
   ) {}
 
-  init(canvas: HTMLCanvasElement) {
+  init(canvas: HTMLCanvasElement): void {
     this.canvas = canvas;
 
     // se puede ejecutar lo que sea para setear el canva a dibujar luego cambiar nombre a set o algo
@@ -43,7 +43,7 @@ export class SpriteService {
     window.addEventListener('resize', () => this.resizeCanvas());
   }
 
-  resizeCanvas() {
+  resizeCanvas(): void {
     const container = this.canvas.parentElement;
     if (!container) return;
 
@@ -62,66 +62,24 @@ export class SpriteService {
     this.ctx.imageSmoothingEnabled = false;
   }
 
-  render() {
+  render(): void {
     try {
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-      const entities = this.entityStoreService.getZOrder();
-
-      for (const e of entities) {
-        this.ctx.save();
+      for (const e of this.entityStoreService.getZOrder()) {
+        this.limitToCanvas(e.sprite);
         if (isMessage(e)) {
           this.renderText(e);
           continue;
         }
-        const sprite: Sprite = e.sprite;
 
-        sprite.scale = this.spriteScale;
-
-        const animation = this.animationService.getAnimation(sprite);
-        this.limitToCanvas(sprite);
-        this.ctx.imageSmoothingEnabled = false;
-        this.ctx.globalAlpha = sprite.alpha / 100;
-        if (animation?.image.complete) {
-          const frameIndex = sprite.currentFrame;
-          // mueve la casilla en la se encuentra el fotograma a ver
-          const sx = frameIndex * animation.frameWidth;
-          const sy = 0;
-
-          this.ctx.drawImage(
-            animation.image,
-            sx,
-            sy,
-            animation.frameWidth,
-            animation.frameHeight,
-            sprite.x,
-            sprite.y,
-            animation.frameWidth * this.spriteScale,
-            animation.frameHeight * this.spriteScale,
-          );
-        } else if (sprite.img) {
-          this.ctx.drawImage(
-            sprite.img,
-            sprite.x,
-            sprite.y,
-            sprite.width * this.spriteScale,
-            sprite.height * this.spriteScale,
-          );
+        if (e.sprite.rotation == null) {
+          this.renderEntity(e);
+        } else {
+          this.renderRotateSprite(e.sprite);
         }
-
-        if (sprite.color) {
-          this.ctx.globalCompositeOperation = 'source-atop';
-          this.ctx.fillStyle = sprite.color.color;
-          this.ctx.fillRect(
-            sprite.x,
-            sprite.y,
-            sprite.width * this.spriteScale,
-            sprite.height * this.spriteScale,
-          );
-        }
-        this.ctx.restore();
       }
-      // Dibujar colliders solo si esta activado
+
       if (this.debugColliders) {
         this.renderColliders();
       }
@@ -131,10 +89,71 @@ export class SpriteService {
   }
 
   /**
-   * Renderiza los objetos que se estan rotando
+   * Renderiza las entidades no especiales
+   * @param entity
    */
-  private renderRotateSprite(sprite: Sprite, frame: HTMLImageElement) {
+  private renderEntity(entity: Entity): void {
+    const sprite: Sprite = entity.sprite;
+
+    sprite.scale = this.spriteScale;
+
+    const animation = this.animationService.getAnimation(sprite);
+
+    this.ctx.save();
+    this.ctx.imageSmoothingEnabled = false;
+    this.ctx.globalAlpha = sprite.alpha / 100;
+    if (animation?.image.complete) {
+      const frameIndex = sprite.currentFrame;
+      // mueve la casilla en la se encuentra el fotograma a ver
+      const sx = frameIndex * animation.frameWidth;
+      const sy = 0;
+
+      this.ctx.drawImage(
+        animation.image,
+        sx,
+        sy,
+        animation.frameWidth,
+        animation.frameHeight,
+        sprite.x,
+        sprite.y,
+        animation.frameWidth * this.spriteScale,
+        animation.frameHeight * this.spriteScale,
+      );
+    } else if (sprite.img) {
+      this.ctx.drawImage(
+        sprite.img,
+        sprite.x,
+        sprite.y,
+        sprite.width * this.spriteScale,
+        sprite.height * this.spriteScale,
+      );
+    }
+    this.applyColorOverlay(sprite);
+    this.ctx.restore();
+  }
+
+  /**
+   * Aplica un color solido encima del sprite si tiene color definido
+   */
+  private applyColorOverlay(sprite: Sprite) {
+    if (sprite.color) {
+      this.ctx.globalCompositeOperation = 'source-atop';
+      this.ctx.fillStyle = sprite.color.color;
+      this.ctx.fillRect(
+        sprite.x,
+        sprite.y,
+        sprite.width * this.spriteScale,
+        sprite.height * this.spriteScale,
+      );
+    }
+  }
+
+  /**
+   * Renderiza los objetos que se estan rotando. ( aun no va si el sprite contiene un animation set)
+   */
+  private renderRotateSprite(sprite: Sprite): void {
     if (sprite.rotation == null) return;
+    const frame = sprite.img;
     this.ctx.save();
     // Mover el origen al centro del sprite
     this.ctx.translate(sprite.x, sprite.y);
@@ -160,7 +179,7 @@ export class SpriteService {
   /**
    * Renderiza los colliders de todas las entidades para depuracion
    */
-  private renderColliders() {
+  private renderColliders(): void {
     if (!this.ctx) return;
 
     const entities = this.entityStoreService.getZOrder();
@@ -187,7 +206,7 @@ export class SpriteService {
   /**
    * Renderizar si la entidad es tipo mensaje
    */
-  private renderText(message: Entity) {
+  private renderText(message: Entity): void {
     if (!isMessage(message)) return;
     this.ctx.save();
     const scale = this.spriteScale;
@@ -222,7 +241,7 @@ export class SpriteService {
     this.ctx.restore();
   }
 
-  limitToCanvas(sprite: Sprite) {
+  limitToCanvas(sprite: Sprite): void {
     const realWidth = sprite.width * this.spriteScale;
     const realHeight = sprite.height * this.spriteScale;
 

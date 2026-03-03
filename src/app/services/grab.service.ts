@@ -60,7 +60,12 @@ export class GrabService {
     const dx = last.x - first.x;
     const dy = last.y - first.y;
     // Tolerancia para no aplicar velocidad al minimo movimiento
-    const MIN_DISTANCE = 20; 
+    let MIN_DISTANCE = 2 * grabbed.sprite.scale;
+    // Cuando se me ocurra algo mejor lo cambio
+    if (MIN_DISTANCE == 10) {
+      MIN_DISTANCE = 12
+    }
+    console.log(MIN_DISTANCE, "distancia minima")
 
     const distance = Math.hypot(dx, dy);
 
