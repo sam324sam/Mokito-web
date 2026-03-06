@@ -186,6 +186,6 @@
       "restitution": 0.9,
       "friction": 0.9
     },
-    "nameBehaviors": ["ballRotate"]
+    "nameBehaviors": ["ballRotate", "stellaBySpeed"]
   }
 ]

@@ -5,6 +5,8 @@ import { Entity } from '../../models/entity/entity.model';
 import { SpriteService } from '../sprites.service';
 import { DataService } from '../data.service';
 import { ParticleConfigs } from './particle-configs';
+import { Physics } from '../../models/entity/physics.model';
+import { Sprite } from '../../models/sprites/sprites.model';
 
 @Injectable({ providedIn: 'root' })
 export class ParticleService {
@@ -12,7 +14,7 @@ export class ParticleService {
   private readonly particles: Particle[] = [];
   private readonly texture: Record<string, HTMLImageElement> = {};
   activeParticleSistem: boolean = true;
-  private status: boolean = false
+  private status: boolean = false;
 
   constructor(
     private readonly entityStoreService: EntityStoreService,
@@ -24,7 +26,7 @@ export class ParticleService {
 
   init() {
     if (this.status) return;
-    this.status = true
+    this.status = true;
     this.scale = this.spriteService.getScale();
   }
 
@@ -120,13 +122,11 @@ export class ParticleService {
     amount: number,
     timeToLife: number,
     textureName: string | null = null,
-    
   ) {
     const tex = this.texture[textureName || 'default'] || this.texture['default'];
     const config = ParticleConfigs.showerWater(x, y, timeToLife, tex, this.scale);
     this.emit(amount, config);
   }
-
 
   /**
    * Particulas de olor sucio
@@ -141,6 +141,14 @@ export class ParticleService {
     const tex = this.texture[textureName || 'default'] || this.texture['default'];
     const config = ParticleConfigs.dirty(x, y, timeToLife, tex, this.scale);
     this.emit(amount, config);
+  }
+
+  /**
+   *
+   */
+  emitStella(timeToLife: number, physics: Physics, spriteStela: Sprite) {
+    const config = ParticleConfigs.stella(timeToLife, physics, spriteStela);
+    this.emit(1, config);
   }
 
   /**

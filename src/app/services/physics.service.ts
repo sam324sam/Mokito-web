@@ -4,7 +4,6 @@ import { CollisionService } from './collision.service';
 import { EntityStoreService } from './entity-store.service';
 import { SpriteService } from './sprites.service';
 //guards
-import { hasPhysics } from '../guards/has-physics.guard';
 import { hasCollider } from '../guards/has-collider.guard';
 import { hasGrab } from '../guards/has-grab.guard';
 import { isParticle } from '../guards/is-particle.guard';
@@ -47,7 +46,7 @@ export class PhysicsService {
    * Aplica fisica para entidades
    */
   private applyPhysics(e: Entity | Particle, dt: number, canvas: HTMLCanvasElement) {
-    if (!hasPhysics(e) || !e.physics.enabled) return;
+    if (!e.physics?.enabled) return;
     if (hasGrab(e) && e.grab.isGrabbed) return;
 
     const FLOOR_Y = canvas.height;

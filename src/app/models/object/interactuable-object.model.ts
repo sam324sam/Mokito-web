@@ -1,9 +1,9 @@
-import { Entity } from "../entity/entity.model";
-import { Physics } from "../entity/physics.model";
+import { Entity } from '../entity/entity.model';
+import { Physics } from '../entity/physics.model';
 
 // Setear el tipo de comportamientos
 type ObjectBehaviors = (p: InteractuableObject, delta: number) => void;
-export interface InteractuableObject extends Entity,  Partial<Physics>{
+export interface InteractuableObject extends Entity {
   type: ObjectType;
   timeToLife: number;
   behaviors?: ObjectBehaviors[];
@@ -15,5 +15,5 @@ export enum ObjectType {
   Bathroom = 'bathroom',
   Garden = 'garden',
   Default = 'default',
-  Room = 'room'
+  Room = 'room',
 }

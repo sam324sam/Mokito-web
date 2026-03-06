@@ -1,6 +1,7 @@
 import { Particle } from '../../models/particle/particle.model';
 import { Entity } from '../../models/entity/entity.model';
-
+import { Physics } from '../../models/entity/physics.model';
+import { Sprite } from '../../models/sprites/sprites.model';
 /**
  * Define la firma de un comportamiento de particula
  */
@@ -57,44 +58,59 @@ export const rotateBehavior: ParticleBehavior = (p, delta) => {
  * Configuracion base para todas las particulas
  * Evita repetir propiedades comunes
  */
+interface ParticleBaseOptions {
+  width?: number;
+  height?: number;
+  rotation?: number | null;
+  zIndex?: number | null;
+}
+
 const baseParticleConfig = (
   x: number,
   y: number,
   timeToLife: number,
   texture: HTMLImageElement,
   scale: number,
-): Particle => ({
-  id: 0,
-  name: 'particleBase',
-  active: true,
-  timeToLife,
-  maxTimeToLife: timeToLife,
-  sprite: {
-    x,
-    y,
-    img: texture,
-    width: 5,
-    height: 5,
-    scale,
-    color: null,
-    animationSprite: {},
-    currentAnimation: '',
-    currentFrame: 0,
-    frameSpeed: 0,
-    frameCounter: 0,
-    timeoutId: null,
-    alpha: 100,
-    zIndex: -1,
-    rotation: null,
-  },
-  collider: {
-    offsetX: 0,
-    offsetY: 0,
-    width: 5,
-    height: 5,
-  },
-  tags: [],
-});
+  options: ParticleBaseOptions = {},
+): Particle => {
+  const width = options.width ?? 5;
+  const height = options.height ?? 5;
+  const rotation = options.rotation ?? null;
+  const zIndex = options.zIndex ?? -1;
+
+  return {
+    id: 0,
+    name: 'particleBase',
+    active: true,
+    timeToLife,
+    maxTimeToLife: timeToLife,
+    sprite: {
+      x,
+      y,
+      img: texture,
+      width,
+      height,
+      scale,
+      color: null,
+      animationSprite: {},
+      currentAnimation: '',
+      currentFrame: 0,
+      frameSpeed: 0,
+      frameCounter: 0,
+      timeoutId: null,
+      alpha: 100,
+      zIndex,
+      rotation,
+    },
+    collider: {
+      offsetX: 0,
+      offsetY: 0,
+      width: width,
+      height: height,
+    },
+    tags: [],
+  };
+};
 
 export const ParticleConfigs = {
   /**
@@ -225,6 +241,38 @@ export const ParticleConfigs = {
       restitution: null,
     },
   }),
+
+  stella: (timeToLife: number, physics: Physics, spriteStela: Sprite): Particle => {
+    const offset = 4;
+    const directionX = Math.sign(physics.vx) || 1;
+    const directionY = Math.sign(physics.vy) || 1;
+
+    return {
+      ...baseParticleConfig(
+        spriteStela.x + directionX * offset,
+        spriteStela.y + directionY * offset,
+        timeToLife,
+        spriteStela.img,
+        spriteStela.scale,
+        {
+          width: spriteStela.width,
+          height: spriteStela.height,
+          zIndex: spriteStela.zIndex - 1,
+          rotation: spriteStela.rotation,
+        },
+      ),
+      tags: ['particle', 'stella', 'gas'],
+      behaviors: [fadeBehavior],
+      physics: {
+        vx: -physics.vx * 0.2,
+        vy: -physics.vy * 0.2,
+        gravity: 0,
+        enabled: true,
+        restitution: 0,
+        friction: 0,
+      },
+    };
+  },
 };
 
 // ==================== Tipos de datos que retornan

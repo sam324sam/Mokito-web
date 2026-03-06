@@ -4,7 +4,6 @@ import { Sprite } from '../models/sprites/sprites.model';
 import { Entity } from '../models/entity/entity.model';
 // Guards
 import { hasCollider } from '../guards/has-collider.guard';
-import { hasPhysics } from '../guards/has-physics.guard';
 // servicios
 import { PetObjectInteractionService } from './interactable-objects/pet-object-interaction.service';
 import { ParticleInteractionService } from './particle/particle-interaction.service';
@@ -142,7 +141,7 @@ export class CollisionService {
     if (
       !hasCollider(particle) ||
       !hasCollider(object) ||
-      !hasPhysics(particle) ||
+      particle.physics == undefined ||
       this.hasTag(particle, 'gas')
     ) {
       return;
@@ -161,9 +160,8 @@ export class CollisionService {
 
     const restitution = 0.5;
     const sprite = particle.sprite;
-    const physics = hasPhysics(particle) ? particle.physics : null;
-    if (physics == null) return;
-
+    if (particle.physics == undefined) return;
+    const physics = particle.physics;
     // Resolver por el eje con menor penetracion
     if (overlapY < overlapX) {
       // Colision vertical
@@ -188,7 +186,7 @@ export class CollisionService {
    * Resuelve la colision fisica entre dos entidades con fisica
    */
   private resolvePhysicsCollision(a: Entity, b: Entity): void {
-    if (!hasCollider(a) || !hasCollider(b) || !hasPhysics(a) || !hasPhysics(b)) {
+    if (!hasCollider(a) || !hasCollider(b) || a.physics == undefined || b.physics == undefined) {
       return;
     }
 

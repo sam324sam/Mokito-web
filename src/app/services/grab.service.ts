@@ -3,7 +3,6 @@ import { Entity } from '../models/entity/entity.model';
 import { EntityStoreService } from './entity-store.service';
 import { hasGrab } from '../guards/has-grab.guard';
 import { Grab } from '../models/entity/grab.model';
-import { hasPhysics } from '../guards/has-physics.guard';
 
 @Injectable({ providedIn: 'root' })
 export class GrabService {
@@ -63,9 +62,8 @@ export class GrabService {
     let MIN_DISTANCE = 2 * grabbed.sprite.scale;
     // Cuando se me ocurra algo mejor lo cambio
     if (MIN_DISTANCE == 10) {
-      MIN_DISTANCE = 12
+      MIN_DISTANCE = 12;
     }
-    console.log(MIN_DISTANCE, "distancia minima")
 
     const distance = Math.hypot(dx, dy);
 
@@ -83,7 +81,7 @@ export class GrabService {
     const vx = dx / dt;
     const vy = dy / dt;
 
-    if (hasPhysics(grabbed)) {
+    if (grabbed.physics != undefined) {
       grabbed.physics.vx = vx;
       grabbed.physics.vy = vy;
     }
