@@ -19,6 +19,8 @@ export class PhysicsService {
     private readonly collisionService: CollisionService,
   ) {}
 
+  MIN_SPEED = 0.1;
+
   update(delta: number) {
     const canvas = this.spriteService.getCanvas();
     if (!canvas) return;
@@ -49,9 +51,16 @@ export class PhysicsService {
     if (hasGrab(e) && e.grab.isGrabbed) return;
 
     const FLOOR_Y = canvas.height;
-    const restitution = isParticle(e) ? 0.5 : 0.25;
-    const friction = isParticle(e) ? 1 : 0.8;
-
+    let restitution = isParticle(e) ? 0.5 : 0.25;
+    let friction = isParticle(e) ? 1 : 0.8;
+    // Esto se puede hacer mejor luego cambiar
+    if (e.physics.restitution !== null) {
+      restitution = e.physics.restitution;
+    }
+    if (e.physics.friction !== null) {
+      friction = e.physics.friction;
+    }
+    
     // Gravedad
     e.physics.vy += e.physics.gravity * dt;
 
@@ -87,6 +96,14 @@ export class PhysicsService {
     if (e.sprite.y < 0) {
       e.sprite.y = 0;
       e.physics.vy = -e.physics.vy * restitution;
+    }
+
+    if (Math.abs(e.physics.vx) < this.MIN_SPEED){
+      e.physics.vx = 0;
+      
+    }
+    if (Math.abs(e.physics.vy) < this.MIN_SPEED){
+      e.physics.vy = 0;
     }
   }
 

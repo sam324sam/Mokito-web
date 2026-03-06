@@ -76,8 +76,6 @@ export class PetConditionService {
     );
     this.energeticCooldown = triggered ? 1500 : cooldown;
     if (!triggered) return;
-
-    this.tryEmitMessage(pet, ctx, 'lauy', 0.05);
   };
 
   private hungerCooldown: number = 0;

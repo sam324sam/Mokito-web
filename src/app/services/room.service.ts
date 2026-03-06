@@ -66,10 +66,13 @@ export class RoomService {
         ...object,
         active: true,
         physics: {
+          ...object.physics,
           vx: 0,
-          vy: 0,
+          vy:0,
           gravity: 980,
           enabled: true,
+          restitution: object.physics?.restitution ?? null,
+          friction: object.physics?.friction ?? null,
         },
         collider: {
           offsetX: 0,

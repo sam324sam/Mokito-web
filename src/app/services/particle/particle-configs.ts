@@ -65,7 +65,7 @@ const baseParticleConfig = (
   scale: number,
 ): Particle => ({
   id: 0,
-  name: "particleBase",
+  name: 'particleBase',
   active: true,
   timeToLife,
   maxTimeToLife: timeToLife,
@@ -116,6 +116,8 @@ export const ParticleConfigs = {
       vy: 0,
       gravity: 100,
       enabled: true,
+      restitution: null,
+      friction: null,
     },
   }),
 
@@ -138,6 +140,8 @@ export const ParticleConfigs = {
       vy: 0,
       gravity: 100,
       enabled: true,
+      restitution: null,
+      friction: null,
     },
   }),
 
@@ -193,6 +197,8 @@ export const ParticleConfigs = {
       vy: Math.random() * 10,
       gravity: 200,
       enabled: true,
+      restitution: null,
+      friction: null,
     },
   }),
 
@@ -215,6 +221,8 @@ export const ParticleConfigs = {
       vy: Math.random() * 10,
       gravity: -200,
       enabled: true,
+      friction: null,
+      restitution: null,
     },
   }),
 };

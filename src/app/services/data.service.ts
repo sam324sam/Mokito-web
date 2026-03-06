@@ -152,6 +152,13 @@ export class DataService {
           alpha: 100,
           rotation: null,
         },
+        physics: {
+          ...element.physics,
+          vx: 0,
+          vy: 0,
+          gravity: 980,
+          enabled: true,
+        },
         timeToLife: objTimeToLife,
         active: true,
       };

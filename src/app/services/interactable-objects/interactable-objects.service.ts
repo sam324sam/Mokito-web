@@ -8,6 +8,7 @@ import { EntityStoreService } from '../entity-store.service';
 import { isInteractuableObject } from '../../guards/is-interactuable-object.guard';
 import { ParticleService } from '../particle/particle.service';
 import { hasGrab } from '../../guards/has-grab.guard';
+import { hasPhysics } from '../../guards/has-physics.guard';
 
 type ObjectBehaviors = (p: InteractuableObject, delta: number) => void;
 @Injectable({
@@ -20,6 +21,7 @@ export class InteractableObjectsService {
   // Mapa de behaviors disponibles
   behaviorMap: Record<string, ObjectBehaviors> = {
     dropWater: this.dropWater.bind(this),
+    ballRotate: this.ballRotate.bind(this),
   };
 
   constructor(
@@ -76,12 +78,6 @@ export class InteractableObjectsService {
     const runtimeObj: InteractuableObjectRuntime = {
       ...objCopy,
       active: true,
-      physics: {
-        vx: 0,
-        vy: 0,
-        gravity: 980,
-        enabled: true,
-      },
       collider: {
         offsetX: 0,
         offsetY: 0,
@@ -140,6 +136,14 @@ export class InteractableObjectsService {
           'drops',
         );
       }
+    }
+  }
+
+  private ballRotate(obj: InteractuableObject, delta: number) {
+    if (hasPhysics(obj) && obj.physics.vx != 0) {
+      obj.sprite.rotation = obj.physics.vx * 0.01;
+    } else if (obj.sprite.rotation != null) {
+      obj.sprite.rotation = null;
     }
   }
 }

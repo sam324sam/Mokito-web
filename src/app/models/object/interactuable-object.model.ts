@@ -1,8 +1,9 @@
 import { Entity } from "../entity/entity.model";
+import { Physics } from "../entity/physics.model";
 
 // Setear el tipo de comportamientos
 type ObjectBehaviors = (p: InteractuableObject, delta: number) => void;
-export interface InteractuableObject extends Entity{
+export interface InteractuableObject extends Entity,  Partial<Physics>{
   type: ObjectType;
   timeToLife: number;
   behaviors?: ObjectBehaviors[];

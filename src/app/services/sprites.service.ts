@@ -17,7 +17,7 @@ export class SpriteService {
   private readonly BASE_WIDTH = 200;
   private readonly BASE_HEIGHT = 200;
   spriteScale = 6;
-  debugColliders: boolean = false;
+  debugColliders: boolean = true;
 
   constructor(
     private readonly animationService: AnimationService,
@@ -155,8 +155,12 @@ export class SpriteService {
     if (sprite.rotation == null) return;
     const frame = sprite.img;
     this.ctx.save();
+    this.ctx.imageSmoothingEnabled = false;
+    this.ctx.globalAlpha = sprite.alpha / 100;
+    const width = sprite.width * this.spriteScale;
+    const height = sprite.height * this.spriteScale;
     // Mover el origen al centro del sprite
-    this.ctx.translate(sprite.x, sprite.y);
+    this.ctx.translate(sprite.x + width / 2, sprite.y + height / 2);
     this.ctx.rotate(sprite.rotation);
 
     if (
@@ -167,9 +171,6 @@ export class SpriteService {
       Number.isFinite(sprite.width) &&
       Number.isFinite(sprite.height)
     ) {
-      const width = sprite.width * this.spriteScale;
-      const height = sprite.height * this.spriteScale;
-
       // Dibujar centrado
       this.ctx.drawImage(frame, -width / 2, -height / 2, width, height);
     }
