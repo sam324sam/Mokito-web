@@ -139,8 +139,7 @@ export class CollisionService {
     if (
       !particle.collider ||
       !object.collider ||
-      particle.physics == undefined ||
-      this.hasTag(particle, 'gas')
+      particle.physics == undefined
     ) {
       return;
     }

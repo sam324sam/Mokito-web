@@ -149,7 +149,7 @@ export const ParticleConfigs = {
     scale: number,
   ): Particle => ({
     ...baseParticleConfig(x, y, timeToLife, texture, scale),
-    tags: ['particle', 'sweat_drops', 'gas'],
+    tags: ['particle', 'sweat_drops'],
     behaviors: [fadeBehavior, slowDownBehavior],
     physics: {
       vx: 0,
@@ -159,6 +159,7 @@ export const ParticleConfigs = {
       restitution: null,
       friction: null,
     },
+    collider: undefined
   }),
 
   /**
@@ -183,14 +184,6 @@ export const ParticleConfigs = {
     },
     sprite: {
       ...baseParticleConfig(0, 0, timeToLife, texture, scale).sprite,
-      width: 8,
-      height: 8,
-    },
-    collider: {
-      offsetX: 0,
-      offsetY: 0,
-      width: 8,
-      height: 8,
     },
   }),
 
@@ -226,7 +219,7 @@ export const ParticleConfigs = {
     scale: number,
   ): Particle => ({
     ...baseParticleConfig(x, y, timeToLife, texture, scale),
-    tags: ['particle', 'dirty', 'gas'],
+    tags: ['particle', 'dirty'],
     behaviors: [fadeBehavior, rotateBehavior],
     sprite: {
       ...baseParticleConfig(x, y, timeToLife, texture, scale).sprite,
@@ -240,6 +233,32 @@ export const ParticleConfigs = {
       friction: null,
       restitution: null,
     },
+    collider: undefined
+  }),
+
+  sleepZZZ: (
+    x: number,
+    y: number,
+    timeToLife: number,
+    texture: HTMLImageElement,
+    scale: number,
+  ): Particle => ({
+    ...baseParticleConfig(x, y, timeToLife, texture, scale),
+    tags: ['particle', 'z'],
+    behaviors: [fadeBehavior],
+    sprite: {
+      ...baseParticleConfig(x, y, timeToLife, texture, scale).sprite,
+      rotation: 0,
+    },
+    physics: {
+      vx: (Math.random() - 0.5) * 100,
+      vy: Math.random() * 10,
+      gravity: -200,
+      enabled: true,
+      friction: null,
+      restitution: null,
+    },
+    collider: undefined
   }),
 
   stella: (timeToLife: number, physics: Physics, spriteStela: Sprite): Particle => {
@@ -261,7 +280,7 @@ export const ParticleConfigs = {
           rotation: spriteStela.rotation,
         },
       ),
-      tags: ['particle', 'stella', 'gas'],
+      tags: ['particle', 'stella'],
       behaviors: [fadeBehavior],
       physics: {
         vx: -physics.vx * 0.5,
@@ -271,6 +290,7 @@ export const ParticleConfigs = {
         restitution: 0,
         friction: 0,
       },
+      collider: undefined
     };
   },
 };

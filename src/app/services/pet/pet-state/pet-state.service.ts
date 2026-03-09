@@ -51,6 +51,10 @@ export class PetStateService {
       onEnter: (p, c) => this.enterTalking(p, c),
       onExit: (p, c) => this.exitTalking(p, c),
     },
+    [PetState.PlayBall]: {
+      onEnter: (p, c) => this.enterPlayBall(p, c),
+      onExit: (p, c) => this.exitPlayBall(p, c),
+    },
   };
 
   lastState: PetState = {} as PetState;
@@ -60,6 +64,7 @@ export class PetStateService {
   private eatTimeout: any = null;
   private batingTimeout: any = null;
   private talkingTimeout: any = null;
+  private playBallTimeout: any = null;
 
   constructor(
     private readonly particleService: ParticleService,
@@ -178,9 +183,20 @@ export class PetStateService {
    * Actualiza el estado Sleeping
    * Verifica si la energia alcanzo el 80% para despertar
    */
+  cooldownZZZ = 1000;
   private updateSleeping(pet: Pet, delta: number, ctx: PetStateContext): void {
     const stat = ctx.getStat('energy');
     ctx.sumMinusStat('energy', 0.05);
+
+    this.cooldownZZZ -= delta;
+    if (this.cooldownZZZ <= 0) {
+      const width = pet.sprite.width * pet.sprite.scale;
+      const height = pet.sprite.height * pet.sprite.scale;
+      let x = pet.sprite.x + Math.random() * width;
+      let y = pet.sprite.y + (Math.random() * height) / 2;
+      this.particleService.emitSleepZZZ(x, y, 1, 'zzz');
+      this.cooldownZZZ = 1000;
+    }
 
     if (stat !== null) {
       const energy = stat.porcent;
@@ -221,7 +237,9 @@ export class PetStateService {
   }
 
   //============================ Hablando
-  exitTalking(pet: Pet, ctx: PetStateContext): void {}
+  exitTalking(pet: Pet, ctx: PetStateContext): void {
+    this.clearTimer(this.talkingTimeout);
+  }
   enterTalking(pet: Pet, ctx: PetStateContext): void {
     ctx.setAnimation('talking');
     this.soundService.playEfects('message-sound');
@@ -232,5 +250,20 @@ export class PetStateService {
     this.talkingTimeout = setTimeout(() => {
       ctx.setState(PetState.Idle);
     }, durationMs);
+  }
+
+  // =============================== Jugando con la pelota
+  enterPlayBall(pet: Pet, ctx: PetStateContext): void {
+    // hacer animacion de pelota ctx.setAnimation('play');
+    ctx.sumMinusStat('happiness', 10);
+
+    this.clearTimer(this.playBallTimeout);
+
+    this.playBallTimeout = setTimeout(() => {
+      ctx.setState(PetState.Idle);
+    }, 1000);
+  }
+  exitPlayBall(pet: Pet, ctx: PetStateContext): void {
+    this.clearTimer(this.playBallTimeout);
   }
 }

@@ -60,7 +60,6 @@ export class ParticleService {
 
     for (let i = 0; i < amount; i++) {
       const particle = this.particlePool[type].pop() ?? this.cloneParticle(particleConfig);
-      console.log('particula', this.particlePool);
       // Resetear atributos que cambian por emisión
       particle.timeToLife = particleConfig.timeToLife;
       particle.sprite.x = particleConfig.sprite.x;
@@ -68,9 +67,17 @@ export class ParticleService {
       particle.sprite.alpha = 100;
 
       // Añadir variación aleatoria a la velocidad si se requiere
-      if (particle.physics && randomVelocity) {
-        particle.physics.vx = (Math.random() - 0.5) * 250;
-        particle.physics.vy = -(Math.random() - 0.5) * 250;
+      if (particle.physics) {
+        if (randomVelocity) {
+          particle.physics.vx = (Math.random() - 0.5) * 250;
+          particle.physics.vy = -(Math.random() - 0.5) * 250;
+        } else if (particleConfig.physics) {
+          particle.physics.vx = particleConfig.physics.vx;
+          particle.physics.vy = particleConfig.physics.vy;
+        } else {
+          particle.physics.vx = 0;
+          particle.physics.vy = 0;
+        }
       }
 
       this.particles.push(particle);
@@ -106,6 +113,20 @@ export class ParticleService {
     const tex = texture || this.texture['default'];
     const config = ParticleConfigs.explosion(x, y, timeToLife, tex, this.scale);
     this.emit(amount, config, 'explosion', true);
+  }
+
+  /**
+   * Particulas zzz
+   */
+  emitSleepZZZ(
+    x: number,
+    y: number,
+    timeToLife: number,
+    textureName: string | null,
+  ) {
+    const tex = this.texture[textureName || 'default'] || this.texture['default'];
+    const config = ParticleConfigs.sleepZZZ(x, y, timeToLife, tex, this.scale);
+    this.emit(1, config, 'z');
   }
 
   /**

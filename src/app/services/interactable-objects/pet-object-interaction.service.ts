@@ -22,12 +22,31 @@ export class PetObjectInteractionService {
 
   onPetTouchObject(pet: Entity, obj: Entity) {
     if (!isPet(pet) || !isInteractuableObject(obj)) return;
-    if (obj.type === ObjectType.Food) {
-      this.petEat(pet, obj);
-    } else if (obj.type == ObjectType.Bathroom) {
-      this.petBathing(pet, obj);
-    } else if (obj.type == ObjectType.Room) {
-      this.onPetTouchRoomObject(pet, obj);
+    switch (obj.type) {
+      case ObjectType.Food:
+        this.petEat(pet, obj);
+        break;
+      case ObjectType.Bathroom:
+        this.petBathing(pet, obj);
+        break;
+      case ObjectType.Garden:
+        this.onPetGarden(pet, obj);
+        break;
+      case ObjectType.Room:
+        this.onPetTouchRoomObject(pet, obj);
+        break;
+
+      default:
+        return;
+    }
+  }
+
+  private onPetGarden(pet: Pet, obj: InteractuableObjectRuntime){
+    if (obj.tags.includes('ball')) {
+      let MIN_SPEED = 100;
+      if (obj.physics && MIN_SPEED <= obj.physics.vx) {
+        this.petService.setState(PetState.PlayBall);
+      }
     }
   }
 

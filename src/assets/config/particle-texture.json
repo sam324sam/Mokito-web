@@ -35,6 +35,10 @@
     {
       "name": "sweat-drops",
       "src": "assets/img/particle/sweat-drops.png"
+    },
+    {
+      "name": "zzz",
+      "src": "assets/img/particle/zzz.png"
     }
   ]
 }
