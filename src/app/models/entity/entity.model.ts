@@ -1,5 +1,6 @@
 import { Sprite } from '../sprites/sprites.model';
 import { Physics } from './physics.model';
+import { Collider } from './collider.model';
 
 export interface Entity {
   id: number | null;
@@ -9,4 +10,5 @@ export interface Entity {
   tags: string[];
 
   physics?: Physics;
+  collider?: Collider;
 }

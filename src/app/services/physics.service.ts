@@ -4,7 +4,6 @@ import { CollisionService } from './collision.service';
 import { EntityStoreService } from './entity-store.service';
 import { SpriteService } from './sprites.service';
 //guards
-import { hasCollider } from '../guards/has-collider.guard';
 import { hasGrab } from '../guards/has-grab.guard';
 import { isParticle } from '../guards/is-particle.guard';
 // Model
@@ -36,7 +35,7 @@ export class PhysicsService {
 
     for (let i = 0; i < entities.length; i++) {
       const a = entities[i];
-      if (!hasCollider(a)) continue;
+      if (!a.collider) continue;
 
       this.checkEntityCollisions(a, entities, i);
     }
@@ -67,7 +66,7 @@ export class PhysicsService {
     e.sprite.x += e.physics.vx * dt;
     e.sprite.y += e.physics.vy * dt;
 
-    if (!hasCollider(e)) return;
+    if (!e.collider) return;
 
     const width = e.collider.width * (e.sprite.scale ?? 1);
     const height = e.collider.height * (e.sprite.scale ?? 1);
@@ -109,7 +108,7 @@ export class PhysicsService {
   private checkEntityCollisions(a: Entity, entities: Entity[], i: number) {
     for (let j = i + 1; j < entities.length; j++) {
       const b = entities[j];
-      if (!hasCollider(b)) continue;
+      if (!b.collider) continue;
 
       if (this.collisionService.areColliding(a, b)) {
         this.collisionService.resolve(a, b);

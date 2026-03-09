@@ -38,7 +38,7 @@ export class PetObjectInteractionService {
   }
 
   private petBathing(pet: Pet, obj: InteractuableObjectRuntime) {
-    if (obj.tags.includes('soap')) {
+    if (obj.tags.includes('soap') && obj.grab?.isGrabbed) {
       this.petService.setState(PetState.Bathing);
     }
   }

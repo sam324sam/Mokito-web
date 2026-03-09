@@ -30,7 +30,7 @@ export class InteractableObjectsService {
     private readonly particleService: ParticleService,
   ) {
     this.objects = this.dataService.getObjects();
-    console.log(this.objects);
+    console.log("Objetos",this.objects);
   }
 
   update(delta: number) {
@@ -41,7 +41,10 @@ export class InteractableObjectsService {
           behavior(obj, delta);
         }
       }
-      if (obj.grab?.isGrabbed) continue;
+      if (obj.grab?.isGrabbed) {
+        obj.timeToLife += 100; 
+        continue
+      }
 
       obj.timeToLife = Math.max(0, obj.timeToLife - delta);
 
@@ -89,6 +92,8 @@ export class InteractableObjectsService {
         grabOffsetX: 0,
         grabOffsetY: 0,
       },
+      physics: structuredClone(objCopy.physics) ?? undefined,
+      
       behaviors: behaviors,
       isTouchingPet: false,
     };

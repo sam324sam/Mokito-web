@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 // model
 import { Sprite } from '../models/sprites/sprites.model';
 import { Entity } from '../models/entity/entity.model';
-// Guards
-import { hasCollider } from '../guards/has-collider.guard';
 // servicios
 import { PetObjectInteractionService } from './interactable-objects/pet-object-interaction.service';
 import { ParticleInteractionService } from './particle/particle-interaction.service';
@@ -33,7 +31,7 @@ export class CollisionService {
    * Detecta si dos entidades estan colisionando
    */
   areColliding(a: Entity, b: Entity): boolean {
-    if (!hasCollider(a) || !hasCollider(b)) return false;
+    if (!a.collider || !b.collider) return false;
 
     const colliderA = this.getColliderBounds(a) || null;
     const colliderB = this.getColliderBounds(b) || null;
@@ -103,7 +101,7 @@ export class CollisionService {
    * Obtiene los limites del collider de una entidad
    */
   private getColliderBounds(entity: Entity) {
-    if (!hasCollider(entity)) {
+    if (!entity.collider) {
       return;
     }
 
@@ -139,8 +137,8 @@ export class CollisionService {
    */
   private resolveParticleObjectCollision(particle: Entity, object: Entity): void {
     if (
-      !hasCollider(particle) ||
-      !hasCollider(object) ||
+      !particle.collider ||
+      !object.collider ||
       particle.physics == undefined ||
       this.hasTag(particle, 'gas')
     ) {
@@ -186,7 +184,7 @@ export class CollisionService {
    * Resuelve la colision fisica entre dos entidades con fisica
    */
   private resolvePhysicsCollision(a: Entity, b: Entity): void {
-    if (!hasCollider(a) || !hasCollider(b) || a.physics == undefined || b.physics == undefined) {
+    if (!a.collider || !b.collider || a.physics == undefined || b.physics == undefined) {
       return;
     }
 

@@ -4,7 +4,6 @@ import { Sprite } from '../models/sprites/sprites.model';
 // Servicios
 import { AnimationService } from './animation.service';
 import { EntityStoreService } from './entity-store.service';
-import { hasCollider } from '../guards/has-collider.guard';
 import { Entity } from '../models/entity/entity.model';
 import { isMessage } from '../guards/is-mesage.guard';
 
@@ -17,7 +16,7 @@ export class SpriteService {
   private readonly BASE_WIDTH = 200;
   private readonly BASE_HEIGHT = 200;
   spriteScale = 6;
-  debugColliders: boolean = false;
+  debugColliders: boolean = true;
 
   constructor(
     private readonly animationService: AnimationService,
@@ -189,7 +188,7 @@ export class SpriteService {
     this.ctx.lineWidth = 1;
 
     for (const e of entities) {
-      if (!hasCollider(e)) continue;
+      if (!e.collider) continue;
 
       const c = e.collider;
       const s = e.sprite.scale ?? 1;
