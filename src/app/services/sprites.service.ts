@@ -16,7 +16,7 @@ export class SpriteService {
   private readonly BASE_WIDTH = 200;
   private readonly BASE_HEIGHT = 200;
   spriteScale = 6;
-  debugColliders: boolean = true;
+  debugColliders: boolean = false;
 
   constructor(
     private readonly animationService: AnimationService,

@@ -206,7 +206,7 @@ export const ParticleConfigs = {
     scale: number,
   ): Particle => ({
     ...baseParticleConfig(x, y, timeToLife, texture, scale),
-    tags: ['particle', 'water'],
+    tags: ['particle', 'showerWater'],
     behaviors: [fadeBehavior],
     physics: {
       vx: (Math.random() - 0.5) * 100,
@@ -243,7 +243,7 @@ export const ParticleConfigs = {
   }),
 
   stella: (timeToLife: number, physics: Physics, spriteStela: Sprite): Particle => {
-    const offset = 4;
+    const offset = 1;
     const directionX = Math.sign(physics.vx) || 1;
     const directionY = Math.sign(physics.vy) || 1;
 
@@ -257,15 +257,15 @@ export const ParticleConfigs = {
         {
           width: spriteStela.width,
           height: spriteStela.height,
-          zIndex: spriteStela.zIndex - 1,
+          zIndex: spriteStela.zIndex + 1,
           rotation: spriteStela.rotation,
         },
       ),
       tags: ['particle', 'stella', 'gas'],
       behaviors: [fadeBehavior],
       physics: {
-        vx: -physics.vx * 0.2,
-        vy: -physics.vy * 0.2,
+        vx: -physics.vx * 0.5,
+        vy: -physics.vy * 0.5,
         gravity: 0,
         enabled: true,
         restitution: 0,

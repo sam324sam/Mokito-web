@@ -115,6 +115,11 @@ export class GrabService {
     }
 
     entity.grab.isGrabbed = true;
+
+    if (entity.physics != undefined) {
+      entity.physics.vx = 0;
+      entity.physics.vy = 0;
+    }
   }
 
   private getGrabbedEntity(): (Entity & Grab) | null {

@@ -16,8 +16,8 @@ export class ParticleInteractionService {
     const bTags = b.tags;
 
     if (
-      (aTags.includes('bubbles') && bTags.includes('water')) ||
-      (bTags.includes('bubbles') && aTags.includes('water'))
+      (aTags.includes('bubbles') && bTags.includes('showerWater')) ||
+      (bTags.includes('bubbles') && aTags.includes('showerWater'))
     ) {
       // Decide cual desaparece, por ejemplo siempre la de tipo 'bubles'
       if (aTags.includes('bubbles')){

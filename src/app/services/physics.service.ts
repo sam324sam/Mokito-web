@@ -17,7 +17,7 @@ export class PhysicsService {
     private readonly collisionService: CollisionService,
   ) {}
 
-  MIN_SPEED = 0.1;
+  private  readonly MIN_SPEED = 0.1;
 
   update(delta: number) {
     const canvas = this.spriteService.getCanvas();

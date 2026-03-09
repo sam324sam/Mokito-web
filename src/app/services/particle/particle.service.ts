@@ -12,9 +12,12 @@ import { Sprite } from '../../models/sprites/sprites.model';
 export class ParticleService {
   private scale: number = 1;
   private readonly particles: Particle[] = [];
+  private readonly particlePool: Record<string, Particle[]> = {};
   private readonly texture: Record<string, HTMLImageElement> = {};
   activeParticleSistem: boolean = true;
   private status: boolean = false;
+  testPerformance: boolean = false;
+  private canvas!: HTMLCanvasElement;
 
   constructor(
     private readonly entityStoreService: EntityStoreService,
@@ -28,19 +31,41 @@ export class ParticleService {
     if (this.status) return;
     this.status = true;
     this.scale = this.spriteService.getScale();
+    this.canvas = this.spriteService.getCanvas();
+  }
+
+  performanceTest() {
+    const width = this.canvas.width;
+    const height = this.canvas.height;
+
+    const particlesPerSpawn = 5; // cantidad por emision
+    const ttl = 6; // tiempo de vida
+
+    const x = Math.random() * width;
+    const y = Math.random() * height;
+
+    this.emitSweatDrops(x, y, particlesPerSpawn, ttl, null);
   }
 
   /**
    * Metodo generico para emitir particulas
    */
-  private emit(amount: number, particleConfig: Particle, randomVelocity = false) {
+  private emit(amount: number, particleConfig: Particle, type: string, randomVelocity = false) {
     if (!this.activeParticleSistem) {
       console.log('El sistema de particulas esta apagado');
       return;
     }
 
+    if (!this.particlePool[type]) this.particlePool[type] = [];
+
     for (let i = 0; i < amount; i++) {
-      const particle = this.cloneParticle(particleConfig);
+      const particle = this.particlePool[type].pop() ?? this.cloneParticle(particleConfig);
+      console.log('particula', this.particlePool);
+      // Resetear atributos que cambian por emisión
+      particle.timeToLife = particleConfig.timeToLife;
+      particle.sprite.x = particleConfig.sprite.x;
+      particle.sprite.y = particleConfig.sprite.y;
+      particle.sprite.alpha = 100;
 
       // Añadir variación aleatoria a la velocidad si se requiere
       if (particle.physics && randomVelocity) {
@@ -80,7 +105,7 @@ export class ParticleService {
   ) {
     const tex = texture || this.texture['default'];
     const config = ParticleConfigs.explosion(x, y, timeToLife, tex, this.scale);
-    this.emit(amount, config, true);
+    this.emit(amount, config, 'explosion', true);
   }
 
   /**
@@ -95,7 +120,7 @@ export class ParticleService {
   ) {
     const tex = this.texture[textureName || 'default'] || this.texture['default'];
     const config = ParticleConfigs.sweat_drops(x, y, timeToLife, tex, this.scale);
-    this.emit(amount, config);
+    this.emit(amount, config, 'sweat_drops');
   }
 
   /**
@@ -110,7 +135,7 @@ export class ParticleService {
   ) {
     const tex = this.texture[textureName || 'default'] || this.texture['default'];
     const config = ParticleConfigs.bubles(x, y, timeToLife, tex, this.scale, entityTarget);
-    this.emit(1, config);
+    this.emit(1, config, 'bubles');
   }
 
   /**
@@ -125,7 +150,7 @@ export class ParticleService {
   ) {
     const tex = this.texture[textureName || 'default'] || this.texture['default'];
     const config = ParticleConfigs.showerWater(x, y, timeToLife, tex, this.scale);
-    this.emit(amount, config);
+    this.emit(amount, config, 'showerWater');
   }
 
   /**
@@ -140,7 +165,7 @@ export class ParticleService {
   ) {
     const tex = this.texture[textureName || 'default'] || this.texture['default'];
     const config = ParticleConfigs.dirty(x, y, timeToLife, tex, this.scale);
-    this.emit(amount, config);
+    this.emit(amount, config, 'dirty');
   }
 
   /**
@@ -148,7 +173,7 @@ export class ParticleService {
    */
   emitStella(timeToLife: number, physics: Physics, spriteStela: Sprite) {
     const config = ParticleConfigs.stella(timeToLife, physics, spriteStela);
-    this.emit(1, config);
+    this.emit(1, config, 'stella');
   }
 
   /**
@@ -165,11 +190,23 @@ export class ParticleService {
         }
       }
 
-      // Remover particulas muertas
       if (p.timeToLife <= 0) {
-        this.particles.splice(i, 1);
+        const lastIndex = this.particles.length - 1;
+        const lastParticle = this.particles[lastIndex];
+        // Swap: reemplaza la particula muerta por la ultima ( para no reaorganizar el array con el splice -_-)
+        this.particles[i] = lastParticle;
+        this.particles.pop();
         this.entityStoreService.removeEntity(p.id);
+        // roclocar el index para que no se salte la siguiente particula
+        i--;
+        // Para el pool de particulas
+        const type = p.tags?.[1] || 'default'; // por ejemplo, usar el segundo tag como tipo
+        if (!this.particlePool[type]) this.particlePool[type] = [];
+        this.particlePool[type].push(p);
       }
+    }
+    if (this.testPerformance) {
+      this.performanceTest();
     }
   }
 

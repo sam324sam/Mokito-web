@@ -17,10 +17,11 @@ export class InteractableObjectsService {
   objects: InteractuableObject[] = [];
   activeObjects: InteractuableObjectRuntime[] = [];
 
+  private readonly MIN_SPEED = 10;
+
   // Mapa de behaviors disponibles
   behaviorMap: Record<string, ObjectBehaviors> = {
     dropWater: this.dropWater.bind(this),
-    ballRotate: this.ballRotate.bind(this),
     stellaBySpeed: this.stellaBySpeed.bind(this),
   };
 
@@ -30,7 +31,7 @@ export class InteractableObjectsService {
     private readonly particleService: ParticleService,
   ) {
     this.objects = this.dataService.getObjects();
-    console.log("Objetos",this.objects);
+    console.log('Objetos', this.objects);
   }
 
   update(delta: number) {
@@ -42,8 +43,8 @@ export class InteractableObjectsService {
         }
       }
       if (obj.grab?.isGrabbed) {
-        obj.timeToLife += 100; 
-        continue
+        obj.timeToLife += 100;
+        continue;
       }
 
       obj.timeToLife = Math.max(0, obj.timeToLife - delta);
@@ -72,7 +73,7 @@ export class InteractableObjectsService {
 
     const behaviors: ObjectBehaviors[] = [];
     for (const element of obj.nameBehaviors) {
-      if (element) {
+      if (this.behaviorMap[element]) {
         behaviors.push(this.behaviorMap[element]);
       }
     }
@@ -93,7 +94,7 @@ export class InteractableObjectsService {
         grabOffsetY: 0,
       },
       physics: structuredClone(objCopy.physics) ?? undefined,
-      
+
       behaviors: behaviors,
       isTouchingPet: false,
     };
@@ -144,16 +145,10 @@ export class InteractableObjectsService {
     }
   }
 
-  private ballRotate(obj: InteractuableObject, delta: number) {
-    if (obj.physics != undefined && obj.physics.vx != 0) {
-      obj.sprite.rotation = obj.physics.vx * 0.01;
-    } else if (obj.sprite.rotation != null) {
-      obj.sprite.rotation = null;
-    }
-  }
-
   private stellaBySpeed(obj: InteractuableObject, delta: number) {
-    if (obj.physics != undefined && (obj.physics.vx != 0 || obj.physics.vy != 0)) {
+    if (obj.physics == undefined) return;
+
+    if (Math.abs(obj.physics.vx) > this.MIN_SPEED || Math.abs(obj.physics.vy) > this.MIN_SPEED) {
       this.particleService.emitStella(0.1, obj.physics, obj.sprite);
     }
   }

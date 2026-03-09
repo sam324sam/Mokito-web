@@ -67,10 +67,12 @@ export class EntityStoreService {
     if (entity?.sprite) {
       const index = this.zOrder.indexOf(entity);
       if (index !== -1) {
-        this.zOrder.splice(index, 1);
+        const lastIndex = this.zOrder.length - 1;
+        const lastEntity = this.zOrder[lastIndex];
+        this.zOrder[index] = lastEntity;
+        this.zOrder.pop();
       }
     }
-
     delete this.entities[id];
   }
 }
