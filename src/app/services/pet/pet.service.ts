@@ -2,7 +2,6 @@ import { Injectable, signal } from '@angular/core';
 
 // Models
 import { Pet, Stats, PetState } from '../../models/pet/pet.model';
-import { AnimationSet } from '../../models/sprites/animation-set.model';
 import { Color } from '../../models/sprites/color.model';
 import { Room } from '../../models/room/room.model';
 import { ObjectType } from '../../models/object/interactuable-object.model';
@@ -69,6 +68,8 @@ export class PetService {
     this.pet = this.dataService.getPetRuntime();
 
     this.colors = this.dataService.getColors();
+
+    this.setIdleAnimation('');
     console.log('La pet', this.pet);
 
     // Meter la entidad cargada alentity
@@ -102,6 +103,19 @@ export class PetService {
   }
 
   // ==================== Metodos publicos para el manejo de estados ====================
+
+  lastIdleAnimationName: string = '';
+  /**
+   * Setea la animacion de estar quieto de mokito
+   * @param animationName 
+   * @returns 
+   */
+  setIdleAnimation(animationName: string) {
+    if (this.lastIdleAnimationName == animationName) return;
+    this.pet.sprite.animationSprite['idle'] =
+      this.pet.sprite.animationSprite[animationName] ?? this.pet.sprite.animationSprite['default'];
+    this.lastIdleAnimationName = animationName;
+  }
 
   /**
    * Cambia el estado de la mascota
@@ -223,6 +237,7 @@ export class PetService {
     getStat: (name) => this.getStatPet(name),
     setAnimation: (name) => this.setAnimation(name),
     setState: (state) => this.setState(state),
+    setIdleAnimation: (animationName) => this.setIdleAnimation(animationName),
   };
 
   /**

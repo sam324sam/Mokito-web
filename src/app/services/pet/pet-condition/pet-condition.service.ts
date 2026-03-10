@@ -100,7 +100,7 @@ export class PetConditionService {
 
   private happy(pet: Pet, delta: number, ctx: PetConditionContext): void {
     if (pet.state == PetState.Idle) {
-      ctx.setAnimation('happiness100');
+      ctx.setIdleAnimation('happiness100');
     }
   }
 
@@ -108,7 +108,7 @@ export class PetConditionService {
   private readonly sad: PetConditionBehavior = (pet, delta, ctx) => {
     if (pet.state == PetState.Idle) {
       this.sadCooldown -= delta;
-      ctx.setAnimation('happiness65');
+      ctx.setIdleAnimation('happiness65');
       if (this.sadCooldown > 0) return;
       if (pet.state == PetState.Idle) {
         const happiness = ctx.getStat('happiness');
@@ -128,7 +128,7 @@ export class PetConditionService {
 
   private depressed(pet: Pet, delta: number, ctx: PetConditionContext): void {
     if (pet.state == PetState.Idle) {
-      ctx.setAnimation('happiness15');
+      ctx.setIdleAnimation('happiness15');
     }
   }
 

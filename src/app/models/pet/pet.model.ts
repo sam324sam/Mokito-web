@@ -1,13 +1,9 @@
 import { Entity } from '../entity/entity.model';
-import { Sprite } from '../sprites/sprites.model';
 
 export interface Pet extends Entity {
   id: number;
-  sprite: Sprite;
-
   state: PetState;
   conditions: Set<PetCondition>;
-
   stats: Stats[];
   cheats: Cheats;
 }

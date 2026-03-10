@@ -4,4 +4,5 @@ export interface PetConditionContext {
     getStat(name: string): Stats | null;
     setAnimation(name:string) : void;
     setState(state: PetState): void;
+    setIdleAnimation(animationName: string): void;
 }

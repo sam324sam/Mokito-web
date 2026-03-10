@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 // Modelos
 import { Pet, PetState } from '../models/pet/pet.model';
 import { Color } from '../models/sprites/color.model';
-import { AnimationSet } from '../models/sprites/animation-set.model';
 import { AnimationSprite, AnimationType } from '../models/sprites/animation-sprite.model';
 import { Room } from '../models/room/room.model';
 import { InteractuableObject, ObjectType } from '../models/object/interactuable-object.model';
@@ -30,7 +29,6 @@ export class DataService {
 
   // Recursos en memoria
   particleTexture: Record<string, HTMLImageElement> = {};
-  animationsCache: Record<number, AnimationSet[]> = {};
   music: Map<string, string> = new Map();
   efects: Map<string, string> = new Map();
 

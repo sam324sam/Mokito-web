@@ -27,7 +27,7 @@ export class AnimationService {
           if (anim.animationType === 'loop') {
             entitie.sprite.currentFrame = 0;
           } else if (anim.animationType === 'once') {
-            entitie.sprite.currentAnimation = 'default';
+            entitie.sprite.currentAnimation = 'idle';
             entitie.sprite.currentFrame = 0;
           }
         }
