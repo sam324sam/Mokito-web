@@ -1,19 +1,26 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { PetService } from '../../../../services/pet/pet.service';
 import { Pet, PetCondition } from '../../../../models/pet/pet.model';
-
+import { DataService } from '../../../../services/data.service';
 @Component({
   selector: 'app-debug-pet',
   imports: [],
   templateUrl: './debug-pet.html',
   styleUrl: './debug-pet.scss',
 })
-export class DebugPet {
+export class DebugPet implements OnChanges {
   @Input() idDebugPetSectionOpen: boolean = false;
 
   pet: Pet = {} as Pet;
-  constructor(private readonly petService: PetService) {
-    this.pet = this.petService.pet;
+  constructor(
+    private readonly petService: PetService,
+    private readonly dataService: DataService,
+  ) {}
+
+  ngOnChanges() {
+    if (this.idDebugPetSectionOpen) {
+      this.pet = this.petService.pet;
+    }
   }
 
   get allConditions(): PetCondition[] {
@@ -21,21 +28,26 @@ export class DebugPet {
   }
 
   activeCondition(condition: PetCondition) {
-    return this.petService.pet.conditions.has(condition);
+    return (
+      this.petService.pet?.conditions?.has(condition) ??
+      this.dataService.getPetRuntime().conditions.has(condition)
+    );
   }
 
   onConditionChange(event: Event, condition: PetCondition) {
     const checked = (event.target as HTMLInputElement).checked;
-
     if (checked) {
       this.petService.pet.conditions.add(condition);
     } else {
       this.petService.pet.conditions.delete(condition);
     }
   }
-  
+
   getNoConditionProcces() {
-    return this.petService.pet.cheats.noConditionProcces;
+    return (
+      this.petService.pet?.cheats?.noConditionProcces ??
+      this.dataService.getPetRuntime().cheats.noConditionProcces
+    );
   }
 
   setNoConditionProcces(event: Event) {

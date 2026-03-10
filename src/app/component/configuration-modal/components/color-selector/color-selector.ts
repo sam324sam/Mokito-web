@@ -1,7 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { Color } from '../../../../models/sprites/color.model';
+// Servicios
 import { PetService } from '../../../../services/pet/pet.service';
-
+import { DataService } from '../../../../services/data.service';
 @Component({
   selector: 'app-color-selector',
   imports: [],
@@ -12,13 +13,14 @@ export class ColorSelector {
   @Input() isColorSectionOpen: boolean = false;
   // seccion del color
   colors: Color[] = [];
-  selectedColor: Color = { name: '', color: '' };
+  selectedColor: Color | null = {} as Color;
 
-  constructor(private readonly petService: PetService) {
-    this.colors = this.petService.colors;
-    if (this.petService.pet.sprite.color) {
-      this.selectedColor = this.petService.pet.sprite.color;
-    }
+  constructor(
+    private readonly petService: PetService,
+    private readonly dataService: DataService,
+  ) {
+    this.colors = this.dataService.getColors();
+    this.selectedColor = this.dataService.getPetRuntime().sprite.color;
   }
 
   selectColor(color: Color) {

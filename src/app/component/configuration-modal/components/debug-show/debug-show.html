@@ -6,8 +6,8 @@
 >
   <div class="mt-3 p-4 bg-slate-700/50 rounded-lg pixel-box-s text-left">
     <!-- Grid de entidades -->
+    <h5>Numero de entidades {{ entityDebug.length }}</h5>
     <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      <h5>Numero de entidades {{ entityDebug.length }}</h5>
       @for (entity of entityDebug; track entity.id) {
         <div class="flex flex-col">
           <!-- Botón principal con imagen y nombre -->
@@ -16,11 +16,14 @@
             class="flex items-center gap-2 p-2 bg-slate-800/60 rounded border border-slate-600 hover:bg-slate-700 transition"
             (click)="toggleEntity(entity.id)"
           >
-            <img
-              [src]="entity.sprite.img.src"
-              alt="sprite"
-              class="w-10 h-10 image-rendering-pixelated border border-slate-600 bg-slate-900 rounded"
-            />
+            @if (entity.sprite.img != undefined) {
+              <img
+                [src]="entity.sprite.img.src"
+                alt="sprite"
+                class="w-10 h-10 image-rendering-pixelated border border-slate-600 bg-slate-900 rounded"
+              />
+            }
+
             <span class="ml-auto text-slate-400">
               @if (isExpanded(entity.id)) {
                 ▲

@@ -23,10 +23,8 @@
 </header>
 
 <!-- Solo renderiza el modal cuando se ha abierto al menos una vez -->
-@if (isOpenConfiguration) {
-  <app-configuration-modal
-    [isOpenConfiguration]="isOpenConfiguration"
-    (toggleConfiguration)="handleModalToggle($event)"
-  >
-  </app-configuration-modal>
-}
+<app-configuration-modal
+  [isOpenConfiguration]="isOpenConfiguration"
+  (toggleConfiguration)="handleModalToggle($event)"
+>
+</app-configuration-modal>

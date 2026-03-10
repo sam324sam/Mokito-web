@@ -1,7 +1,7 @@
 import { Component, effect, Input } from '@angular/core';
 import { PetService } from '../../../../services/pet/pet.service';
 import { Stats } from '../../../../models/pet/pet.model';
-
+import { DataService } from '../../../../services/data.service';
 @Component({
   selector: 'app-cheats',
   imports: [],
@@ -10,13 +10,12 @@ import { Stats } from '../../../../models/pet/pet.model';
 })
 export class Cheats {
   @Input() isCheatsSectionOpen: boolean = false;
-  energia: any;
-  hambre: any;
-  felicidad: any;
-  fuerza: any;
   stats: Stats[] = [];
 
-  constructor(private readonly petService: PetService) {
+  constructor(
+    private readonly petService: PetService,
+    private readonly dataService: DataService,
+  ) {
     effect(() => {
       this.stats = this.petService.statsChanged();
     });
@@ -25,7 +24,7 @@ export class Cheats {
   // Apartado de los trucos
   // God moide
   getGodMode() {
-    return this.petService.pet.cheats.godMode;
+    return this.petService.pet?.cheats?.godMode ?? this.dataService.getPetRuntime().cheats.godMode;
   }
   setGodMode(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
@@ -34,7 +33,9 @@ export class Cheats {
 
   // Bloquear movimiento
   getNoMoreMove() {
-    return this.petService.pet.cheats.noMoreMove;
+    return (
+      this.petService.pet?.cheats?.noMoreMove ?? this.dataService.getPetRuntime().cheats.noMoreMove
+    );
   }
   setNoMoreMove(event: Event) {
     const checked = (event.target as HTMLInputElement).checked;
