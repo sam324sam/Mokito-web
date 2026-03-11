@@ -1,3 +1,4 @@
+@import "tailwindcss";
 :root {
   --console-frame: url('../public/assets/img/icon/UI/console/purple/frame-console.png');
   --screen-frame: url('../public/assets/img/icon/UI/console/purple/frame-pet.png');

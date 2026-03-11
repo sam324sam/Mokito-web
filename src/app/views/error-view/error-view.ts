@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-error-view',
   imports: [],
   templateUrl: './error-view.html',
-  styleUrl: './error-view.scss',
+  styleUrl: './error-view.css',
 })
 export class ErrorView {
 

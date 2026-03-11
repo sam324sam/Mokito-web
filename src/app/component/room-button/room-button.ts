@@ -8,7 +8,7 @@ import { RoomService } from '../../services/room.service';
   selector: 'app-room-button',
   imports: [],
   templateUrl: './room-button.html',
-  styleUrl: './room-button.scss',
+  styleUrl: './room-button.css',
 })
 export class RoomButton {
   constructor(

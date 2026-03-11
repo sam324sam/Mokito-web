@@ -6,7 +6,7 @@ import { Entity } from '../../../../models/entity/entity.model';
   selector: 'app-debug-show',
   imports: [],
   templateUrl: './debug-show.html',
-  styleUrl: './debug-show.scss',
+  styleUrl: './debug-show.css',
 })
 export class DebugShow implements OnChanges {
   @Input() isDebugSectionOpen: boolean = false;

@@ -85,7 +85,7 @@ src/
 ## 🧩 Tecnologías
 
 - **Framework**: Angular 21+
-- **Estilos**: TailwindCSS 4.x + SCSS
+- **Estilos**: TailwindCSS 4.x + css
 - **Lenguaje**: TypeScript
 - **Despliegue**: GitHub Pages
 

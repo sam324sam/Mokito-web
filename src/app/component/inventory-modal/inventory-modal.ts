@@ -9,7 +9,7 @@ import { RoomService } from '../../services/room.service';
   selector: 'app-inventory-modal',
   imports: [],
   templateUrl: './inventory-modal.html',
-  styleUrl: './inventory-modal.scss',
+  styleUrl: './inventory-modal.css',
 })
 export class InventoryModal {
   type: ObjectType | null = {} as ObjectType;

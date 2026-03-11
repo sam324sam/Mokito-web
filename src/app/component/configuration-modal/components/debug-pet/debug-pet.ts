@@ -6,7 +6,7 @@ import { DataService } from '../../../../services/data.service';
   selector: 'app-debug-pet',
   imports: [],
   templateUrl: './debug-pet.html',
-  styleUrl: './debug-pet.scss',
+  styleUrl: './debug-pet.css',
 })
 export class DebugPet implements OnChanges {
   @Input() idDebugPetSectionOpen: boolean = false;

@@ -7,7 +7,7 @@ import { PetView } from '../pet-view/pet-view';
   selector: 'app-console-view',
   imports: [PetView, Header, RoomButton],
   templateUrl: './console-view.html',
-  styleUrl: './console-view.scss',
+  styleUrl: './console-view.css',
 })
 export class ConsoleView {
 

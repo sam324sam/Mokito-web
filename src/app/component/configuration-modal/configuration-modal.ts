@@ -12,7 +12,7 @@ import { DebugPet } from "./components/debug-pet/debug-pet";
 @Component({
   selector: 'app-configuration-modal',
   templateUrl: './configuration-modal.html',
-  styleUrl: './configuration-modal.scss',
+  styleUrl: './configuration-modal.css',
   imports: [SoundConfig, ColorSelector, DataConfig, Cheats, UserUiConfig, DebugShow, DebugPet],
 })
 export class ConfigurationModal {

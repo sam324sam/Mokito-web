@@ -1,4 +1,14 @@
-<div class="flex justify-center gap-1 w-full">
+<div
+  class="flex justify-center gap-1 w-full pointer-events-none transition-all duration-300 ease-in-out overflow-hidden mt-2"
+  [class.max-h-0]="!isOpenStats"
+  [class.max-h-96]="isOpenStats"
+  [class.opacity-0]="!isOpenStats"
+  [class.opacity-100]="isOpenStats"
+  [class.translate-y-4]="!isOpenStats"
+  [class.translate-y-0]="isOpenStats"
+  [class.scale-95]="!isOpenStats"
+  [class.scale-100]="isOpenStats"
+>
   @for (stat of stats; track $index) {
     <div
       class="bg-white aspect-square flex flex-col items-center justify-center p-0 frame-stat"

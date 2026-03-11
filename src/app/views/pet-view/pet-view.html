@@ -6,19 +6,7 @@
   <div class="absolute top-0 left-0 right-0 flex flex-col items-center pb-4 pointer-events-none">
     <!-- Stats bar con animacion de entrada/salida -->
 
-    <div
-      class="w-full max-w-sm pt-2 pb-2 px-4 pointer-events-none transition-all duration-300 ease-in-out"
-      [class.max-h-0]="!isOpenStats"
-      [class.max-h-96]="isOpenStats"
-      [class.opacity-0]="!isOpenStats"
-      [class.opacity-100]="isOpenStats"
-      [class.translate-y-4]="!isOpenStats"
-      [class.translate-y-0]="isOpenStats"
-      [class.scale-95]="!isOpenStats"
-      [class.scale-100]="isOpenStats"
-    >
-      <app-stats-bar></app-stats-bar>
-    </div>
+    <app-stats-bar [isOpenStats]="isOpenStats"></app-stats-bar>
 
     <!-- Boton con pointer-events habilitado -->
     <button
@@ -28,7 +16,7 @@
       <img
         src="/Mokito-web/assets/img/icon/UI/console/arrow.png"
         alt="boton-stats"
-        class="w-16 h-9 drop-shadow-lg clickable"
+        class="w-16 h-9 mt-2 drop-shadow-lg clickable"
       />
     </button>
   </div>

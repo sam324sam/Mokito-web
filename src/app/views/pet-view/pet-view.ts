@@ -21,7 +21,7 @@ import { RoomPet } from '../../component/room-pet/room-pet';
   selector: 'app-pet-view',
   imports: [StatsBar, InventoryModal, RoomPet],
   templateUrl: './pet-view.html',
-  styleUrl: './pet-view.scss',
+  styleUrl: './pet-view.css',
   standalone: true,
 })
 export class PetView implements AfterViewInit, OnDestroy {

@@ -3,7 +3,7 @@ import { Component, Input, AfterViewInit } from '@angular/core';
 @Component({
   selector: 'app-user-ui-config',
   templateUrl: './user-ui-config.html',
-  styleUrl: './user-ui-config.scss',
+  styleUrl: './user-ui-config.css',
 })
 export class UserUiConfig implements AfterViewInit {
   @Input() isUserUiSectionOpen: boolean = false;

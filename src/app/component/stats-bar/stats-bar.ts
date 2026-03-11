@@ -1,13 +1,14 @@
-import { Component, effect } from '@angular/core';
+import { Component, effect, Input } from '@angular/core';
 import { PetService } from '../../services/pet/pet.service';
 import { Stats } from '../../models/pet/pet.model';
 
 @Component({
   selector: 'app-stats-bar',
   templateUrl: './stats-bar.html',
-  styleUrl: './stats-bar.scss',
+  styleUrl: './stats-bar.css',
 })
 export class StatsBar {
+  @Input() isOpenStats: boolean = false;
   stats: Stats[] = [];
 
   constructor(private readonly petService: PetService) {

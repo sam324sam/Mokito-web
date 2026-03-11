@@ -6,7 +6,7 @@ import { RoomService } from '../../services/room.service';
   selector: 'app-room-pet',
   imports: [],
   templateUrl: './room-pet.html',
-  styleUrl: './room-pet.scss',
+  styleUrl: './room-pet.css',
 })
 export class RoomPet {
   // para room

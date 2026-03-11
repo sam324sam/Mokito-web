@@ -4,7 +4,7 @@ import { SoundService } from '../../../../services/sound.service';
 @Component({
   selector: 'app-sound-config',
   templateUrl: './sound-config.html',
-  styleUrl: './sound-config.scss',
+  styleUrl: './sound-config.css',
 })
 export class SoundConfig {
 

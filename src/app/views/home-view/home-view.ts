@@ -7,7 +7,7 @@ import { SoundService } from '../../services/sound.service';
 @Component({
   selector: 'app-home-view',
   templateUrl: './home-view.html',
-  styleUrl: './home-view.scss',
+  styleUrl: './home-view.css',
 })
 export class HomeView implements OnInit {
   howPlay = false;

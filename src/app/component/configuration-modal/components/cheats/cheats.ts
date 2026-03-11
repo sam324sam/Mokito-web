@@ -6,7 +6,7 @@ import { DataService } from '../../../../services/data.service';
   selector: 'app-cheats',
   imports: [],
   templateUrl: './cheats.html',
-  styleUrl: './cheats.scss',
+  styleUrl: './cheats.css',
 })
 export class Cheats {
   @Input() isCheatsSectionOpen: boolean = false;

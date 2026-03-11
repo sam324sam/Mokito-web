@@ -4,7 +4,7 @@ import { Component, Input } from '@angular/core';
   selector: 'app-data-config',
   imports: [],
   templateUrl: './data-config.html',
-  styleUrl: './data-config.scss',
+  styleUrl: './data-config.css',
 })
 export class DataConfig {
   @Input() isSaveSectionOpen: boolean = false;

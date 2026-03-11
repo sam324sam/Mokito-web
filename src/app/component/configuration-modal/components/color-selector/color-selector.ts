@@ -7,7 +7,7 @@ import { DataService } from '../../../../services/data.service';
   selector: 'app-color-selector',
   imports: [],
   templateUrl: './color-selector.html',
-  styleUrl: './color-selector.scss',
+  styleUrl: './color-selector.css',
 })
 export class ColorSelector {
   @Input() isColorSectionOpen: boolean = false;
