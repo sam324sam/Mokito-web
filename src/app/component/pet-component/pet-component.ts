@@ -16,15 +16,14 @@ import { ParticleService } from '../../services/particle/particle.service';
 // Componentes
 import { StatsBar } from '../../component/stats-bar/stats-bar';
 import { InventoryModal } from '../../component/inventory-modal/inventory-modal';
-import { RoomPet } from '../../component/room-pet/room-pet';
+
 @Component({
-  selector: 'app-pet-view',
-  imports: [StatsBar, InventoryModal, RoomPet],
-  templateUrl: './pet-view.html',
-  styleUrl: './pet-view.css',
-  standalone: true,
+  selector: 'app-pet-component',
+  imports: [StatsBar,InventoryModal],
+  templateUrl: './pet-component.html',
+  styleUrl: './pet-component.css',
 })
-export class PetView implements AfterViewInit, OnDestroy {
+export class PetComponent implements AfterViewInit, OnDestroy {
   @ViewChild('petCanvas')
   canvasRef!: ElementRef<HTMLCanvasElement>;
   canvas!: HTMLCanvasElement;

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PetView } from './pet-view';
+import { ConsoleFrame } from './console-frame';
 
-describe('PetView', () => {
-  let component: PetView;
-  let fixture: ComponentFixture<PetView>;
+describe('ConsoleFrame', () => {
+  let component: ConsoleFrame;
+  let fixture: ComponentFixture<ConsoleFrame>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PetView]
+      imports: [ConsoleFrame]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PetView);
+    fixture = TestBed.createComponent(ConsoleFrame);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

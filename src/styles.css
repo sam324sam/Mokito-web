@@ -112,7 +112,6 @@ img {
 .console-screen {
   border: 24px solid black;
   border-image: var(--screen-frame) 16 fill round;
-  border-radius: 7em;
   image-rendering: pixelated;
 }
 

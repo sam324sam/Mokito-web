@@ -1,0 +1,17 @@
+<div class="console-screen ml-auto mr-auto sm:ml-0 sm:mr-0 size-full relative overflow-hidden" style="touch-action: none;">
+  <!-- Background de rooms -->
+  @for (room of rooms; track $index) {
+    <div
+      class="absolute inset-0 transition-opacity duration-300"
+      [style.backgroundImage]="'url(' + room.img + ')'"
+      [style.backgroundSize]="'100% 100%'"
+      [style.backgroundRepeat]="'no-repeat'"
+      [style.opacity]="activeRoom(room) ? 1 : 0"
+      [style.pointerEvents]="activeRoom(room) ? 'auto' : 'none'"
+      style="image-rendering: pixelated;"
+    ></div>
+  }
+
+  <!-- Pet encima del fondo -->
+  <app-pet-component class="size-full relative z-10"></app-pet-component>
+</div>

@@ -95,8 +95,8 @@ export class GrabService {
     if (!grabbed) return;
 
     const mouse = this.getMousePos(event);
-    grabbed.sprite.x = mouse.x - this.grabOffsetX;
-    grabbed.sprite.y = mouse.y - this.grabOffsetY;
+    grabbed.sprite.x = Math.round(mouse.x - this.grabOffsetX);
+    grabbed.sprite.y = Math.round(mouse.y - this.grabOffsetY);
 
     const historyElement = {
       x: mouse.x,

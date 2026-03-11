@@ -1,11 +1,8 @@
 <!-- Contenedor relativo para posicionamiento absoluto -->
 <div class="relative w-full h-full overflow-hidden">
-  <app-room-pet></app-room-pet>
-
   <!-- Contenedor absoluto en la parte inferior -->
   <div class="absolute top-0 left-0 right-0 flex flex-col items-center pb-4 pointer-events-none">
     <!-- Stats bar con animacion de entrada/salida -->
-
     <app-stats-bar [isOpenStats]="isOpenStats"></app-stats-bar>
 
     <!-- Boton con pointer-events habilitado -->
@@ -23,5 +20,5 @@
 
   <app-inventory-modal></app-inventory-modal>
 
-  <canvas #canvas id="pet-canvas" tabindex="0" class="w-full h-full z-30"> </canvas>
+  <canvas #canvas id="pet-canvas" tabindex="0" class="w-full h-full z-30" style="touch-action: none;"></canvas>
 </div>
