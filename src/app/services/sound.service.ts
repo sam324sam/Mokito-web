@@ -1,32 +1,35 @@
 import { Injectable } from '@angular/core';
 // Servicios
 import { DataService } from './data.service';
+import { PlayerData } from '../models/player/player-data.model';
 @Injectable({ providedIn: 'root' })
 export class SoundService {
   private readonly music: Map<string, string> = new Map();
   private readonly efects: Map<string, string> = new Map();
+  private readonly dataPlayer: PlayerData = {} as PlayerData; 
 
   constructor(private readonly dataService: DataService) {
     this.music = this.dataService.getMusic();
     this.efects = this.dataService.getEfects();
+
+    this.dataPlayer = this.dataService.getPlayerData()
   }
 
   private currentMusic: HTMLAudioElement | null = null;
   private curretnEfect: HTMLAudioElement | null = null;
 
-  private musicVolume = 0.1;
-  private sfxVolume = 0.1;
+  
 
   getMusicVolume() {
-    return this.musicVolume;
+    return this.dataPlayer.musicVolume;
   }
 
   getSfxVolume() {
-    return this.sfxVolume;
+    return this.dataPlayer.sfxVolume;
   }
 
   setMusicVolume(musicVolume: number) {
-    this.musicVolume = musicVolume;
+    this.dataPlayer.musicVolume = musicVolume;
 
     if (this.currentMusic) {
       this.currentMusic.volume = musicVolume;
@@ -34,7 +37,7 @@ export class SoundService {
   }
 
   setSfxVolume(sfxVolume: number) {
-    this.sfxVolume = sfxVolume;
+    this.dataPlayer.sfxVolume = sfxVolume;
   }
 
   // ========= Musica
@@ -49,7 +52,7 @@ export class SoundService {
       this.currentMusic = null;
     }
     audio.loop = loop;
-    audio.volume = this.musicVolume;
+    audio.volume = this.dataPlayer.musicVolume ?? 0.1;
     audio.play().catch(() => {});
 
     this.currentMusic = audio;
@@ -71,7 +74,7 @@ export class SoundService {
     }
 
     const audio = new Audio(src);
-    audio.volume = this.sfxVolume;
+    audio.volume = this.dataPlayer.sfxVolume ?? 0.1;
     audio.play().catch(() => {});
 
     this.curretnEfect = audio;

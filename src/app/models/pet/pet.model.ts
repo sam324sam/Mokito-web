@@ -1,7 +1,6 @@
 import { Entity } from '../entity/entity.model';
 
 export interface Pet extends Entity {
-  id: number;
   state: PetState;
   conditions: Set<PetCondition>;
   stats: Stats[];

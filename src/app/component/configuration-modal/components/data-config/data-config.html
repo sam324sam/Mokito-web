@@ -6,6 +6,15 @@
   [class.opacity-100]="isSaveSectionOpen"
 >
   <div class="mt-3 p-4 bg-slate-700/50 rounded-lg text-center pixel-box-s">
-    <p class="text-sm sm:text-base text-slate-400">En proceso...</p>
+    <p class="text-xs text-slate-400 mb-3" style="font-family: monospace">
+      Fase temprana — si hay errores, reinicia los datos guardados.
+    </p>
+    <button
+      (click)="clearSaveData()"
+      class="px-4 py-1 bg-red-900 hover:bg-red-700 rounded-xl text-red-200 text-xs pixel-box-s transition-colors"
+      style="font-family: monospace"
+    >
+      Reiniciar datos
+    </button>
   </div>
 </div>

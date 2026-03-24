@@ -1,38 +1,29 @@
-import { Component, Input, AfterViewInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { PlayerData } from '../../../../models/player/player-data.model';
+import { DataService } from '../../../../services/data.service';
 
 @Component({
   selector: 'app-user-ui-config',
   templateUrl: './user-ui-config.html',
   styleUrl: './user-ui-config.css',
 })
-export class UserUiConfig implements AfterViewInit {
+export class UserUiConfig {
   @Input() isUserUiSectionOpen: boolean = false;
 
   /** Colores disponibles para la consola */
   aviableColors: string[] = ['purple', 'blue', 'red', 'green', 'white', 'yellow'];
 
-  /** Color seleccionado para la pantalla de la consola */
-  colorScreenSelected: string = 'purple';
+  playerData: PlayerData = {} as PlayerData;
 
-  /** Color seleccionado para el cuerpo de la consola */
-  colorBodySelected: string = 'purple';
-
-  /**
+/**
    * Inicializa los colores seleccionados despues de que la vista se haya cargado
    * Esto permite sincronizar con las variables CSS globales si es necesario
    */
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      const rootStyles = getComputedStyle(document.documentElement);
-
-      const screenUrl = rootStyles.getPropertyValue('--screen-frame').trim();
-      const bodyUrl = rootStyles.getPropertyValue('--console-frame').trim();
-
-      // Extrae el color de la URL y asigna valor por defecto si no se encuentra
-      this.colorScreenSelected = /console\/(\w+)\//.exec(screenUrl)?.[1] ?? 'purple';
-      this.colorBodySelected = /console\/(\w+)\//.exec(bodyUrl)?.[1] ?? 'purple';
-    });
+  constructor(private readonly dataService: DataService) {
+    this.playerData = this.dataService.getPlayerData();
   }
+
+  
 
   /**
    * Cambia el color del cuerpo de la consola
@@ -40,8 +31,7 @@ export class UserUiConfig implements AfterViewInit {
    * Actualiza la variable CSS global --console-frame
    */
   setConsoleBodyColor(color: string): void {
-    this.colorBodySelected = color;
-
+    this.playerData.frameConsoleColor = color;
     document.documentElement.style.setProperty(
       '--console-frame',
       `url('assets/img/icon/UI/console/${color}/frame-console.png')`,
@@ -54,8 +44,7 @@ export class UserUiConfig implements AfterViewInit {
    * Actualiza la variable CSS global --screen-frame
    */
   setConsoleScreenColor(color: string): void {
-    this.colorScreenSelected = color;
-
+    this.playerData.framePetColor = color;
     document.documentElement.style.setProperty(
       '--screen-frame',
       `url('assets/img/icon/UI/console/${color}/frame-pet.png')`,

@@ -69,7 +69,7 @@ export class PetService {
 
     this.colors = this.dataService.getColors();
 
-    this.setIdleAnimation('');
+    this.setIdleAnimation('idle');
     console.log('La pet', this.pet);
 
     // Meter la entidad cargada alentity
@@ -324,5 +324,9 @@ export class PetService {
     if (!room.buttonRoom) return;
     const behavior = this.buttonBehaviors[room.buttonRoom.buttonBehavior];
     behavior?.();
+  }
+
+  getPet(): Pet{
+    return this.pet
   }
 }

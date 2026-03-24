@@ -16,10 +16,11 @@ import { ParticleService } from '../../services/particle/particle.service';
 // Componentes
 import { StatsBar } from '../../component/stats-bar/stats-bar';
 import { InventoryModal } from '../../component/inventory-modal/inventory-modal';
+import { DataService } from '../../services/data.service';
 
 @Component({
   selector: 'app-pet-component',
-  imports: [StatsBar,InventoryModal],
+  imports: [StatsBar, InventoryModal],
   templateUrl: './pet-component.html',
   styleUrl: './pet-component.css',
 })
@@ -38,6 +39,7 @@ export class PetComponent implements AfterViewInit, OnDestroy {
     private readonly grabService: GrabService,
     private readonly gameLoopService: GameLoopService,
     private readonly particleService: ParticleService,
+    private readonly dataService: DataService,
   ) {}
 
   @HostListener('window:resize')
@@ -49,6 +51,8 @@ export class PetComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.gameLoopService.stop();
+    this.dataService.saveLocalStorage(this.petService.getPet());
+
     document.removeEventListener('visibilitychange', this.onVisibilityChange);
   }
 
@@ -58,6 +62,7 @@ export class PetComponent implements AfterViewInit, OnDestroy {
       // pestaña oculta en teoria parar loop
       this.gameLoopService.stop();
       console.log('Juego en pausa');
+      this.dataService.saveLocalStorage(this.petService.getPet());
     } else {
       // pestaña visible reanudar loop
       this.gameLoopService.start();

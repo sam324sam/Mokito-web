@@ -17,6 +17,7 @@ import particleTextureJson from '../../assets/config/particle-texture.json';
 import musicJson from '../../assets/sound/music.json';
 import efectsJson from '../../assets/sound/efects.json';
 import { Entity } from '../models/entity/entity.model';
+import { PlayerData } from '../models/player/player-data.model';
 
 @Injectable({ providedIn: 'root' })
 export class DataService {
@@ -26,6 +27,14 @@ export class DataService {
   petRuntime!: PetRuntime;
   objects: InteractuableObject[] = [];
   rooms: Room[] = [];
+  playerData: PlayerData = {
+    frameConsoleColor: 'purple',
+    framePetColor: 'purple',
+    musicVolume: 0.1,
+    sfxVolume: 0.1,
+  };
+
+  isResetting: boolean = false;
 
   // Recursos en memoria
   particleTexture: Record<string, HTMLImageElement> = {};
@@ -38,11 +47,41 @@ export class DataService {
    */
   async loadAllAssets(): Promise<void> {
     this.loadFromJson();
-
+    this.loadLocalStorage();
     this.loadAnimations(this.petRuntime);
 
     for (const object of this.objects) {
       this.loadAnimations(object);
+    }
+  }
+
+  /**
+   * Luego tendre que refactorizar a ver si existe una mejor forma de hacer esto tal vez con un objeto que lo junte todò no se -_-
+   */
+  private loadLocalStorage() {
+    let data = localStorage.getItem('statsPet');
+
+    if (data != null) {
+      this.petRuntime.stats = [];
+      for (const stat of JSON.parse(data)) {
+        this.petRuntime.stats.push(stat);
+      }
+    }
+
+    data = localStorage.getItem('cheatsPet');
+
+    if (data != null) {
+      this.petRuntime.cheats = JSON.parse(data);
+    }
+
+    data = localStorage.getItem('colorPet');
+
+    if (data != null) {
+      this.petRuntime.sprite.color = JSON.parse(data);
+    }
+    data = localStorage.getItem('playerData');
+    if (data != null) {
+      this.playerData = JSON.parse(data);
     }
   }
 
@@ -206,6 +245,27 @@ export class DataService {
   }
 
   /**
+   * Funcion de guardo se ejecuta en el pet-component
+   * @param pet
+   */
+  saveLocalStorage(pet: Pet) {
+    if (!this.isResetting) {
+      // Datos de la mascota
+      localStorage.setItem('statsPet', JSON.stringify(pet.stats));
+      localStorage.setItem('colorPet', JSON.stringify(pet.sprite.color));
+      localStorage.setItem('cheatsPet', JSON.stringify(pet.cheats));
+      // Data del jugador
+      localStorage.setItem('playerData', JSON.stringify(this.playerData));
+      //localStorage.clear()
+    }
+  }
+
+  clearSaveData() {
+    this.isResetting = true;
+    localStorage.clear();
+    location.reload();
+  }
+  /**
    * Devuelve las texturas de particulas
    */
   getParticleTexture(): Record<string, HTMLImageElement> {
@@ -252,5 +312,11 @@ export class DataService {
    */
   getObjects(): InteractuableObject[] {
     return this.objects;
+  }
+  /**
+   * Devuelve el data player
+   */
+  getPlayerData(): PlayerData {
+    return this.playerData;
   }
 }
