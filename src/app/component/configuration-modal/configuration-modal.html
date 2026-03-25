@@ -122,6 +122,31 @@
     <!-- Contenido desplegable Guardar mascota -->
     <app-data-config [isSaveSectionOpen]="isSaveSectionOpen"></app-data-config>
 
+    <!-- Cambiar los sprite-Set de mokito -->
+    <button
+      type="button"
+      class="w-full flex items-center justify-between p-3 sm:p-4 bg-slate-700 rounded-lg hover:bg-slate-600 transition-colors mb-1 pixel-box"
+      (click)="toggleChangeSpriteSection()"
+    >
+      <div class="flex items-center gap-3">
+        <img src="assets/img/icon/configuration/data.png" alt="data" />
+        <span class="text-sm sm:text-base font-medium">Añade a tu propio mokito</span>
+      </div>
+
+      <svg
+        class="w-5 h-5 transition-transform duration-300"
+        [class.rotate-180]="isChangeSpriteSectionOpen"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+
+    <!-- Contenido desplegable Guardar mascota -->
+    <app-change-sprite [isChangeSpriteSectionOpen]="isChangeSpriteSectionOpen"></app-change-sprite>
+
     <!--  Trucos -->
     <button
       type="button"

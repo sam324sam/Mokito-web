@@ -46,8 +46,14 @@ export class DataService {
    * Inicializa datos desde json y precarga animaciones
    */
   async loadAllAssets(): Promise<void> {
-    this.loadFromJson();
-    this.loadLocalStorage();
+    try {
+      this.loadFromJson();
+      this.loadLocalStorage();
+    } catch (e) {
+      console.log(e);
+      localStorage.clear();
+    }
+
     this.loadAnimations(this.petRuntime);
 
     for (const object of this.objects) {
@@ -61,7 +67,7 @@ export class DataService {
   private loadLocalStorage() {
     let data = localStorage.getItem('statsPet');
 
-    if (data != null) {
+    if (data != null || data != undefined) {
       this.petRuntime.stats = [];
       for (const stat of JSON.parse(data)) {
         this.petRuntime.stats.push(stat);
@@ -70,17 +76,17 @@ export class DataService {
 
     data = localStorage.getItem('cheatsPet');
 
-    if (data != null) {
+    if (data != null || data != undefined) {
       this.petRuntime.cheats = JSON.parse(data);
     }
 
     data = localStorage.getItem('colorPet');
 
-    if (data != null) {
+    if (data != null || data != undefined) {
       this.petRuntime.sprite.color = JSON.parse(data);
     }
     data = localStorage.getItem('playerData');
-    if (data != null) {
+    if (data != null || data != undefined) {
       this.playerData = JSON.parse(data);
     }
   }

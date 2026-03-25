@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 :root {
   --console-frame: url('../public/assets/img/icon/UI/console/purple/frame-console.png');
   --screen-frame: url('../public/assets/img/icon/UI/console/purple/frame-pet.png');
@@ -21,25 +21,32 @@
 }
 
 * {
-  cursor: url("../public/assets/img/cursor/cursor.png") 16 16, auto;
+  cursor:
+    url('../public/assets/img/cursor/cursor.png') 16 16,
+    auto;
   box-sizing: border-box;
   user-select: none;
 }
 
 button,
 a,
-[role="button"],
+[role='button'],
 select,
 option,
-input[type="button"],
-input[type="submit"],
+input[type='button'],
+input[type='submit'],
+input[type='file'],
 .clickable {
-  cursor: url("../public/assets/img/cursor/cursor-pointer.png") 16 16, pointer !important;
+  cursor:
+    url('../public/assets/img/cursor/cursor-pointer.png') 16 16,
+    pointer !important;
 }
 
 .draggable,
-[draggable="true"] {
-  cursor: url("../public/assets/img/cursor/cursor-grab.png") 16 16, grab !important;
+[draggable='true'] {
+  cursor:
+    url('../public/assets/img/cursor/cursor-grab.png') 16 16,
+    grab !important;
 }
 
 body,
@@ -50,12 +57,13 @@ html {
 }
 
 body {
-  background:
-    repeating-linear-gradient(0deg,
-      rgba(0, 0, 0, 0.15),
-      rgba(0, 0, 0, 0.15) 1px,
-      transparent 1px,
-      transparent 2px);
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15),
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
 }
 
 img {

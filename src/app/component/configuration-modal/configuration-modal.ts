@@ -5,15 +5,16 @@ import { SoundConfig } from './components/sound-config/sound-config';
 import { ColorSelector } from './components/color-selector/color-selector';
 import { DataConfig } from './components/data-config/data-config';
 import { Cheats } from './components/cheats/cheats';
-import { UserUiConfig } from "./components/user-ui-config/user-ui-config";
-import { DebugShow } from "./components/debug-show/debug-show";
-import { DebugPet } from "./components/debug-pet/debug-pet";
+import { UserUiConfig } from './components/user-ui-config/user-ui-config';
+import { DebugShow } from './components/debug-show/debug-show';
+import { DebugPet } from './components/debug-pet/debug-pet';
+import { ChangeSprite } from "./components/change-sprite/change-sprite";
 
 @Component({
   selector: 'app-configuration-modal',
   templateUrl: './configuration-modal.html',
   styleUrl: './configuration-modal.css',
-  imports: [SoundConfig, ColorSelector, DataConfig, Cheats, UserUiConfig, DebugShow, DebugPet],
+  imports: [SoundConfig, ColorSelector, DataConfig, Cheats, UserUiConfig, DebugShow, DebugPet, ChangeSprite],
 })
 export class ConfigurationModal {
   @Input() isOpenConfiguration: boolean = false;
@@ -27,6 +28,11 @@ export class ConfigurationModal {
   isUserUiSectionOpen = false;
   isDebugSectionOpen = false;
   idDebugPetSectionOpen = false;
+  isChangeSpriteSectionOpen = false;
+
+  toggleChangeSpriteSection() {
+    this.isChangeSpriteSectionOpen = !this.isChangeSpriteSectionOpen;
+  }
 
   toggleSoundSection() {
     this.isSoundSectionOpen = !this.isSoundSectionOpen;
@@ -44,22 +50,19 @@ export class ConfigurationModal {
     this.isSaveSectionOpen = !this.isSaveSectionOpen;
   }
 
-  toggleUserUiSection(){
+  toggleUserUiSection() {
     this.isUserUiSectionOpen = !this.isUserUiSectionOpen;
   }
 
-  togleDebugSection(){
+  togleDebugSection() {
     this.isDebugSectionOpen = !this.isDebugSectionOpen;
   }
 
-  togleDebugPetSection(){
+  togleDebugPetSection() {
     this.idDebugPetSectionOpen = !this.idDebugPetSectionOpen;
   }
 
   close() {
-    this.isOpenConfiguration = false;
-    this.isColorSectionOpen = false;
-    this.isCheatsSectionOpen = false;
     this.toggleConfiguration.emit(false);
   }
 }
