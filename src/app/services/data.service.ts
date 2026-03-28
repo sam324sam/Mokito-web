@@ -18,6 +18,7 @@ import musicJson from '../../assets/sound/music.json';
 import efectsJson from '../../assets/sound/efects.json';
 import { Entity } from '../models/entity/entity.model';
 import { PlayerData } from '../models/player/player-data.model';
+import { ImageStorageService } from './storage/image-storage.service';
 
 @Injectable({ providedIn: 'root' })
 export class DataService {
@@ -34,6 +35,8 @@ export class DataService {
     sfxVolume: 0.1,
   };
 
+  constructor(private readonly imageStorageService: ImageStorageService) {}
+
   isResetting: boolean = false;
 
   // Recursos en memoria
@@ -49,20 +52,21 @@ export class DataService {
     try {
       this.loadFromJson();
       this.loadLocalStorage();
+      await this.imageStorageService.init();
+      await this.loadAnimations(this.petRuntime);
     } catch (e) {
       console.log(e);
       localStorage.clear();
     }
 
-    this.loadAnimations(this.petRuntime);
-
     for (const object of this.objects) {
-      this.loadAnimations(object);
+      await this.loadAnimations(object);
     }
   }
 
   /**
-   * Luego tendre que refactorizar a ver si existe una mejor forma de hacer esto tal vez con un objeto que lo junte todò no se -_-
+   * Luego tendre que refactorizar a ver si existe una mejor forma de hacer esto tal vez con un objeto que lo junte 
+todò no se -_-
    */
   private loadLocalStorage() {
     let data = localStorage.getItem('statsPet');
@@ -231,18 +235,27 @@ export class DataService {
    * Carga todas las animaciones asociadas a una entidad
    * Busca las animaciones en el json por nombre
    */
-  loadAnimations(entity: Entity) {
+  async loadAnimations(entity: Entity) {
     const rawAnimations = animationsJson.find((o) => o.name === entity.name)?.animations;
     if (!rawAnimations) return;
     for (const anim of rawAnimations) {
-      const img = new Image();
-      img.src = anim.src;
+      // Intentar obtener la imagen de la base de datos primero
+      const animDb = await this.imageStorageService.getAnimationSave(anim.name);
+
+      // Si no esta en el indexdb cargo los datos del json y ya
+      const img = animDb ? animDb.image : new Image();
+      const frameWidth = animDb ? animDb.frameWidth : entity.sprite.width;
+      const frameHeight = animDb ? animDb.frameHeight : entity.sprite.height;
+      const frameCount = animDb ? animDb.frameCount : anim.frames;
+      if (!animDb) {
+        img.src = anim.src;
+      }
 
       const animation: AnimationSprite = {
         image: img,
-        frameWidth: entity.sprite.width,
-        frameHeight: entity.sprite.height,
-        frameCount: anim.frames,
+        frameWidth,
+        frameHeight,
+        frameCount,
         animationType: anim.animationType as AnimationType,
       };
 
@@ -256,19 +269,25 @@ export class DataService {
    */
   saveLocalStorage(pet: Pet) {
     if (!this.isResetting) {
-      // Datos de la mascota
+      // Datos de la mascota (Cambiar esto y guardar solo el objeto petSave con solo los datos nesesarios)
       localStorage.setItem('statsPet', JSON.stringify(pet.stats));
       localStorage.setItem('colorPet', JSON.stringify(pet.sprite.color));
       localStorage.setItem('cheatsPet', JSON.stringify(pet.cheats));
       // Data del jugador
       localStorage.setItem('playerData', JSON.stringify(this.playerData));
+
       //localStorage.clear()
+      const keys = Object.keys(pet.sprite.animationSprite);
+      for (const key of keys) {
+        this.imageStorageService.saveImage(key, pet.sprite.animationSprite[key]);
+      }
     }
   }
 
   clearSaveData() {
     this.isResetting = true;
     localStorage.clear();
+    this.imageStorageService.clear();
     location.reload();
   }
   /**

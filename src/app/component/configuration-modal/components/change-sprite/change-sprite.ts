@@ -46,13 +46,13 @@ export class ChangeSprite implements AfterViewInit {
     const petSprite: Sprite = this.petService.getPet().sprite;
     const image = await this.fileToImage(file, this.width, this.height);
 
-    // Reemplazamos la animación existente
+    // Reemplazamos la animacion existente
     petSprite.animationSprite[key] = {
       image,
       frameWidth: this.width,
       frameHeight: this.height,
       // Cambiar para despues
-      frameCount: 1,
+      frameCount: image.width / this.width ,
       animationType: AnimationType.once,
     };
 
