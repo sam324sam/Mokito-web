@@ -44,39 +44,31 @@ export class ChangeSprite implements AfterViewInit {
     if (!file) return;
 
     const petSprite: Sprite = this.petService.getPet().sprite;
-    const image = await this.fileToImage(file, this.width, this.height);
-
+    const image = await this.fileToImage(file);
+    this.height = this.petService.getPet().sprite.height;
+    this.width = this.petService.getPet().sprite.width;
     // Reemplazamos la animacion existente
     petSprite.animationSprite[key] = {
       image,
       frameWidth: this.width,
       frameHeight: this.height,
       // Cambiar para despues
-      frameCount: image.width / this.width ,
+      frameCount: image.naturalWidth / this.width,
       animationType: AnimationType.once,
     };
+
+    console.log(image);
 
     // Guardar en localStorage
   }
 
-  private fileToImage(file: File, width: number, height: number): Promise<HTMLImageElement> {
+  private fileToImage(file: File): Promise<HTMLImageElement> {
     return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d')!;
-          ctx.drawImage(img, 0, 0, width, height);
-          const resizedImg = new Image();
-          resizedImg.src = canvas.toDataURL('image/png');
-          resolve(resizedImg);
-        };
-        img.src = e.target?.result as string;
-      };
-      reader.readAsDataURL(file);
+      const img = new Image();
+
+      img.onload = () => resolve(img);
+
+      img.src = URL.createObjectURL(file);
     });
   }
 }
