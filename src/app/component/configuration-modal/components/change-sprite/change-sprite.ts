@@ -47,27 +47,21 @@ export class ChangeSprite implements AfterViewInit {
     const image = await this.fileToImage(file);
     this.height = this.petService.getPet().sprite.height;
     this.width = this.petService.getPet().sprite.width;
-    // Reemplazamos la animacion existente
     petSprite.animationSprite[key] = {
       image,
       frameWidth: this.width,
       frameHeight: this.height,
-      // Cambiar para despues
       frameCount: image.naturalWidth / this.width,
       animationType: AnimationType.once,
     };
 
     console.log(image);
-
-    // Guardar en localStorage
   }
 
   private fileToImage(file: File): Promise<HTMLImageElement> {
     return new Promise((resolve) => {
       const img = new Image();
-
       img.onload = () => resolve(img);
-
       img.src = URL.createObjectURL(file);
     });
   }
