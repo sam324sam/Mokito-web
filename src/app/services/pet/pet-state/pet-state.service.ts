@@ -110,7 +110,9 @@ export class PetStateService {
   }
 
   private updateIdle(pet: Pet, delta: number, ctx: PetStateContext): void {
-    ctx.runIaIdle(pet, delta);
+    if (!pet.cheats.noMoreMove) {
+      ctx.runIaIdle(pet, delta);
+    }
   }
 
   // Agarrar

@@ -19,6 +19,7 @@ import efectsJson from '../../assets/sound/efects.json';
 import { Entity } from '../models/entity/entity.model';
 import { PlayerData } from '../models/player/player-data.model';
 import { ImageStorageService } from './storage/image-storage.service';
+import { PetSave } from '../models/pet/pet-save.model';
 
 @Injectable({ providedIn: 'root' })
 export class DataService {
@@ -69,29 +70,26 @@ export class DataService {
 todò no se -_-
    */
   private loadLocalStorage() {
-    let data = localStorage.getItem('statsPet');
+    const data = localStorage.getItem('savePet');
 
-    if (data != null || data != undefined) {
-      this.petRuntime.stats = [];
-      for (const stat of JSON.parse(data)) {
-        this.petRuntime.stats.push(stat);
-      }
+    if (!data) return;
+
+    const savePet: PetSave = JSON.parse(data);
+
+    if (savePet.stats) {
+      this.petRuntime.stats = [...savePet.stats];
     }
 
-    data = localStorage.getItem('cheatsPet');
-
-    if (data != null || data != undefined) {
-      this.petRuntime.cheats = JSON.parse(data);
+    if (savePet.cheats) {
+      this.petRuntime.cheats = savePet.cheats;
     }
 
-    data = localStorage.getItem('colorPet');
-
-    if (data != null || data != undefined) {
-      this.petRuntime.sprite.color = JSON.parse(data);
+    if (savePet.color) {
+      this.petRuntime.sprite.color = savePet.color;
     }
-    data = localStorage.getItem('playerData');
-    if (data != null || data != undefined) {
-      this.playerData = JSON.parse(data);
+
+    if (savePet.playerData) {
+      this.playerData = savePet.playerData;
     }
   }
 
@@ -269,14 +267,16 @@ todò no se -_-
    */
   saveLocalStorage(pet: Pet) {
     if (!this.isResetting) {
-      // Datos de la mascota (Cambiar esto y guardar solo el objeto petSave con solo los datos nesesarios)
-      localStorage.setItem('statsPet', JSON.stringify(pet.stats));
-      localStorage.setItem('colorPet', JSON.stringify(pet.sprite.color));
-      localStorage.setItem('cheatsPet', JSON.stringify(pet.cheats));
-      // Data del jugador
-      localStorage.setItem('playerData', JSON.stringify(this.playerData));
+      const savePet: PetSave = {
+        version: 1,
+        stats: pet.stats,
+        color: pet.sprite.color,
+        cheats: pet.cheats,
+        playerData: this.playerData,
+      };
 
-      //localStorage.clear()
+      localStorage.setItem('savePet', JSON.stringify(savePet));
+
       const keys = Object.keys(pet.sprite.animationSprite);
       for (const key of keys) {
         this.imageStorageService.saveImage(key, pet.sprite.animationSprite[key]);

@@ -1,4 +1,4 @@
-import { Component, effect, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { PetService } from '../../services/pet/pet.service';
 import { Stats } from '../../models/pet/pet.model';
 
@@ -12,9 +12,8 @@ export class StatsBar {
   stats: Stats[] = [];
 
   constructor(private readonly petService: PetService) {
-    
-    effect(() => {
-      this.stats = this.petService.statsChanged();
+    setTimeout(() => {
+      this.stats = this.petService.getPet().stats;
     });
   }
 

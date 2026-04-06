@@ -1,4 +1,4 @@
-import { Component, effect, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { PetService } from '../../../../services/pet/pet.service';
 import { Stats } from '../../../../models/pet/pet.model';
 import { DataService } from '../../../../services/data.service';
@@ -16,8 +16,8 @@ export class Cheats {
     private readonly petService: PetService,
     private readonly dataService: DataService,
   ) {
-    effect(() => {
-      this.stats = this.petService.statsChanged();
+    setTimeout(() => {
+      this.stats = this.petService.getPet().stats;
     });
   }
 
