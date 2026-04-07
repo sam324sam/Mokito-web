@@ -5,6 +5,8 @@ export interface AnimationSprite {
   frameHeight: number;
   frameCount: number;
   animationType: AnimationType;
+  active: boolean;
+  description: string;
 }
 
 export enum AnimationType {

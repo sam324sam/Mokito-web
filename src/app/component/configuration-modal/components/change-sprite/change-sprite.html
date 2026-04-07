@@ -5,24 +5,58 @@
   [class.opacity-100]="isChangeSpriteSectionOpen"
 >
   <div class="mt-3 p-4 bg-slate-700/50 rounded-lg text-center pixel-box-s">
-    <ul class="space-y-4">
-      <li>
-        Aclaracion las animaciones a subir deben ser Set de animaciones y el
-        tamaño del sprite debe ser de <span class="text-red-500">32x32</span>
-      </li>
+    <div class="space-y-3">
+      <div>
+        Aclaración: las animaciones a subir deben ser sets de animaciones y el tamaño del sprite
+        debe ser de <span class="text-red-500">32x32</span>
+      </div>
+
       @for (key of getKeys(); track $index) {
-        <li class="flex flex-col items-start gap-2">
-          <span
-            >Nombre de la animación: <span class="text-amber-200">{{ key }}</span></span
+        <div class="border border-slate-500 rounded-lg overflow-hidden">
+          <!-- Cabecera -->
+          <button
+            type="button"
+            class="w-full text-left px-4 py-2 bg-slate-600 hover:bg-slate-500 transition"
+            (click)="toggle(key)"
           >
-          <input
-            type="file"
-            [id]="key"
-            (change)="onFileChange($event, key)"
-            class="clickable block w-full text-sm text-gray-200 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600"
-          />
-        </li>
+            Nombre de la animación:
+            <span class="text-amber-200">{{ key }}</span>
+          </button>
+
+          <!-- Contenido -->
+          @if (opened[key]) {
+            <div class="p-4 bg-slate-700 text-left space-y-3">
+              <!-- Descripcion -->
+              <div class="text-sm text-gray-300">
+                {{ getDescription(key) }}
+              </div>
+
+              <div class="flex flex-row p-5 gap-5 w-full">
+                <div class="sprite-preview sm:scale-200 scale-100" [ngStyle]="getSpriteStyle(key)"></div>
+
+                <!-- Activar / desactivar -->
+                <label class="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    [checked]="animationSprite[key].active"
+                    (change)="toggleActive(key, $event)"
+                  />
+                  Activo
+                </label>
+              </div>
+              <!--Prreview del sprite-->
+
+              <!-- Input archivo -->
+              <input
+                type="file"
+                [id]="key"
+                (change)="onFileChange($event, key)"
+                class="block w-full text-sm text-gray-200 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600"
+              />
+            </div>
+          }
+        </div>
       }
-    </ul>
+    </div>
   </div>
 </div>

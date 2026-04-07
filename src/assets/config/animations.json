@@ -1,20 +1,111 @@
 [
   {
-  "name": "pet",
-  "animations": [
-    { "name": "default", "src": "assets/img/pet/default.png", "frames": 1, "animationType": "loop" },
-    { "name": "tutsitutsi", "src": "assets/img/pet/tutsitutsi.png", "frames": 20, "animationType": "once" },
-    { "name": "grab", "src": "assets/img/pet/grab.png", "frames": 11, "animationType": "loop" },
-    { "name": "right", "src": "assets/img/pet/Right.png", "frames": 12, "animationType": "once" },
-    { "name": "left", "src": "assets/img/pet/Left.png", "frames": 12, "animationType": "once" },
-    { "name": "up", "src": "assets/img/pet/Up.png", "frames": 12, "animationType": "once" },
-    { "name": "down", "src": "assets/img/pet/Down.png", "frames": 12, "animationType": "once" },
-    { "name": "happiness100", "src": "assets/img/pet/happiness100.png", "frames": 30, "animationType": "loop" },
-    { "name": "happiness65", "src": "assets/img/pet/happiness65.png", "frames": 21, "animationType": "loop" },
-    { "name": "happiness15", "src": "assets/img/pet/happiness15.png", "frames": 21, "animationType": "loop" },
-    { "name": "sleep", "src": "assets/img/pet/sleep.png", "frames": 1, "animationType": "loop" },
-    { "name": "eat", "src": "assets/img/pet/eat.png", "frames": 18, "animationType": "once" },
-    { "name": "talking", "src": "assets/img/pet/talking.png", "frames": 15, "animationType": "once" }
+    "name": "pet",
+    "animations": [
+      {
+        "name": "default",
+        "src": "assets/img/pet/default.png",
+        "frames": 1,
+        "animationType": "loop",
+        "active": true,
+        "description": "Animación por defecto en caso de no encontrar la animación correspondiente"
+      },
+      {
+        "name": "tutsitutsi",
+        "src": "assets/img/pet/tutsitutsi.png",
+        "frames": 20,
+        "animationType": "once",
+        "active": true,
+        "description": "Animación de felicidad al interactuar con la mascota"
+      },
+      {
+        "name": "grab",
+        "src": "assets/img/pet/grab.png",
+        "frames": 11,
+        "animationType": "loop",
+        "active": true,
+        "description": "Animación de agarre de la mascota"
+      },
+      {
+        "name": "right",
+        "src": "assets/img/pet/Right.png",
+        "frames": 12,
+        "animationType": "once",
+        "active": true,
+        "description": "Animación de movimiento hacia la derecha"
+      },
+      {
+        "name": "left",
+        "src": "assets/img/pet/Left.png",
+        "frames": 12,
+        "animationType": "once",
+        "active": true,
+        "description": "Animación de movimiento hacia la izquierda"
+      },
+      {
+        "name": "up",
+        "src": "assets/img/pet/Up.png",
+        "frames": 12,
+        "animationType": "once",
+        "active": true,
+        "description": "Animación de movimiento hacia arriba"
+      },
+      {
+        "name": "down",
+        "src": "assets/img/pet/Down.png",
+        "frames": 12,
+        "animationType": "once",
+        "active": true,
+        "description": "Animación de movimiento hacia abajo"
+      },
+      {
+        "name": "happiness100",
+        "src": "assets/img/pet/happiness100.png",
+        "frames": 30,
+        "animationType": "loop",
+        "active": true,
+        "description": "Animación de reposo para una felicidad mayor a 65"
+      },
+      {
+        "name": "happiness65",
+        "src": "assets/img/pet/happiness65.png",
+        "frames": 21,
+        "animationType": "loop",
+        "active": true,
+        "description": "Animación de reposo para una felicidad menor a 65 y mayor a 15"
+      },
+      {
+        "name": "happiness15",
+        "src": "assets/img/pet/happiness15.png",
+        "frames": 21,
+        "animationType": "loop",
+        "active": true,
+        "description": "Animación de reposo para una felicidad menor a 15"
+      },
+      {
+        "name": "sleep",
+        "src": "assets/img/pet/sleep.png",
+        "frames": 1,
+        "animationType": "loop",
+        "active": true,
+        "description": "Animación de dormir"
+      },
+      {
+        "name": "eat",
+        "src": "assets/img/pet/eat.png",
+        "frames": 18,
+        "animationType": "once",
+        "active": true,
+        "description": "Animación de comer"
+      },
+      {
+        "name": "talking",
+        "src": "assets/img/pet/talking.png",
+        "frames": 15,
+        "animationType": "once",
+        "active": true,
+        "description": "Animación de hablar"
+      }
     ]
   }
 ]

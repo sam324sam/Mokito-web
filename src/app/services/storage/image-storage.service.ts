@@ -120,6 +120,8 @@ export class ImageStorageService {
               frameWidth: result.frameWidth,
               frameHeight: result.frameHeight,
               frameCount: result.frameCount,
+              active: result.active,
+              description: result.description,
               animationType: AnimationType.loop,
             };
             resolve(animation);

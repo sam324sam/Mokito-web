@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 // Modelos
 import { Pet, PetState } from '../models/pet/pet.model';
 import { Color } from '../models/sprites/color.model';
@@ -36,7 +37,10 @@ export class DataService {
     sfxVolume: 0.1,
   };
 
-  constructor(private readonly imageStorageService: ImageStorageService) {}
+  constructor(
+    private readonly imageStorageService: ImageStorageService,
+    private readonly router: Router,
+  ) {}
 
   isResetting: boolean = false;
 
@@ -242,18 +246,22 @@ todò no se -_-
 
       // Si no esta en el indexdb cargo los datos del json y ya
       const img = animDb ? animDb.image : new Image();
-      const frameWidth = animDb ? animDb.frameWidth : entity.sprite.width;
-      const frameHeight = animDb ? animDb.frameHeight : entity.sprite.height;
-      const frameCount = animDb ? animDb.frameCount : anim.frames;
       if (!animDb) {
         img.src = anim.src;
       }
+      const frameWidth = animDb ? animDb.frameWidth : entity.sprite.width;
+      const frameHeight = animDb ? animDb.frameHeight : entity.sprite.height;
+      const frameCount = animDb ? animDb.frameCount : anim.frames;
+      const active = animDb ? animDb.active : anim.active;
+      const description = animDb ? animDb.description : anim.description;
 
       const animation: AnimationSprite = {
         image: img,
         frameWidth,
         frameHeight,
         frameCount,
+        active,
+        description,
         animationType: anim.animationType as AnimationType,
       };
 
@@ -288,7 +296,9 @@ todò no se -_-
     this.isResetting = true;
     localStorage.clear();
     this.imageStorageService.clear();
-    location.reload();
+    this.router.navigate(['/']).then(() => {
+      globalThis.location.reload();
+    });
   }
   /**
    * Devuelve las texturas de particulas

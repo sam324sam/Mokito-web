@@ -1,0 +1,7 @@
+/*Ajustar luego para que si se cambia el tamaño del sprite de la animacion se cambie este*/
+.sprite-preview {
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+  background-repeat: no-repeat;
+}
