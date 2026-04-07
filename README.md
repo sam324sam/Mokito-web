@@ -136,3 +136,6 @@ Creacion de musica y efectos retro.
 Tipografía de la web: [Ænigma](https://www.dafont.com/aenigma.d188) ![Ænigma ejemplo](githubAssest/aenigma.png)
 
 Tipografía de mokito: [Dahaba](https://www.dafont.com/regina-dahaba.d11214) ![Dahaba ejemplo](githubAssest/dahaba.png)
+
+> [!WARNING]
+> Este proyecto está bajo una licencia personalizada que prohíbe el uso para entrenamiento de inteligencia artificial. Consulta el archivo [LICENSE](LICENSE) para más detalles.
