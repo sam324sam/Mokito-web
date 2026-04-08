@@ -117,6 +117,33 @@ src/
 4. **Configura** la apariencia a tu gusto en el menú de configuración
 5. ¡Asegúrate de que Mokito esté siempre feliz, limpio y bien alimentado!
 
+## 📖 Tutorial
+
+### Alimentar a Mokito
+Dale de comer a tu mascota para mantener su hambre al día.
+![Dar comida](githubAssest/tutorial/Dar-comida.gif)
+
+### Bañar a Mokito
+Mantén a Mokito limpio usando el objeto de baño.
+![Dar baño](githubAssest/tutorial/Dar-baño.gif)
+
+### Aumentar la felicidad
+Juega con Mokito para aumentar su felicidad.
+![Dar felicidad](githubAssest/tutorial/Dar-felicidad.gif)
+
+### Mandar a dormir
+Manda a Mokito a dormir para recuperar su energía.
+![Mandar dormir](githubAssest/tutorial/Mandar-dormir.gif)
+
+### Personalizar la consola
+Accede a la configuración y personaliza la interfaz a tu gusto.
+![Personalizar consola](githubAssest/tutorial/Personalizar-consola.gif)
+
+### Subir animaciones
+Sube tus propias animaciones 32x32 para personalizar a tu mokito Mokito.
+![Subir animaciones](githubAssest/tutorial/Subir-animaciones.gif)
+Asset usado de [Mattz Art](https://xzany.itch.io/cat-2d-pixel-art)
+
 ## 🧩 Tecnologías
 
 - **Framework**: Angular 21+
