@@ -1,5 +1,4 @@
 import { InteractuableObject } from '../object/interactuable-object.model';
-import { ButtonRoom } from './buttom-room.model';
 
 export interface Room {
   name: string;
@@ -7,4 +6,10 @@ export interface Room {
   music: string | null;
   buttonRoom: ButtonRoom | null;
   objects: Record<string, InteractuableObject> | null;
+}
+
+export interface ButtonRoom {
+  name: string;
+  buttonBehavior: string;
+  img: string;
 }

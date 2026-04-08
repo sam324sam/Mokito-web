@@ -1,5 +1,0 @@
-.invetory-border {
-    border: 16px solid transparent;
-    border-image: url('/Mokito-web/assets/img/icon/UI/inventory-border.png') 8 fill round;
-    image-rendering: pixelated;
-}

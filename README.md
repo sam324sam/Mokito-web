@@ -42,36 +42,71 @@ ng serve --host 0.0.0.0
 ```
 src/
 ├── app/
-│   ├── component/           # Componentes reutilizables
-│   │   ├── configuration-modal/    # Configuración del juego
-│   │   ├── header/                 # Cabecera con estadísticas
-│   │   ├── inventory-modal/        # Inventario de objetos
-│   │   ├── room-button/            # Botones de navegación
-│   │   └── stats-bar/              # Barra de estadísticas
-│   ├── guards/              # Guards de Angular
-│   ├── models/              # Modelos de datos
-│   │   ├── entity/          # Entidades del juego
-│   │   ├── object/          # Objetos interactuables
-│   │   ├── particle/        # Sistema de partículas
-│   │   ├── pet/              # Modelo de la mascota
-│   │   ├── room/            # Modelo de habitaciones
-│   │   └── sprites/         # Modelos de sprites y animaciones
-│   ├── services/            # Servicios del juego
-│   │   ├── animation/       # Servicio de animaciones
-│   │   ├── collision/       # Detección de colisiones
-│   │   ├── cursor/          # Gestión del cursor
-│   │   ├── data/            # Persistencia de datos
-│   │   ├── entity-store/    # Almacén de entidades
-│   │   ├── game-loop/       # Bucle principal del juego
-│   │   ├── grab/            # Sistema de arrastre
-│   │   ├── particle/        # Efectos de partículas
-│   │   ├── physics/         # Motor de física
-│   │   ├── room/            # Gestión de habitaciones
-│   │   └── sprites/         # Carga de sprites
-│   └── views/               # Vistas principales
-│       └── pet-view/        # Vista principal de la mascota
-├── public/                  # Assets estáticos
-└── styles/                  # Estilos globales
+│   ├── component/               # Componentes reutilizables
+│   │   ├── configuration-modal/
+│   │   │   └── components/
+│   │   │       ├── change-sprite/
+│   │   │       ├── cheats/
+│   │   │       ├── color-selector/
+│   │   │       ├── data-config/
+│   │   │       ├── debug-pet/
+│   │   │       ├── debug-show/
+│   │   │       ├── sound-config/
+│   │   │       └── user-ui-config/
+│   │   ├── console-frame/
+│   │   ├── header/
+│   │   ├── inventory-modal/
+│   │   ├── pet-component/
+│   │   ├── room-button/
+│   │   └── stats-bar/
+│   ├── guards/                  # Guards de Angular
+│   │   ├── has-collider.guard.ts
+│   │   ├── has-grab.guard.ts
+│   │   ├── is-interactuable-object.guard.ts
+│   │   ├── is-mesage.guard.ts
+│   │   ├── is-particle.guard.ts
+│   │   └── is-pet.guard.ts
+│   ├── models/                  # Modelos de datos
+│   │   ├── entity/             # Entidades del juego
+│   │   ├── message/
+│   │   ├── object/             # Objetos interactuables
+│   │   ├── particle/           # Sistema de partículas
+│   │   ├── pet/                # Modelo de la mascota
+│   │   ├── player/
+│   │   ├── room/               # Modelo de habitaciones
+│   │   └── sprites/            # Modelos de sprites y animaciones
+│   ├── services/               # Servicios del juego
+│   │   ├── animation.service.ts
+│   │   ├── collision.service.ts
+│   │   ├── cursor.service.ts
+│   │   ├── data.service.ts
+│   │   ├── entity-store.service.ts
+│   │   ├── game-loop.service.ts
+│   │   ├── grab.service.ts
+│   │   ├── mesage/              # Sistema de mensajes
+│   │   ├── particle/            # Efectos de partículas
+│   │   ├── pet/                 # Lógica de la mascota
+│   │   │   ├── pet-condition/
+│   │   │   ├── pet-ia/
+│   │   │   ├── pet-input/
+│   │   │   ├── pet-stat/
+│   │   │   └── pet-state/
+│   │   ├── physics.service.ts
+│   │   ├── room.service.ts
+│   │   ├── sound.service.ts
+│   │   ├── sprites.service.ts
+│   │   ├── storage/             # Almacenamiento de imágenes
+│   │   └── interactable-objects/
+│   └── views/                   # Vistas principales
+│       ├── console-view/
+│       ├── error-view/
+│       └── home-view/
+├── assets/
+│   ├── config/                  # Configuraciones JSON
+│   └── sound/                   # Audio del juego
+├── index.html
+├── main.ts
+└── styles.css                  # Estilos globales
 ```
 
 ## 🎮 Cómo Jugar

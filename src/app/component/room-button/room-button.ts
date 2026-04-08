@@ -29,12 +29,10 @@ export class RoomButton {
 
     this.buttonLocked = true;
 
-    // logica del botón
     if (room) {
       this.petService.executeRoomButton(room);
     }
 
-    // desbloqueo opcional
     setTimeout(() => {
       this.buttonLocked = false;
     }, 500);

@@ -5,33 +5,34 @@
     (keydown)="closeInventory()"
   >
     <div
-      class="bg-slate-800 text-white p-6 shadow-2xl w-[95%] max-w-md sm:max-w-lg md:max-w-2xl overflow-y-auto relative border-4 border-slate-900 pixel-box"
+      class="pixel-box overflow-y-auto bg-slate-800 text-white p-5 shadow-2xl w-150 max-w-[95%] max-h-full relative rounded-[10px]"
+      (click)="$event.stopPropagation()"
     >
+      
+
       <!-- Grid de items -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-4">
+      <div
+        class="grid gap-2 mb-4"
+        style="grid-template-columns: repeat(auto-fill, minmax(100px, 1fr))"
+      >
         @for (obj of filteredObjects(); track $index) {
-          <button class="hover:clickable" (click)="generateObject(obj)">
-            <div class="flex items-center justify-center mb-2">
-              <img [src]="obj.sprite.img.src" alt="Object" class="sm:w-16 sm:h-16 w-8 h-8" />
-            </div>
-            <p
-              class="text-xs text-center"
-              style="font-family: monospace; text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8)"
-            >
-              <span class="sm:text-sm text-[0.5rem]">{{ obj.name }}</span>
+          <button
+            (click)="generateObject(obj); $event.stopPropagation()"
+            class="flex flex-col items-center justify-center aspect-square cursor-pointer transition-transform duration-200 hover:scale-110 p-1"
+            [title]="obj.name"
+          >
+            <img
+              [src]="obj.sprite.img.src"
+              alt="Object"
+              class="w-14 h-14 sm:w-18 sm:h-18 lg:w-22 lg:h-22 object-contain"
+              style="image-rendering: pixelated"
+            />
+            <p class="text-[0.7rem] sm:text-[1.1rem] truncate text-center mt-1 w-full">
+              {{ obj.name }}
             </p>
           </button>
         }
       </div>
-
-      <!-- Boton cerrar con estilo pixel -->
-      <button
-        (click)="closeInventory()"
-        class="w-full pixel-box  font-bold transition-all"
-        style="font-family: monospace; text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.8)"
-      >
-        <span class="sm:text-sm text-[0.5rem]"> Cerrar </span>
-      </button>
     </div>
   </div>
 }

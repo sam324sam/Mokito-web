@@ -1,34 +1,41 @@
 @if (rooms) {
-  <span class="flex sm:flex-col gap-3 items-center justify-around">
-    <button
-      (click)="roomChange(1)"
-      class="sm:rotate-180 rotate-90 bg-transparent border-none p-0 cursor-pointer mb-2 pointer-events-auto transition-transform hover:scale-110 active:scale-95 duration-200 opacity-40 hover:opacity-900"
-    >
-      <img
-        src="/Mokito-web/assets/img/icon/UI/console/arrow.png"
-        alt="boton-stats"
-        class="sm:w-16 sm:h-9 w-5 h-5 drop-shadow-lg clickable"
-      />
-    </button>
-    <span class="text-xs sm:text-sm">{{ currentRoom().name }}</span>
-    <button
-      (click)="roomChange(-1)"
-      class="sm:rotate-0 -rotate-90 bg-transparent border-none p-0 cursor-pointer mb-2 pointer-events-auto transition-transform hover:scale-110 active:scale-95 duration-200 opacity-40 hover:opacity-900"
-    >
-      <img
-        src="/Mokito-web/assets/img/icon/UI/console/arrow.png"
-        alt="boton-stats"
-        class="sm:w-16 sm:h-9 w-5 h-5 drop-shadow-lg clickable"
-      />
-    </button>
-
-    @if (currentRoom().buttonRoom) {
+  <span class="w-full m-auto items-center grid grid-cols-2 sm:flex sm:flex-col gap-3 justify-around p-2">
+    <span class="grid grid-cols-3 sm:flex sm:flex-col gap-3 items-center justify-around w-full">
       <button
-        class="pixel-box-s hover:scale-110 transition-transform duration-200 text-xs sm:text-sm"
-        (click)="onRoomButtonClick(currentRoom())"
+        (click)="roomChange(1)"
+        class=" bg-transparent border-none p-0 cursor-pointer pointer-events-auto transition-transform hover:scale-110 active:scale-95 duration-200 opacity-40 hover:opacity-90"
       >
-        {{ currentRoom().buttonRoom?.name }}
+        <img
+          src="/Mokito-web/assets/img/icon/UI/console/arrow.png"
+          alt="boton-stats"
+          class="sm:rotate-180 rotate-90 sm:w-16 sm:h-9 w-8 h-8 drop-shadow-lg clickable"
+        />
       </button>
-    }
+      <span class="text-[0.7rem] sm:text-sm text-center whitespace-nowrap">{{ currentRoom().name }}</span>
+      <button
+        (click)="roomChange(-1)"
+        class=" bg-transparent border-none p-0 cursor-pointer pointer-events-auto transition-transform hover:scale-110 active:scale-95 duration-200 opacity-40 hover:opacity-90"
+      >
+        <img
+          src="/Mokito-web/assets/img/icon/UI/console/arrow.png"
+          alt="boton-stats"
+          class="sm:rotate-0 -rotate-90 sm:w-16 sm:h-9 w-8 h-8 drop-shadow-lg clickable"
+        />
+      </button>
+    </span>
+
+    <button
+      class="hover:scale-110 transition-transform duration-200 flex flex-col items-center gap-1 pointer-events-auto"
+      [class.invisible]="!currentRoom().buttonRoom"
+      [class.pointer-events-none]="!currentRoom().buttonRoom"
+      (click)="onRoomButtonClick(currentRoom())"
+    >
+      <img
+        [src]="currentRoom().buttonRoom?.img"
+        alt="ImgRoomButton"
+        class="w-8 sm:w-24 object-contain"
+      />
+      <span class="text-[0.5rem] sm:text-sm whitespace-nowrap">{{ currentRoom().buttonRoom?.name }}</span>
+    </button>
   </span>
 }

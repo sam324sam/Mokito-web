@@ -5,8 +5,9 @@
       "img": "assets/img/room/background/living-room.png",
       "music": "",
       "buttonRoom": {
-        "name": "Inventario",
-        "buttonBehavior": "openInventoryFood"
+        "name": "Alacena",
+        "buttonBehavior": "openInventoryFood",
+        "img": "assets/img/room/button/living-room.png"
       },
       "objects": [
         {
@@ -88,7 +89,8 @@
       "music": "",
       "buttonRoom": {
         "name": "Higiene",
-        "buttonBehavior": "openInventoryBathroom"
+        "buttonBehavior": "openInventoryBathroom",
+        "img": "assets/img/room/button/bathroom.png"
       },
       "objects": [
         {
@@ -120,7 +122,8 @@
       "music": "",
       "buttonRoom": {
         "name": "Inventario",
-        "buttonBehavior": "openInventoryGarden"
+        "buttonBehavior": "openInventoryGarden",
+        "img": "assets/img/room/button/garden.png"
       },
       "objects": []
     }
