@@ -61,11 +61,6 @@ export class ChangeSprite implements AfterViewInit, OnDestroy {
     this.opened[key] = !this.opened[key];
   }
 
-  toggleActive(key: string, event: Event) {
-    const input = event.target as HTMLInputElement;
-    this.animationSprite[key].active = input.checked;
-  }
-
   async onFileChange(event: Event, key: string) {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
@@ -76,7 +71,6 @@ export class ChangeSprite implements AfterViewInit, OnDestroy {
     this.height = this.petService.getPet().sprite.height;
     this.width = this.petService.getPet().sprite.width;
 
-    const active = petSprite.animationSprite[key].active;
     const description = petSprite.animationSprite[key].description;
     petSprite.animationSprite[key] = {
       image,
@@ -84,7 +78,6 @@ export class ChangeSprite implements AfterViewInit, OnDestroy {
       frameHeight: this.height,
       frameCount: image.naturalWidth / this.width,
       animationType: AnimationType.once,
-      active,
       description,
     };
 

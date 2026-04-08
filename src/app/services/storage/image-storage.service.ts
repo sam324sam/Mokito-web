@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { AnimationSprite, AnimationType } from '../../models/sprites/animation-sprite.model';
-import { AnimationSaveDb } from '../../models/sprites/animatio-save-db.model';
+import { AnimationSprite, AnimationType, AnimationSaveDb } from '../../models/sprites/animation-sprite.model';
 
 @Injectable({ providedIn: 'root' })
 export class ImageStorageService {
   private readonly dbName = 'gameDB';
-  private readonly dbVersion = 1;
+  private readonly dbVersion = 2;
   private readonly storeName = 'images';
   private db!: IDBDatabase;
   compatibleBrowser = typeof indexedDB !== 'undefined';
@@ -120,7 +119,6 @@ export class ImageStorageService {
               frameWidth: result.frameWidth,
               frameHeight: result.frameHeight,
               frameCount: result.frameCount,
-              active: result.active,
               description: result.description,
               animationType: AnimationType.loop,
             };

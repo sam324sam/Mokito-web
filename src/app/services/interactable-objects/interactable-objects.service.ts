@@ -85,8 +85,8 @@ export class InteractableObjectsService {
       collider: {
         offsetX: 0,
         offsetY: 0,
-        width: objCopy.sprite.width * objCopy.sprite.scale,
-        height: objCopy.sprite.height * objCopy.sprite.scale,
+        width: objCopy.sprite.width,
+        height: objCopy.sprite.height,
       },
       grab: {
         isGrabbed: false,

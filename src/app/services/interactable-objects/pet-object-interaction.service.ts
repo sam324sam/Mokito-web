@@ -10,6 +10,7 @@ import { Entity } from '../../models/entity/entity.model';
 import { isPet } from '../../guards/is-pet.guard';
 import { isInteractuableObject } from '../../guards/is-interactuable-object.guard';
 import { hasGrab } from '../../guards/has-grab.guard';
+import { AnimationService } from '../animation.service';
 
 @Injectable({ providedIn: 'root' })
 export class PetObjectInteractionService {
@@ -18,6 +19,7 @@ export class PetObjectInteractionService {
   constructor(
     private readonly petService: PetService,
     private readonly interactableObjectsService: InteractableObjectsService,
+    private readonly animationService: AnimationService,
   ) {}
 
   onPetTouchObject(pet: Entity, obj: Entity) {
@@ -41,11 +43,26 @@ export class PetObjectInteractionService {
     }
   }
 
-  private onPetGarden(pet: Pet, obj: InteractuableObjectRuntime){
+  private onPetGarden(pet: Pet, obj: InteractuableObjectRuntime) {
     if (obj.tags.includes('ball')) {
-      let MIN_SPEED = 100;
+      let MIN_SPEED = 80;
       if (obj.physics && MIN_SPEED <= obj.physics.vx) {
         this.petService.setState(PetState.PlayBall);
+        const durationMs = this.animationService.getAnimationDuration(pet.sprite, 'playball');
+        obj.physics.vx = 0;
+        obj.physics.vy = 0;
+
+        obj.sprite.x = pet.sprite.x + pet.sprite.width / 2 + obj.sprite.width / 2;
+
+      obj.sprite.y = pet.sprite.y + pet.sprite.height;
+
+        console.log('pelota antes', obj);
+        this.interactableObjectsService.deleteInteractuableObject(obj);
+        setTimeout(() => {
+          if (obj.collider) {
+            this.interactableObjectsService.addInteractuableObject(obj);
+          }
+        }, durationMs);
       }
     }
   }

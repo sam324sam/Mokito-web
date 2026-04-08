@@ -33,16 +33,6 @@
 
               <div class="flex flex-row p-5 gap-5 w-full">
                 <div class="sprite-preview sm:scale-200 scale-100" [ngStyle]="getSpriteStyle(key)"></div>
-
-                <!-- Activar / desactivar -->
-                <label class="flex items-center gap-2 text-sm">
-                  <input
-                    type="checkbox"
-                    [checked]="animationSprite[key].active"
-                    (change)="toggleActive(key, $event)"
-                  />
-                  Activo
-                </label>
               </div>
               <!--Prreview del sprite-->
 

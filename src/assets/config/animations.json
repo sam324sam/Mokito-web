@@ -105,6 +105,14 @@
         "animationType": "once",
         "active": true,
         "description": "Animación de hablar"
+      },
+      {
+        "name": "playball",
+        "src": "assets/img/pet/play-ball.png",
+        "frames": 9,
+        "animationType": "once",
+        "active": true,
+        "description": "Animación de jugar con la pelota"
       }
     ]
   }

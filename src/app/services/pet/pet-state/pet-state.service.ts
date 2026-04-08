@@ -258,14 +258,16 @@ export class PetStateService {
   enterPlayBall(pet: Pet, ctx: PetStateContext): void {
     // hacer animacion de pelota ctx.setAnimation('play');
     ctx.sumMinusStat('happiness', 10);
-
+    ctx.setAnimation('playball');
     this.clearTimer(this.playBallTimeout);
-
+    const durationMs = ctx.getAnimationDuration(pet.sprite, 'playball');
     this.playBallTimeout = setTimeout(() => {
       ctx.setState(PetState.Idle);
-    }, 1000);
+    }, durationMs);
   }
+
   exitPlayBall(pet: Pet, ctx: PetStateContext): void {
     this.clearTimer(this.playBallTimeout);
+
   }
 }

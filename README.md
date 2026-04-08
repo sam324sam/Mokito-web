@@ -89,6 +89,9 @@ src/
 - **Lenguaje**: TypeScript
 - **Despliegue**: GitHub Pages
 
+## 📝 Licencia
+
+Este proyecto está bajo la Licencia MIT.
 
 ## Programas usados
 

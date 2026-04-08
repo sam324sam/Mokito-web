@@ -5,8 +5,22 @@ export interface AnimationSprite {
   frameHeight: number;
   frameCount: number;
   animationType: AnimationType;
-  active: boolean;
   description: string;
+}
+
+export interface AnimationFromJson {
+  name: string;
+  src: string;
+  frames: number;
+  animationType: string;
+  description: string;
+}
+
+export interface AnimationSaveDb {
+  blob: Blob;
+  frameWidth: number;
+  frameHeight: number;
+  frameCount: number;
 }
 
 export enum AnimationType {

@@ -3,7 +3,11 @@ import { Router } from '@angular/router';
 // Modelos
 import { Pet, PetState } from '../models/pet/pet.model';
 import { Color } from '../models/sprites/color.model';
-import { AnimationSprite, AnimationType } from '../models/sprites/animation-sprite.model';
+import {
+  AnimationSprite,
+  AnimationType,
+  AnimationFromJson,
+} from '../models/sprites/animation-sprite.model';
 import { Room } from '../models/room/room.model';
 import { InteractuableObject, ObjectType } from '../models/object/interactuable-object.model';
 import { PetRuntime } from '../models/pet/pet-runtime.model';
@@ -36,6 +40,7 @@ export class DataService {
     musicVolume: 0.1,
     sfxVolume: 0.1,
   };
+  isLoading = true;
 
   constructor(
     private readonly imageStorageService: ImageStorageService,
@@ -59,14 +64,19 @@ export class DataService {
       this.loadLocalStorage();
       await this.imageStorageService.init();
       await this.loadAnimations(this.petRuntime);
+      for (const object of this.objects) {
+        await this.loadAnimations(object);
+      }
     } catch (e) {
       console.log(e);
       localStorage.clear();
+    } finally {
+      this.isLoading = false;
     }
+  }
 
-    for (const object of this.objects) {
-      await this.loadAnimations(object);
-    }
+  getIsloading(): boolean {
+    return this.isLoading;
   }
 
   /**
@@ -238,35 +248,39 @@ todò no se -_-
    * Busca las animaciones en el json por nombre
    */
   async loadAnimations(entity: Entity) {
-    const rawAnimations = animationsJson.find((o) => o.name === entity.name)?.animations;
+    const rawAnimations: AnimationFromJson[] | undefined = animationsJson.find(
+      (o) => o.name === entity.name,
+    )?.animations;
     if (!rawAnimations) return;
     for (const anim of rawAnimations) {
       // Intentar obtener la imagen de la base de datos primero
       const animDb = await this.imageStorageService.getAnimationSave(anim.name);
-
-      // Si no esta en el indexdb cargo los datos del json y ya
-      const img = animDb ? animDb.image : new Image();
-      if (!animDb) {
-        img.src = anim.src;
-      }
-      const frameWidth = animDb ? animDb.frameWidth : entity.sprite.width;
-      const frameHeight = animDb ? animDb.frameHeight : entity.sprite.height;
-      const frameCount = animDb ? animDb.frameCount : anim.frames;
-      const active = animDb ? animDb.active : anim.active;
-      const description = animDb ? animDb.description : anim.description;
-
-      const animation: AnimationSprite = {
-        image: img,
-        frameWidth,
-        frameHeight,
-        frameCount,
-        active,
-        description,
-        animationType: anim.animationType as AnimationType,
-      };
-
-      entity.sprite.animationSprite[anim.name] = animation;
+      entity.sprite.animationSprite[anim.name] = this.buildAnimationSprite(animDb, anim, entity);
     }
+  }
+
+  private buildAnimationSprite(
+    animDb: AnimationSprite | null,
+    anim: AnimationFromJson,
+    entity: Entity,
+  ): AnimationSprite {
+    // Si no esta en el indexdb cargo los datos del json y ya
+    const img = animDb ? animDb.image : new Image();
+    if (!animDb) {
+      img.src = anim.src;
+    }
+    const frameWidth = animDb ? animDb.frameWidth : entity.sprite.width;
+    const frameHeight = animDb ? animDb.frameHeight : entity.sprite.height;
+    const frameCount = animDb ? animDb.frameCount : anim.frames;
+    const description = animDb ? animDb.description : anim.description;
+    return {
+      image: img,
+      frameWidth,
+      frameHeight,
+      frameCount,
+      description,
+      animationType: anim.animationType as AnimationType,
+    };
   }
 
   /**
@@ -276,7 +290,7 @@ todò no se -_-
   saveLocalStorage(pet: Pet) {
     if (!this.isResetting) {
       const savePet: PetSave = {
-        version: 1,
+        version: 2,
         stats: pet.stats,
         color: pet.sprite.color,
         cheats: pet.cheats,
