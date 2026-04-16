@@ -9,12 +9,13 @@ import { UserUiConfig } from './components/user-ui-config/user-ui-config';
 import { DebugShow } from './components/debug-show/debug-show';
 import { DebugPet } from './components/debug-pet/debug-pet';
 import { ChangeSprite } from "./components/change-sprite/change-sprite";
+import { ServerConfig } from './components/server-config/server-config';
 
 @Component({
   selector: 'app-configuration-modal',
   templateUrl: './configuration-modal.html',
   styleUrl: './configuration-modal.css',
-  imports: [SoundConfig, ColorSelector, DataConfig, Cheats, UserUiConfig, DebugShow, DebugPet, ChangeSprite],
+  imports: [SoundConfig, ColorSelector, DataConfig, Cheats, UserUiConfig, DebugShow, DebugPet, ChangeSprite, ServerConfig],
 })
 export class ConfigurationModal {
   @Input() isOpenConfiguration: boolean = false;
@@ -29,9 +30,14 @@ export class ConfigurationModal {
   isDebugSectionOpen = false;
   idDebugPetSectionOpen = false;
   isChangeSpriteSectionOpen = false;
+  isServerConfigSectionOpen = false;
 
   toggleChangeSpriteSection() {
     this.isChangeSpriteSectionOpen = !this.isChangeSpriteSectionOpen;
+  }
+
+  toggleServerConfigSection() {
+    this.isServerConfigSectionOpen = !this.isServerConfigSectionOpen;
   }
 
   toggleSoundSection() {

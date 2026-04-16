@@ -39,6 +39,14 @@ export class DataService {
     framePetColor: 'purple',
     musicVolume: 0.1,
     sfxVolume: 0.1,
+    user: {
+      name: 'Mokito',
+      userId: null,
+      cursor: {
+        x: 0,
+        y: 0,
+      },
+    },
   };
   isLoading = true;
 

@@ -1,0 +1,48 @@
+<div
+  class="overflow-hidden transition-all duration-300 ease-in-out mb-2"
+  [class.max-h-0]="!isServerConfigSectionOpen"
+  [class.max-h-[500px]]="isServerConfigSectionOpen"
+  [class.opacity-0]="!isServerConfigSectionOpen"
+  [class.opacity-100]="isServerConfigSectionOpen"
+>
+  <div class="mb-3 p-4 bg-slate-700/50 rounded-lg text-center pixel-box-s">
+    <div class="flex flex-col justify-center gap-4">
+      <input
+        type="text"
+        [value]="user.name"
+        (input)="setNameUser($any($event.target).value)"
+        placeholder="Nombre de usuario"
+        class="px-3 py-2 rounded bg-slate-800 text-white outline-none"
+      />
+
+      <input
+        type="text"
+        [value]="url"
+        (input)="setUrl($any($event.target).value)"
+        placeholder="Url del servidor"
+        class="px-3 py-2 rounded bg-slate-800 text-white outline-none"
+      />
+
+      <button
+        (click)="connect()"
+        class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded text-white"
+      >
+        Conectar
+      </button>
+
+      @if (status) {
+        <p class="text-sm text-green-300">Conectado</p>
+        <div>
+          Usuarios
+          <ul>
+            @for (user of users; track $index) {
+              <li>{{ user.name }}</li>
+            }
+          </ul>
+        </div>
+      } @else {
+        <p class="text-sm text-red-800">No conectado como: {{ user.name }}</p>
+      }
+    </div>
+  </div>
+</div>
