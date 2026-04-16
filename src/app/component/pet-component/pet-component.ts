@@ -91,6 +91,7 @@ export class PetComponent implements AfterViewInit, OnDestroy {
     });
 
     this.canvas.addEventListener('pointermove', (event: PointerEvent) => {
+      this.cursorService.handleMouseMove(event);
       this.grabService.handleMouseMove(event);
     });
 

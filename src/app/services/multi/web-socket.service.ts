@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User } from '../../models/player/player-data.model';
+import { Cursor, User } from '../../models/player/player-data.model';
 
 @Injectable({ providedIn: 'root' })
 export class WebSocketService {
@@ -8,7 +8,7 @@ export class WebSocketService {
 
   status: boolean = false;
 
-  private readonly user: User = {
+  private user: User = {
     name: 'Mokito Friend',
     userId: null,
     cursor: null,
@@ -24,6 +24,10 @@ export class WebSocketService {
 
   getUser(): User {
     return this.user;
+  }
+
+  setUser(user: User) {
+    this.user = user;
   }
 
   getUrl(): string {
@@ -74,12 +78,21 @@ export class WebSocketService {
     }
   }
 
-  sendCursor(x: number, y: number) {
+  // Mide el ping al servidor
+  async ping(): Promise<number> {
+    const start = Date.now();
+    const res = await fetch(`https://${this.url}/user/ping`);
+    if (!res.ok) throw new Error(`Ping failed: ${res.status}`);
+    return Date.now() - start;
+  }
+
+  sendCursor(cursor: Cursor) {
     if (this.ws?.readyState !== 1) return;
 
     const payload = {
       type: 'cursor_move',
-      payload: { x, y },
+      userId: this.user.userId,
+      payload: { cursor },
     };
 
     this.ws.send(JSON.stringify(payload));

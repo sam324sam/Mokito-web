@@ -9,39 +9,71 @@
     <div class="flex flex-col justify-center gap-4">
       <input
         type="text"
-        [value]="user.name"
-        (input)="setNameUser($any($event.target).value)"
+        [(ngModel)]="user.name"
+        (ngModelChange)="setNameUser($event)"
         placeholder="Nombre de usuario"
         class="px-3 py-2 rounded bg-slate-800 text-white outline-none"
       />
 
       <input
         type="text"
-        [value]="url"
-        (input)="setUrl($any($event.target).value)"
+        [(ngModel)]="url"
+        (ngModelChange)="setUrl($event)"
         placeholder="Url del servidor"
         class="px-3 py-2 rounded bg-slate-800 text-white outline-none"
       />
 
       <button
         (click)="connect()"
-        class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded text-white"
+        [disabled]="isLoading"
+        class="px-4 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-50 rounded text-white"
       >
-        Conectar
+        {{ isLoading ? 'Conectando...' : 'Conectar' }}
       </button>
 
+      @if (errorMsg) {
+        <p class="text-sm text-red-400">{{ errorMsg }}</p>
+      }
+
       @if (status) {
-        <p class="text-sm text-green-300">Conectado</p>
-        <div>
-          Usuarios
-          <ul>
-            @for (user of users; track $index) {
-              <li>{{ user.name }}</li>
+        <div class="flex items-center justify-between">
+          <p class="text-sm text-green-300">✓ Conectado</p>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-slate-300">Usuarios en sala</span>
+            <button
+              (click)="refresh()"
+              [disabled]="isRefreshing"
+              class="px-3 py-1 text-sm bg-slate-600 hover:bg-slate-500 disabled:opacity-50 rounded text-white"
+            >
+              {{ isRefreshing ? '...' : '↻ Refresh' }}
+            </button>
+          </div>
+
+          <ul class="flex flex-col gap-1 max-h-40 overflow-y-auto">
+            @for (u of users; track u.userId) {
+              <li
+                class="flex items-center justify-between px-2 py-1 bg-slate-800 rounded text-sm text-white"
+              >
+                <span [class.text-green-400]="u.userId === user.userId">{{ u.name }}</span>
+                <div class="flex items-center gap-2">
+                  @if (u.userId === user.userId) {
+                    <span class="text-xs font-mono" [class]="pingColor">
+                      {{ ping !== null ? ping + 'ms' : '--' }}
+                    </span>
+                  }
+                  <span class="text-xs text-slate-400">{{ u.userId }}</span>
+                </div>
+              </li>
+            } @empty {
+              <li class="text-sm text-slate-400 text-center py-2">Sin usuarios</li>
             }
           </ul>
         </div>
       } @else {
-        <p class="text-sm text-red-800">No conectado como: {{ user.name }}</p>
+        <p class="text-sm text-red-400">No conectado</p>
       }
     </div>
   </div>

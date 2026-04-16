@@ -45,6 +45,7 @@ export class DataService {
       cursor: {
         x: 0,
         y: 0,
+        src: ""
       },
     },
   };
