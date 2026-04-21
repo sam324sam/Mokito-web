@@ -7,7 +7,7 @@ import { ParticleService } from './particle/particle.service';
 import { PhysicsService } from './physics.service';
 import { InteractableObjectsService } from './interactable-objects/interactable-objects.service';
 import { MessageService } from './mesage/message.service';
-
+import { WebSocketService } from './web-socket/web-socket.service';
 @Injectable({
   providedIn: 'root',
 })
@@ -24,7 +24,8 @@ export class GameLoopService {
     private readonly particleService: ParticleService,
     private readonly interactableObjectsService: InteractableObjectsService,
     private readonly physicsService: PhysicsService,
-    private readonly messageService: MessageService
+    private readonly messageService: MessageService,
+    private readonly webSocketService: WebSocketService,
   ) {}
 
   start() {
@@ -33,7 +34,7 @@ export class GameLoopService {
       stop();
       return;
     }
-    console.log("servicio game loop cargado")
+    console.log('servicio game loop cargado');
     this.running = true;
     this.frameId = requestAnimationFrame(this.loop.bind(this));
   }
@@ -49,7 +50,7 @@ export class GameLoopService {
     this.lastTime = 0;
   }
 
-  getStatus(){
+  getStatus() {
     return this.running;
   }
 
@@ -74,6 +75,9 @@ export class GameLoopService {
     this.particleService.update(delta);
     this.physicsService.update(delta);
     this.messageService.update(delta);
+    if (this.webSocketService.status) {
+      this.webSocketService.update(delta);
+    }
   }
 
   private render() {

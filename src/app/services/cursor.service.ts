@@ -1,42 +1,53 @@
 import { HostListener, Injectable } from '@angular/core';
 import { SpriteService } from './sprites.service';
-import { WebSocketService } from './multi/web-socket.service';
-import { User } from '../models/player/player-data.model';
-import { Entity } from '../models/entity/entity.model';
-import { EntityStoreService } from './entity-store.service';
+import { Cursor, User } from '../models/player/player-data.model';
+import { UserManagerService } from './web-socket/user-manager.service';
 
 @Injectable({ providedIn: 'root' })
 export class CursorService {
-  cursors: Entity[] = [];
-  private user: User = {} as User;
+  cursor: Cursor = { x: 0, y: 0, src: 'assets/img/cursor/cursor.png' };
+
+  private readonly user: User = {
+    name: '',
+    userId: null,
+    cursor: null,
+    pet: null,
+  };
+  private canvas!: HTMLCanvasElement;
   constructor(
     private readonly spriteService: SpriteService,
-    private readonly webSocketService: WebSocketService,
-    private readonly entityStoreService: EntityStoreService,
+    private readonly userManagerService: UserManagerService,
   ) {
-    this.user = this.webSocketService.getUser();
+    this.user = this.userManagerService.getClientUser();
+    setTimeout(() => {
+      this.canvas = this.spriteService.getCanvas();
+    });
   }
 
   setCanvasCursor(url: string) {
-    const canvas = this.spriteService.getCanvas();
-    if (!canvas) return;
-    canvas.style.cursor = `url("${url}") 16 16, auto`;
+    if (!this.canvas) return;
+    this.canvas.style.cursor = `url("${url}") 16 16, auto`;
   }
 
   handleMouseMove(event: PointerEvent): void {
-    if (this.webSocketService.status) {
-      let { x, y } = this.getMousePos(event);
-      if (!this.user.cursor) return;
-      this.user.cursor.x = x;
-      this.user.cursor.y = y;
-      this.webSocketService.sendCursor(this.user.cursor);
-    }
+    if (!this.userManagerService.getStatus()) return;
+
+    const canvas = this.canvas;
+    if (!canvas) return;
+
+    const { x, y } = this.getMousePos(event);
+
+    this.cursor.x = x;
+    this.cursor.y = y;
+
+    this.userManagerService.setCursor(this.cursor);
   }
 
   resetCanvasCursor() {
     const canvas = this.spriteService.getCanvas();
     if (!canvas) return;
     canvas.style.cursor = `url("assets/img/cursor/cursor.png") 16 16, auto`;
+
     if (!this.user.cursor) return;
     this.user.cursor.src = 'assets/img/cursor/cursor.png';
   }
@@ -52,7 +63,7 @@ export class CursorService {
   onMouseUp() {
     document.body.style.cursor = `url("/assets/img/cursor/cursor.png"), pointer`;
     if (!this.user.cursor) return;
-    this.user.cursor.src = 'assets/img/cursor/cursor.png';
+    this.cursor.src = 'assets/img/cursor/cursor.png';
   }
 
   private getMousePos(event: PointerEvent) {

@@ -1,6 +1,7 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { WebSocketService } from '../../../../services/multi/web-socket.service';
+import { UserManagerService } from '../../../../services/web-socket/user-manager.service';
+import { WebSocketService } from '../../../../services/web-socket/web-socket.service';
 import { User } from '../../../../models/player/player-data.model';
 
 @Component({
@@ -23,7 +24,7 @@ export class ServerConfig implements OnDestroy {
   private pingInterval: ReturnType<typeof setInterval> | null = null;
 
   get status(): boolean {
-    return this.webSocketService.status;
+    return this.userManagerService.getStatus();
   }
 
   get pingColor(): string {
@@ -33,14 +34,17 @@ export class ServerConfig implements OnDestroy {
     return 'text-red-400';
   }
 
-  constructor(private readonly webSocketService: WebSocketService) {
-    this.user = this.webSocketService.getUser();
+  constructor(
+    private readonly userManagerService: UserManagerService,
+    private readonly webSocketService: WebSocketService,
+  ) {
+    this.user = this.userManagerService.getClientUser();
     this.url = this.webSocketService.getUrl();
   }
 
   setNameUser(name: string) {
     this.user.name = name;
-    this.webSocketService.setUserName(name);
+    this.userManagerService.setUserName(name);
   }
 
   setUrl(url: string) {
@@ -54,7 +58,10 @@ export class ServerConfig implements OnDestroy {
     try {
       await this.webSocketService.connect();
       await this.measurePing();
-      await this.refresh();
+      setTimeout(() => {
+        this.isRefreshing = true;
+        this.refresh();
+      }, 1000);
       // Actualiza el ping cada 5 segundos
       this.pingInterval = setInterval(() => this.measurePing(), 5000);
     } catch (e) {
@@ -66,7 +73,6 @@ export class ServerConfig implements OnDestroy {
   }
 
   async refresh() {
-    this.isRefreshing = true;
     try {
       this.users = await this.webSocketService.getAllUsers();
     } catch (e) {
@@ -85,7 +91,7 @@ export class ServerConfig implements OnDestroy {
     }
   }
 
-  // limpio lo del ping 
+  // limpio lo del ping
   ngOnDestroy() {
     if (this.pingInterval) clearInterval(this.pingInterval);
   }

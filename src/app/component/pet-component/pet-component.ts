@@ -13,6 +13,7 @@ import { PetService } from '../../services/pet/pet.service';
 import { CursorService } from '../../services/cursor.service';
 import { GrabService } from '../../services/grab.service';
 import { ParticleService } from '../../services/particle/particle.service';
+import { WebSocketService } from '../../services/web-socket/web-socket.service';
 // Componentes
 import { StatsBar } from '../../component/stats-bar/stats-bar';
 import { InventoryModal } from '../../component/inventory-modal/inventory-modal';
@@ -40,6 +41,7 @@ export class PetComponent implements AfterViewInit, OnDestroy {
     private readonly gameLoopService: GameLoopService,
     private readonly particleService: ParticleService,
     private readonly dataService: DataService,
+    private readonly webSocketService: WebSocketService,
   ) {}
 
   @HostListener('window:resize')
