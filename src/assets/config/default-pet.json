@@ -10,7 +10,7 @@
     "y": 0,
     "width": 32,
     "height": 32,
-    "scale": 1,
+    "spriteScale": 1,
     "currentAnimation": "idle",
     "currentFrame": 0,
     "frameSpeed": 100

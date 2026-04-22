@@ -59,7 +59,7 @@ export class GrabService {
     const dx = last.x - first.x;
     const dy = last.y - first.y;
     // Tolerancia para no aplicar velocidad al minimo movimiento
-    let MIN_DISTANCE = 2 * grabbed.sprite.scale;
+    let MIN_DISTANCE = 2 * (grabbed.sprite.totalScale ?? 1);
     // Cuando se me ocurra algo mejor lo cambio
     if (MIN_DISTANCE == 10) {
       MIN_DISTANCE = 12;
@@ -145,9 +145,9 @@ export class GrabService {
       const e = entities[i];
       if (!hasGrab(e)) continue;
       // scale puede estar en el sprite
-      const { x, y, width, height, scale = 1 } = e.sprite;
-      const realWidth = width * scale;
-      const realHeight = height * scale;
+      const { x, y, width, height, totalScale = 1 } = e.sprite;
+      const realWidth = width * totalScale;
+      const realHeight = height * totalScale;
 
       if (mouse.x >= x && mouse.x <= x + realWidth && mouse.y >= y && mouse.y <= y + realHeight) {
         return e;

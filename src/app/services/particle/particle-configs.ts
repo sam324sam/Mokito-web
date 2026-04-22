@@ -70,7 +70,7 @@ const baseParticleConfig = (
   y: number,
   timeToLife: number,
   texture: HTMLImageElement,
-  scale: number,
+  spriteScale: number,
   options: ParticleBaseOptions = {},
 ): Particle => {
   const width = options.width ?? 5;
@@ -90,7 +90,9 @@ const baseParticleConfig = (
       img: texture,
       width,
       height,
-      scale,
+      spriteScale,
+      canvasScale: 1,
+      totalScale: 1,
       color: null,
       animationSprite: {},
       currentAnimation: '',
@@ -272,7 +274,7 @@ export const ParticleConfigs = {
         spriteStela.y + directionY * offset,
         timeToLife,
         spriteStela.img,
-        spriteStela.scale,
+        spriteStela.spriteScale,
         {
           width: spriteStela.width,
           height: spriteStela.height,

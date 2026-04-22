@@ -192,8 +192,8 @@ export class PetStateService {
 
     this.cooldownZZZ -= delta;
     if (this.cooldownZZZ <= 0) {
-      const width = pet.sprite.width * pet.sprite.scale;
-      const height = pet.sprite.height * pet.sprite.scale;
+      const width = pet.sprite.width * (pet.sprite.totalScale ?? 1);
+      const height = pet.sprite.height * (pet.sprite.totalScale ?? 1);
       let x = pet.sprite.x + Math.random() * width;
       let y = pet.sprite.y + (Math.random() * height) / 2;
       this.particleService.emitSleepZZZ(x, y, 1, 'zzz');
@@ -216,8 +216,8 @@ export class PetStateService {
   private enterBathing(pet: Pet, ctx: PetStateContext): void {
     ctx.setAnimation('idle');
 
-    const halfW = (pet.sprite.width * pet.sprite.scale) / 2;
-    const halfH = (pet.sprite.height * pet.sprite.scale) / 2;
+    const halfW = (pet.sprite.width * (pet.sprite.totalScale ?? 1)) / 2;
+    const halfH = (pet.sprite.height * (pet.sprite.totalScale ?? 1)) / 2;
 
     const number = Math.floor(Math.random() * 2) + 1;
     const textureName = 'bubles' + number;

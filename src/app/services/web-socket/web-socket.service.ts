@@ -1,28 +1,31 @@
 import { Injectable } from '@angular/core';
-import { User } from '../../models/player/player-data.model';
+
 import { UserManagerService } from './user-manager.service';
-import { EntityStoreService } from '../entity-store.service';
+
+import { User } from '../../models/player/player-data.model';
+import { Entity } from '../../models/entity/entity.model';
 
 @Injectable({ providedIn: 'root' })
 export class WebSocketService {
   private ws!: WebSocket;
-  private url: string = 'eagle-uni-apartment-which.trycloudflare.com';
+  private url: string = 'instead-consulting-might-vessels.trycloudflare.com';
 
   status: boolean = false;
+
+  sendAccumulator: number = 0;
+  NETWORK_TICK_MS: number = 10;
 
   private readonly user: User = {
     name: 'Mokito Friend',
     userId: null,
     cursor: null,
     pet: null,
+    canvas: { width: 0, height: 0 },
   };
 
   dataUsers: User[] = [];
 
-  constructor(
-    private readonly userManagerService: UserManagerService,
-    private readonly entityStoreService: EntityStoreService,
-  ) {
+  constructor(private readonly userManagerService: UserManagerService) {
     this.user = this.userManagerService.getClientUser();
   }
 
@@ -71,14 +74,18 @@ export class WebSocketService {
 
       this.ws.onmessage = (event) => {
         const msg = JSON.parse(event.data);
+        console.log('mensaje', msg);
         switch (msg.type) {
           case 'init_state':
             this.userManagerService.setUsers(msg);
             break;
 
           case 'user_data':
-            console.log(msg);
             this.dataUsers.push(msg.user);
+            break;
+
+          case 'user_remove':
+            this.userManagerService.removeUser(msg.userId);
             break;
         }
       };
@@ -111,9 +118,6 @@ export class WebSocketService {
     this.ws.send(JSON.stringify(payload));
   }
 
-  sendAccumulator: number = 0;
-  NETWORK_TICK_MS: number = 50;
-
   update(deltaTime: number) {
     // Vaciar la cola este frame
     while (this.dataUsers.length > 0) {
@@ -124,7 +128,7 @@ export class WebSocketService {
       this.applyUserData(msg);
     }
 
-    // Envío por network tick
+    // Envio por network tick
     this.sendAccumulator += deltaTime;
     if (this.sendAccumulator >= this.NETWORK_TICK_MS) {
       this.sendUser(this.user);
@@ -133,7 +137,6 @@ export class WebSocketService {
   }
 
   applyUserData(msg: User) {
-    console.log(msg);
     if (!msg?.userId) return;
 
     // No aplicar datos propios
@@ -155,8 +158,30 @@ export class WebSocketService {
         }
       }
     } else {
-      // Usuario nuevo, añadirlo
+      // Usuario nuevo añadirlo
       this.userManagerService.addUser(msg);
     }
+  }
+
+  lerpEntity(entity: Entity, targetX: number, targetY: number, smoothing: number = 0.8): void {
+    entity.sprite.x += (targetX - entity.sprite.x) * smoothing;
+    entity.sprite.y += (targetY - entity.sprite.y) * smoothing;
+  }
+
+  /**
+   * Regla de tres para que se pueda ver los mouses en el mismo sitio apesar de tener distintas resoluciones
+   */
+  ajustLocationCanvas(msg: User): { localX: number; localY: number } {
+    let localX = 0;
+    let localY = 0;
+    if (msg.cursor && msg.canvas) {
+      const localCanvas = this.userManagerService.getClientUser().canvas;
+      const scaleX = localCanvas.width / msg.canvas.width;
+      const scaleY = localCanvas.height / msg.canvas.height;
+
+      localX = msg.cursor.x * scaleX;
+      localY = msg.cursor.y * scaleY;
+    }
+    return { localX, localY };
   }
 }

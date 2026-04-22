@@ -136,7 +136,7 @@ export class InteractableObjectsService {
       if (Math.random() < 0.3) {
         this.particleService.emitShowerWater(
           obj.sprite.x + obj.sprite.height,
-          obj.sprite.y + obj.sprite.height * obj.sprite.scale,
+          obj.sprite.y + obj.sprite.height * (obj.sprite.totalScale ?? 1),
           1,
           5,
           'drops',

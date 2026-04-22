@@ -12,6 +12,7 @@ export class CursorService {
     userId: null,
     cursor: null,
     pet: null,
+    canvas: { width: 0, height: 0 },
   };
   private canvas!: HTMLCanvasElement;
   constructor(
@@ -27,6 +28,7 @@ export class CursorService {
   setCanvasCursor(url: string) {
     if (!this.canvas) return;
     this.canvas.style.cursor = `url("${url}") 16 16, auto`;
+    this.cursor.src = url;
   }
 
   handleMouseMove(event: PointerEvent): void {

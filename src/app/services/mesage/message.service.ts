@@ -7,13 +7,15 @@ import { Sprite } from '../../models/sprites/sprites.model';
 export class MessageService {
   defaultMesage: Message = {
     id: 0,
-    name: "message",
+    name: 'message',
     sprite: {
       x: 0,
       y: 0,
       width: 24,
       height: 24,
-      scale: 1,
+      spriteScale: 1,
+      canvasScale: 1,
+      totalScale: 1,
       img: new Image(),
       color: null,
       alpha: 100,
@@ -24,7 +26,7 @@ export class MessageService {
       frameCounter: 0,
       timeoutId: null,
       zIndex: -1,
-      rotation: null
+      rotation: null,
     },
     active: true,
     tags: ['message'],

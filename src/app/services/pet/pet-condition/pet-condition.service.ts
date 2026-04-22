@@ -263,8 +263,8 @@ export class PetConditionService {
    * Calcula una posicion aleatoria dentro del sprite de la pet
    */
   private getRandomSpritePosition(pet: Pet): { x: number; y: number } {
-    const width = pet.sprite.width * pet.sprite.scale;
-    const height = pet.sprite.height * pet.sprite.scale;
+    const width = pet.sprite.width * (pet.sprite.totalScale ?? 1);
+    const height = pet.sprite.height * (pet.sprite.totalScale ?? 1);
     return {
       x: pet.sprite.x + Math.random() * width,
       y: pet.sprite.y + Math.random() * height,

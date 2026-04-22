@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Cursor, User } from '../../models/player/player-data.model';
 import { Entity } from '../../models/entity/entity.model';
 import { EntityStoreService } from '../entity-store.service';
+import { SpriteService } from '../sprites.service';
 @Injectable({
   providedIn: 'root',
 })
@@ -16,11 +17,22 @@ export class UserManagerService {
     userId: null,
     cursor: null,
     pet: null,
+    canvas: { width: 0, height: 0 },
   };
 
   private users: Map<string, User> = new Map();
 
-  constructor(private readonly entityStoreService: EntityStoreService) {}
+  constructor(
+    private readonly entityStoreService: EntityStoreService,
+    private readonly spriteService: SpriteService,
+  ) {
+    setTimeout(() => {
+      const canvas = this.spriteService.getCanvas();
+      this.user.canvas.width = canvas.width;
+      this.user.canvas.height = canvas.height;
+      console.log(this.user);
+    });
+  }
 
   setUser(user: User) {
     this.user = user;
@@ -76,7 +88,9 @@ export class UserManagerService {
             y: user.cursor.y,
             width: 32,
             height: 32,
-            scale: 0,
+            spriteScale: 0.25,
+            totalScale: 1,
+            canvasScale: 1,
             color: null,
             alpha: 100,
             currentAnimation: '',
@@ -99,6 +113,9 @@ export class UserManagerService {
   }
   removeUser(userId: string) {
     this.users.delete(userId);
+    if (this.cursorEntitys[userId]) {
+      this.entityStoreService.removeEntity(this.cursorEntitys[userId].id);
+    }
   }
   getAllUsers(): User[] {
     return Array.from(this.users.values());

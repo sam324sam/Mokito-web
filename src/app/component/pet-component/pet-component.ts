@@ -113,7 +113,7 @@ export class PetComponent implements AfterViewInit, OnDestroy {
   }
 
   private centerPet() {
-    const scale = this.spriteService.spriteScale;
+    const scale = this.spriteService.canvasScale;
     const canvasWidth = this.canvas.width;
     const canvasHeight = this.canvas.height;
 

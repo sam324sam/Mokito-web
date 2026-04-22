@@ -11,24 +11,29 @@ import { Entity } from '../models/entity/entity.model';
 import { Particle } from '../models/particle/particle.model';
 @Injectable({ providedIn: 'root' })
 export class PhysicsService {
+  private canvas!: HTMLCanvasElement;
+
   constructor(
     private readonly entityStore: EntityStoreService,
     private readonly spriteService: SpriteService,
     private readonly collisionService: CollisionService,
-  ) {}
+  ) {
+    setTimeout(() => {
+      this.canvas = this.spriteService.getCanvas();
+    });
+  }
 
-  private  readonly MIN_SPEED = 0.1;
+  private readonly MIN_SPEED = 0.1;
 
   update(delta: number) {
-    const canvas = this.spriteService.getCanvas();
-    if (!canvas) return;
+    if (!this.canvas) return;
 
     const dt = delta / 1000;
     const entities = this.entityStore.getZOrder();
 
     // Aplicar fisica a todas las entidades
     for (const element of entities) {
-      this.applyPhysics(element, dt, canvas);
+      this.applyPhysics(element, dt, this.canvas);
     }
 
     // Verificar colisiones entre las entidades
@@ -58,7 +63,7 @@ export class PhysicsService {
     if (e.physics.friction !== null) {
       friction = e.physics.friction;
     }
-    
+
     // Gravedad
     e.physics.vy += e.physics.gravity * dt;
 
@@ -68,8 +73,8 @@ export class PhysicsService {
 
     if (!e.collider) return;
 
-    const width = e.collider.width * (e.sprite.scale ?? 1);
-    const height = e.collider.height * (e.sprite.scale ?? 1);
+    const width = e.collider.width * (e.sprite.totalScale ?? 1);
+    const height = e.collider.height * (e.sprite.totalScale ?? 1);
 
     // Suelo
     if (e.sprite.y + height > FLOOR_Y) {
@@ -96,11 +101,10 @@ export class PhysicsService {
       e.physics.vy = -e.physics.vy * restitution;
     }
 
-    if (Math.abs(e.physics.vx) < this.MIN_SPEED){
+    if (Math.abs(e.physics.vx) < this.MIN_SPEED) {
       e.physics.vx = 0;
-      
     }
-    if (Math.abs(e.physics.vy) < this.MIN_SPEED){
+    if (Math.abs(e.physics.vy) < this.MIN_SPEED) {
       e.physics.vy = 0;
     }
   }

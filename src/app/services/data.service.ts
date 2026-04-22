@@ -48,6 +48,7 @@ export class DataService {
         src: '',
       },
       pet: null,
+      canvas: { width: 0, height: 0 },
     },
   };
   isLoading = true;
@@ -142,6 +143,8 @@ todò no se -_-
       active: true,
       sprite: {
         ...jsonPet.sprite,
+        canvasScale: 1,
+        totalScale: 1,
         color: this.colors[jsonPet.sprite.colorIndex],
         img: imgDefault,
         animationSprite: {},
@@ -181,6 +184,8 @@ todò no se -_-
           nameBehaviors: [],
           sprite: {
             ...object.sprite,
+            canvasScale: 1,
+            totalScale: 1,
             zIndex: 1,
             color: null,
             img: spriteImage,
@@ -212,6 +217,8 @@ todò no se -_-
         type: element.type as ObjectType,
         sprite: {
           ...element.sprite,
+          canvasScale: 1,
+          totalScale: 1,
           zIndex: element.sprite.zIndex ? element.sprite.zIndex : 1,
           color: null,
           img,

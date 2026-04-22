@@ -15,7 +15,7 @@ export class SpriteService {
   // Resolución lógica fija
   private readonly BASE_WIDTH = 200;
   private readonly BASE_HEIGHT = 200;
-  spriteScale = 6;
+  canvasScale = 6;
   debugColliders: boolean = false;
 
   constructor(
@@ -49,13 +49,13 @@ export class SpriteService {
     const w = container.offsetWidth;
 
     if (w <= 360) {
-      this.spriteScale = 2;
+      this.canvasScale = 2;
     } else if (w <= 500) {
-      this.spriteScale = 3;
+      this.canvasScale = 3;
     } else if (w <= 768) {
-      this.spriteScale = 4;
+      this.canvasScale = 4;
     } else {
-      this.spriteScale = 5;
+      this.canvasScale = 5;
     }
 
     this.ctx.imageSmoothingEnabled = false;
@@ -94,7 +94,9 @@ export class SpriteService {
   private renderEntity(entity: Entity): void {
     const sprite: Sprite = entity.sprite;
 
-    sprite.scale = this.spriteScale;
+    // Luego veo para que solo realice el calculo cuando se redimencione el canvas solo
+    sprite.canvasScale = this.canvasScale;
+    sprite.totalScale = Math.round(this.canvasScale * sprite.spriteScale);
 
     const animation = this.animationService.getAnimation(sprite);
 
@@ -115,16 +117,16 @@ export class SpriteService {
         animation.frameHeight,
         sprite.x,
         sprite.y,
-        animation.frameWidth * this.spriteScale,
-        animation.frameHeight * this.spriteScale,
+        animation.frameWidth * sprite.totalScale,
+        animation.frameHeight * sprite.totalScale,
       );
     } else if (sprite.img) {
       this.ctx.drawImage(
         sprite.img,
         sprite.x,
         sprite.y,
-        sprite.width * this.spriteScale,
-        sprite.height * this.spriteScale,
+        sprite.width * sprite.totalScale,
+        sprite.height * sprite.totalScale,
       );
     }
     this.applyColorOverlay(sprite);
@@ -141,8 +143,8 @@ export class SpriteService {
       this.ctx.fillRect(
         sprite.x,
         sprite.y,
-        sprite.width * this.spriteScale,
-        sprite.height * this.spriteScale,
+        sprite.width * sprite.totalScale,
+        sprite.height * sprite.totalScale,
       );
     }
   }
@@ -156,8 +158,8 @@ export class SpriteService {
     this.ctx.save();
     this.ctx.imageSmoothingEnabled = false;
     this.ctx.globalAlpha = sprite.alpha / 100;
-    const width = sprite.width * this.spriteScale;
-    const height = sprite.height * this.spriteScale;
+    const width = sprite.width * sprite.totalScale;
+    const height = sprite.height * sprite.totalScale;
     // Mover el origen al centro del sprite
     this.ctx.translate(sprite.x + width / 2, sprite.y + height / 2);
     this.ctx.rotate(sprite.rotation);
@@ -191,7 +193,7 @@ export class SpriteService {
       if (!e.collider) continue;
 
       const c = e.collider;
-      const s = e.sprite.scale ?? 1;
+      const s = e.sprite.totalScale ?? 1;
       const x = e.sprite.x + c.offsetX * s;
       const y = e.sprite.y + c.offsetY * s;
       const w = c.width * s;
@@ -209,7 +211,7 @@ export class SpriteService {
   private renderText(message: Entity): void {
     if (!isMessage(message)) return;
     this.ctx.save();
-    const scale = this.spriteScale;
+    const scale = this.canvasScale;
     const padding = 4 * scale;
 
     this.ctx.globalAlpha = message.sprite.alpha / 100;
@@ -242,8 +244,8 @@ export class SpriteService {
   }
 
   limitToCanvas(sprite: Sprite): void {
-    const realWidth = sprite.width * this.spriteScale;
-    const realHeight = sprite.height * this.spriteScale;
+    const realWidth = sprite.width * sprite.totalScale;
+    const realHeight = sprite.height * sprite.totalScale;
 
     // Convertir limites reales a coordenadas internas del canvas
     const maxX = this.canvas.width - realWidth;
@@ -262,6 +264,6 @@ export class SpriteService {
   }
 
   getScale() {
-    return this.spriteScale;
+    return this.canvasScale;
   }
 }

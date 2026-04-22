@@ -6,7 +6,10 @@ export interface Sprite {
   y: number;
   width: number;
   height: number;
-  scale: number;
+  // luego lo pongo con su interface
+  spriteScale: number;
+  canvasScale: number;
+  totalScale: number;
   // imagen base
   img: HTMLImageElement;
   color: Color | null;

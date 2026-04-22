@@ -107,7 +107,7 @@ export class CollisionService {
 
     const sprite = entity.sprite;
     const collider = (entity as any).collider;
-    const scale = sprite.scale ?? 1;
+    const scale = sprite.totalScale ?? 1;
 
     return {
       x: sprite.x + collider.offsetX * scale,
