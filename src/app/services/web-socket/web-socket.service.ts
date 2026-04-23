@@ -8,7 +8,7 @@ import { Entity } from '../../models/entity/entity.model';
 @Injectable({ providedIn: 'root' })
 export class WebSocketService {
   private ws!: WebSocket;
-  private url: string = 'instead-consulting-might-vessels.trycloudflare.com';
+  private url: string = 'served-modeling-poker-rap.trycloudflare.com';
 
   status: boolean = false;
 
@@ -149,8 +149,9 @@ export class WebSocketService {
 
       const entity = this.userManagerService.getCursorEntityByUserId(msg.userId);
       if (entity && msg.cursor) {
-        entity.sprite.x = msg.cursor.x;
-        entity.sprite.y = msg.cursor.y;
+        const { localX, localY } = this.ajustLocationCanvas(msg);
+
+        this.lerpEntity(entity, localX, localY);
 
         if (entity.sprite.img.src !== msg.cursor.src) {
           entity.sprite.img = new Image();
@@ -163,7 +164,7 @@ export class WebSocketService {
     }
   }
 
-  lerpEntity(entity: Entity, targetX: number, targetY: number, smoothing: number = 0.8): void {
+  lerpEntity(entity: Entity, targetX: number, targetY: number, smoothing: number = 0.9): void {
     entity.sprite.x += (targetX - entity.sprite.x) * smoothing;
     entity.sprite.y += (targetY - entity.sprite.y) * smoothing;
   }
