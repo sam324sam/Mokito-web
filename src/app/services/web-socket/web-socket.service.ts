@@ -8,7 +8,7 @@ import { Entity } from '../../models/entity/entity.model';
 @Injectable({ providedIn: 'root' })
 export class WebSocketService {
   private ws!: WebSocket;
-  private url: string = 'served-modeling-poker-rap.trycloudflare.com';
+  private url: string = 'fossil-handbook-connecticut-maintains.trycloudflare.com';
 
   status: boolean = false;
 

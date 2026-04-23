@@ -10,7 +10,6 @@ import { Sprite } from '../../models/sprites/sprites.model';
 
 @Injectable({ providedIn: 'root' })
 export class ParticleService {
-  private scale: number = 1;
   private readonly particles: Particle[] = [];
   private readonly particlePool: Record<string, Particle[]> = {};
   private readonly texture: Record<string, HTMLImageElement> = {};
@@ -30,7 +29,6 @@ export class ParticleService {
   init() {
     if (this.status) return;
     this.status = true;
-    this.scale = this.spriteService.getScale();
     this.canvas = this.spriteService.getCanvas();
   }
 
@@ -111,21 +109,16 @@ export class ParticleService {
     texture: HTMLImageElement | null = null,
   ) {
     const tex = texture || this.texture['default'];
-    const config = ParticleConfigs.explosion(x, y, timeToLife, tex, this.scale);
+    const config = ParticleConfigs.explosion(x, y, timeToLife, tex, 1);
     this.emit(amount, config, 'explosion', true);
   }
 
   /**
    * Particulas zzz
    */
-  emitSleepZZZ(
-    x: number,
-    y: number,
-    timeToLife: number,
-    textureName: string | null,
-  ) {
+  emitSleepZZZ(x: number, y: number, timeToLife: number, textureName: string | null) {
     const tex = this.texture[textureName || 'default'] || this.texture['default'];
-    const config = ParticleConfigs.sleepZZZ(x, y, timeToLife, tex, this.scale);
+    const config = ParticleConfigs.sleepZZZ(x, y, timeToLife, tex, 100);
     this.emit(1, config, 'z');
   }
 
@@ -140,7 +133,7 @@ export class ParticleService {
     textureName: string | null = null,
   ) {
     const tex = this.texture[textureName || 'default'] || this.texture['default'];
-    const config = ParticleConfigs.sweat_drops(x, y, timeToLife, tex, this.scale);
+    const config = ParticleConfigs.sweat_drops(x, y, timeToLife, tex, 1);
     this.emit(amount, config, 'sweat_drops');
   }
 
@@ -155,7 +148,7 @@ export class ParticleService {
     entityTarget: Entity,
   ) {
     const tex = this.texture[textureName || 'default'] || this.texture['default'];
-    const config = ParticleConfigs.bubles(x, y, timeToLife, tex, this.scale, entityTarget);
+    const config = ParticleConfigs.bubles(x, y, timeToLife, tex, 1, entityTarget);
     this.emit(1, config, 'bubles');
   }
 
@@ -170,7 +163,7 @@ export class ParticleService {
     textureName: string | null = null,
   ) {
     const tex = this.texture[textureName || 'default'] || this.texture['default'];
-    const config = ParticleConfigs.showerWater(x, y, timeToLife, tex, this.scale);
+    const config = ParticleConfigs.showerWater(x, y, timeToLife, tex, 1);
     this.emit(amount, config, 'showerWater');
   }
 
@@ -185,7 +178,7 @@ export class ParticleService {
     textureName: string | null = null,
   ) {
     const tex = this.texture[textureName || 'default'] || this.texture['default'];
-    const config = ParticleConfigs.dirty(x, y, timeToLife, tex, this.scale);
+    const config = ParticleConfigs.dirty(x, y, timeToLife, tex, 1);
     this.emit(amount, config, 'dirty');
   }
 

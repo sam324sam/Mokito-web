@@ -196,7 +196,7 @@ export class PetStateService {
       const height = pet.sprite.height * (pet.sprite.totalScale ?? 1);
       let x = pet.sprite.x + Math.random() * width;
       let y = pet.sprite.y + (Math.random() * height) / 2;
-      this.particleService.emitSleepZZZ(x, y, 1, 'zzz');
+      this.particleService.emitSleepZZZ(x, y, 10, 'zzz');
       this.cooldownZZZ = 1000;
     }
 

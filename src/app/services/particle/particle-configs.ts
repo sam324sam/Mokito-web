@@ -220,11 +220,11 @@ export const ParticleConfigs = {
     texture: HTMLImageElement,
     scale: number,
   ): Particle => ({
-    ...baseParticleConfig(x, y, timeToLife, texture, scale),
+    ...baseParticleConfig(x, y, timeToLife, texture, scale, { width: 15, height: 15 }),
     tags: ['particle', 'dirty'],
     behaviors: [fadeBehavior, rotateBehavior],
     sprite: {
-      ...baseParticleConfig(x, y, timeToLife, texture, scale).sprite,
+      ...baseParticleConfig(x, y, timeToLife, texture, scale, { width: 15, height: 15 }).sprite,
       rotation: 0,
     },
     physics: {
@@ -245,11 +245,11 @@ export const ParticleConfigs = {
     texture: HTMLImageElement,
     scale: number,
   ): Particle => ({
-    ...baseParticleConfig(x, y, timeToLife, texture, scale),
+    ...baseParticleConfig(x, y, timeToLife, texture, scale, { width: 15, height: 15 }),
     tags: ['particle', 'z'],
     behaviors: [fadeBehavior],
     sprite: {
-      ...baseParticleConfig(x, y, timeToLife, texture, scale).sprite,
+      ...baseParticleConfig(x, y, timeToLife, texture, scale, { width: 15, height: 15 }).sprite,
       rotation: 0,
     },
     physics: {
