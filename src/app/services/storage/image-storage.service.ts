@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { AnimationSprite, AnimationType, AnimationSaveDb } from '../../models/sprites/animation-sprite.model';
+import {
+  AnimationSprite,
+  AnimationType,
+  AnimationSaveDb,
+} from '../../models/sprites/animation-sprite.model';
 
 @Injectable({ providedIn: 'root' })
 export class ImageStorageService {
@@ -26,7 +30,7 @@ export class ImageStorageService {
       request.onsuccess = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
         this.db = db;
-        console.log(db);
+        console.log('Base de datos', db);
         resolve();
       };
 
@@ -41,10 +45,10 @@ export class ImageStorageService {
 
   /**
    * Guardo la animacion Sprite (si solo guardo imagen no se guardara el numero de frame y el animation service asi caput)
-   * @param key 
-   * @param animation 
-   * @returns 
-   * 
+   * @param key
+   * @param animation
+   * @returns
+   *
    */
   saveImage(key: string, animation: AnimationSprite): Promise<void> {
     return new Promise((resolve, reject) => {
@@ -83,7 +87,7 @@ export class ImageStorageService {
   }
 
   /**
-   * 
+   *
    * Recupera una imagen por su clave desde IndexedDB regresa el objeto entero para guardar tambien los frmaes
    * Si no existe, devuelve null.
    */
@@ -123,7 +127,6 @@ export class ImageStorageService {
               animationType: AnimationType.loop,
             };
             resolve(animation);
-
           };
           img.onerror = () => resolve(null);
         } else {

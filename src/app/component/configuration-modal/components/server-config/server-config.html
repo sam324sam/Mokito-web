@@ -7,15 +7,21 @@
 >
   <div class="mb-3 p-4 bg-slate-700/50 rounded-lg text-center pixel-box-s">
     <div class="flex flex-col justify-center gap-4">
+      <label for="nameUser">Inserte nombre de usuario</label>
+
       <input
         type="text"
+        id="nameUser"
         [(ngModel)]="user.name"
         (ngModelChange)="setNameUser($event)"
         placeholder="Nombre de usuario"
         class="px-3 py-2 rounded bg-slate-800 text-white outline-none"
       />
 
+      <label for="urlServer">Inserte url del server</label>
+
       <input
+        id="urlServer"
         type="text"
         [(ngModel)]="url"
         (ngModelChange)="setUrl($event)"

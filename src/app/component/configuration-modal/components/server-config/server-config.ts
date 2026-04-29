@@ -58,14 +58,18 @@ export class ServerConfig implements OnDestroy {
     try {
       await this.webSocketService.connect();
       await this.measurePing();
-      setTimeout(() => {
-        this.isRefreshing = true;
-        this.refresh();
-      }, 1000);
+
       // Actualiza el ping cada 5 segundos
-      this.pingInterval = setInterval(() => this.measurePing(), 5000);
+      if (this.webSocketService.status) {
+        setTimeout(() => {
+          this.isRefreshing = true;
+          this.refresh();
+        }, 1000);
+        this.pingInterval = setInterval(() => this.measurePing(), 5000);
+      }
     } catch (e) {
       this.errorMsg = 'Error al conectar. Revisa la URL.';
+      this.users = [];
       console.error(e);
     } finally {
       this.isLoading = false;
@@ -77,6 +81,7 @@ export class ServerConfig implements OnDestroy {
       this.users = await this.webSocketService.getAllUsers();
     } catch (e) {
       this.errorMsg = 'Error al obtener usuarios.';
+      if (this.pingInterval) clearInterval(this.pingInterval);
       console.error(e);
     } finally {
       this.isRefreshing = false;

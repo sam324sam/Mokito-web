@@ -1,4 +1,3 @@
-import { Pet } from '../pet/pet.model';
 
 export interface PlayerData {
   frameConsoleColor: string;
@@ -14,7 +13,6 @@ export interface User {
   name: string;
   userId: string | null;
   cursor: Cursor | null;
-  pet: Pet | null;
   canvas: Canvas;
 }
 
@@ -27,4 +25,10 @@ export interface Cursor {
 export interface Canvas {
   width: number;
   height: number;
+}
+
+export interface PetClient {
+  x: number;
+  y: number;
+  userId: string;
 }

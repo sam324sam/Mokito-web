@@ -47,7 +47,6 @@ export class DataService {
         y: 0,
         src: '',
       },
-      pet: null,
       canvas: { width: 0, height: 0 },
     },
   };

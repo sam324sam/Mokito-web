@@ -11,7 +11,6 @@ export class CursorService {
     name: '',
     userId: null,
     cursor: null,
-    pet: null,
     canvas: { width: 0, height: 0 },
   };
   private canvas!: HTMLCanvasElement;

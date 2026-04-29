@@ -25,7 +25,7 @@ Puedes probarlo [aquí](https://sam324sam.github.io/Mokito-web/)
 
 ```bash
 # Clonar el repositorio
-git clone https://github.com/tu-usuario/Mokito-web.git
+git clone https://github.com/sam324sam/Mokito-web.git
 
 # Entrar al directorio
 cd Mokito-web
