@@ -3,20 +3,22 @@ import { Injectable } from '@angular/core';
 import { UserManagerService } from './user-manager.service';
 import { PetService } from '../pet/pet.service';
 
-import { User } from '../../models/player/player-data.model';
-import { Entity } from '../../models/entity/entity.model';
+import { PetClient, User } from '../../models/player/player-data.model';
 import { PetManagerService } from './pet-manager.service';
 import { Pet } from '../../models/pet/pet.model';
 
+import { ajustLocationCanvas } from './helpers/ajust-location-canva.helper';
 @Injectable({ providedIn: 'root' })
 export class WebSocketService {
   private ws!: WebSocket;
-  private url: string = 'hire-exhibitions-begin-mounting.trycloudflare.com';
+  private baseUrl: string = '';
 
   status: boolean = false;
 
   sendAccumulator: number = 0;
   NETWORK_TICK_MS: number = 10;
+
+  runInLocalServer: boolean = false;
 
   private imagePetSent = false;
 
@@ -27,9 +29,11 @@ export class WebSocketService {
     canvas: { width: 0, height: 0 },
   };
 
-  private readonly petUser: Pet = {} as Pet;
+  private petUser: Pet = {} as Pet;
 
   private readonly pendingUsers: Map<string, User> = new Map();
+
+  private readonly candidates = ['http://localhost:8080', 'http://127.0.0.1:8080'];
 
   constructor(
     private readonly userManagerService: UserManagerService,
@@ -37,7 +41,9 @@ export class WebSocketService {
     private readonly petService: PetService,
   ) {
     this.user = this.userManagerService.getClientUser();
-    this.petUser = this.petService.getPet();
+    setTimeout(() => {
+      this.petUser = this.petService.getPet();
+    });
   }
 
   /**
@@ -45,7 +51,7 @@ export class WebSocketService {
   */
   async connect() {
     try {
-      const res = await fetch(`https://${this.url}/login`, {
+      const res = await fetch(`${this.httpUrl}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: this.user.name }),
@@ -57,19 +63,20 @@ export class WebSocketService {
       this.userManagerService.setStatus(true);
       this.userManagerService.setUser(this.user);
 
-      this.ws = new WebSocket(`wss://${this.url}/`);
+      if (this.candidates.includes(this.baseUrl)) {
+        this.runInLocalServer = true;
+      }
+
+      this.ws = new WebSocket(`${this.wsUrl}/`);
 
       this.ws.onopen = () => {
         this.status = true;
+
         this.ws.send(
           JSON.stringify({
             type: 'init_full',
             user: this.user,
-            pet: {
-              x: 0,
-              y: 0,
-              userId: this.user.userId,
-            },
+            pet: { x: 0, y: 0, userId: this.user.userId },
           }),
         );
       };
@@ -77,6 +84,7 @@ export class WebSocketService {
       this.ws.onmessage = (event) => {
         const msg = JSON.parse(event.data);
         if (!this.user.userId) return;
+
         switch (msg.type) {
           case 'user_data':
             this.pendingUsers.set(msg.user.userId, msg.user);
@@ -87,10 +95,7 @@ export class WebSocketService {
             break;
 
           case 'move_pet':
-            if (msg.pet_move && msg.pet_move.userId !== this.user.userId) {
-              this.petManagerService.updatePet(msg.pet_move);
-              console.log('pet', msg);
-            }
+            this.resolMovePet(msg.move_pet);
             break;
 
           case 'init_pet':
@@ -113,26 +118,34 @@ export class WebSocketService {
   /**
    *  Devuelve la URL actual del servidor
    */
-  getUrl(): string {
-    return this.url;
+  get httpUrl(): string {
+    return this.baseUrl;
   }
 
-  /**
-   *  Establece una nueva URL para el servidor
-   */
-  setUrl(url: string) {
-    this.url = url;
+  get wsUrl(): string {
+    if (this.runInLocalServer) {
+      return this.baseUrl.replace(/^http/, 'ws');
+    }
+    return this.baseUrl.replace(/^http/, 'wss');
+  }
+
+  SetUrl(url: string) {
+    if (url.startsWith('http')) {
+      this.baseUrl = url;
+    } else {
+      this.baseUrl = `http://${url}`;
+    }
   }
 
   /**
    * Obtiene todos los usuarios de la sala mediante HTTP
    */
   async getAllUsers(): Promise<User[]> {
-    const res = await fetch(`https://${this.url}/user/all`);
+    const res = await fetch(`${this.httpUrl}/user/all`);
 
     if (!res.ok) throw new Error(`Error ${res.status}`);
 
-    return res.json() as Promise<User[]>;
+    return res.json();
   }
 
   /**
@@ -140,8 +153,11 @@ export class WebSocketService {
    */
   async ping(): Promise<number> {
     const start = Date.now();
-    const res = await fetch(`https://${this.url}/user/ping`);
+
+    const res = await fetch(`${this.httpUrl}/user/ping`);
+
     if (!res.ok) throw new Error(`Ping failed: ${res.status}`);
+
     return Date.now() - start;
   }
 
@@ -160,23 +176,21 @@ export class WebSocketService {
   }
 
   /**
-   * Envía el movimiento de la mascota del usuario al servidor
+   * Envia el movimiento de la mascota del usuario al servidor
    */
   sendPetMove(user: User) {
     if (this.ws?.readyState !== 1) return;
-    if (!this.petUser?.sprite) return;
-
     const payload = {
       type: 'move_pet',
       payload: {
-        pet_move: { x: this.petUser.sprite.x, y: this.petUser.sprite.y, userId: user.userId },
+        move_pet: { x: this.petUser.sprite.x, y: this.petUser.sprite.y, userId: user.userId },
       },
     };
     this.ws.send(JSON.stringify(payload));
   }
 
   /**
-   * Envía una notificacion de que se ha enviado la imagen de la mascota
+   * Envia una notificacion de que se ha enviado la imagen de la mascota
    */
   sendUserImagePet() {
     if (this.imagePetSent) return;
@@ -191,15 +205,18 @@ export class WebSocketService {
     this.imagePetSent = true;
   }
 
-  /* Actualiza el estado cada frame: procesa datos recibidos y envía actualizaciones por tick*/
+  /**
+   * Actualiza el estado cada frame: procesa datos recibidos y envía actualizaciones por tick
+   */
   update(deltaTime: number) {
-    // Vaciar la cola este frame y actualizar los datos
     for (const [, user] of this.pendingUsers) {
-      this.applyUserData(user, deltaTime);
+      this.applyUserData(user);
     }
     this.pendingUsers.clear();
 
-    // Envio por network tick
+    this.userManagerService.update(deltaTime);
+    this.petManagerService.update(deltaTime);
+
     this.sendAccumulator += deltaTime;
     if (this.sendAccumulator >= this.NETWORK_TICK_MS) {
       this.sendUser(this.user);
@@ -208,57 +225,24 @@ export class WebSocketService {
     }
   }
 
-  /* Aplica los datos de un usuario recibidos al estado local*/
-  applyUserData(msg: User, deltaTime: number) {
-    if (!msg?.userId) return;
-
-    if (msg.userId === this.user.userId) return;
+  /**
+   * Aplica los datos de un usuario recibidos al estado local
+   */
+  applyUserData(msg: User) {
+    if (!msg?.userId || msg.userId === this.user.userId) return;
 
     const existing = this.userManagerService.getUserById(msg.userId);
 
-    if (existing) {
-      existing.cursor = msg.cursor;
-
-      const entity = this.userManagerService.getCursorEntityByUserId(msg.userId);
-      if (entity && msg.cursor) {
-        const { localX, localY } = this.ajustLocationCanvas(msg);
-
-        this.lerpEntity(entity, localX, localY, deltaTime);
-
-        if (entity.sprite.img.src !== msg.cursor.src) {
-          entity.sprite.img = new Image();
-          entity.sprite.img.src = msg.cursor.src;
-        }
-      }
+    if (existing && msg.cursor) {
+      let location: { x: number; y: number } = {
+        x: msg.cursor.x,
+        y: msg.cursor.y,
+      };
+      const { localX, localY } = ajustLocationCanvas(location, this.user.canvas, msg.canvas);
+      this.userManagerService.updateUser(msg, localX, localY);
     } else {
       this.userManagerService.addUser(msg);
     }
-  }
-
-  /**
-   * Interpola la posicion de una entidad hacia un objetivo con suavizado va ligado ahora con el framrate
-   */
-  private lerpEntity(entity: Entity, targetX: number, targetY: number, deltaTime: number): void {
-    const t = 1 - Math.pow(0.01, deltaTime / 100);
-    entity.sprite.x += (targetX - entity.sprite.x) * t;
-    entity.sprite.y += (targetY - entity.sprite.y) * t;
-  }
-
-  /**
-   * Ajusta las coordenadas del cursor segun las resoluciones de canvas local y remoto
-   */
-  private ajustLocationCanvas(msg: User): { localX: number; localY: number } {
-    let localX = 0;
-    let localY = 0;
-    if (msg.cursor && msg.canvas) {
-      const localCanvas = this.userManagerService.getClientUser().canvas;
-      const scaleX = localCanvas.width / msg.canvas.width;
-      const scaleY = localCanvas.height / msg.canvas.height;
-
-      localX = msg.cursor.x * scaleX;
-      localY = msg.cursor.y * scaleY;
-    }
-    return { localX, localY };
   }
 
   /**
@@ -293,5 +277,44 @@ export class WebSocketService {
 
       canvas.toBlob((blob) => resolve(blob!), 'image/png');
     });
+  }
+
+  async detectServer(): Promise<boolean> {
+    for (const base of this.candidates) {
+      try {
+        const res = await fetch(`${base}/user/ping`, {
+          method: 'GET',
+        });
+
+        if (res.ok) {
+          this.baseUrl = base;
+          return true;
+        }
+      } catch (err) {
+        console.log(`No se a encotrado servidor probando el siguiente ${err}`);
+        return false;
+      }
+    }
+
+    throw new Error('No local server found');
+  }
+
+  resolMovePet(petClient: PetClient) {
+    let location: { x: number; y: number } = {
+      x: petClient.x,
+      y: petClient.y,
+    };
+    let canvasMsg = this.userManagerService.getCanvasUser(petClient.userId);
+    if (!canvasMsg) {
+      return;
+    }
+    if (!this.user.userId) {
+      return;
+    }
+    const { localX, localY } = ajustLocationCanvas(location, this.user.canvas, canvasMsg);
+    petClient.x = localX;
+    petClient.y = localY;
+
+    this.petManagerService.enqueuePetMove(petClient, this.user.userId);
   }
 }

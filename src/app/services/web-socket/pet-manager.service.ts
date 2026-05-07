@@ -4,13 +4,21 @@ import { PetClient } from '../../models/player/player-data.model';
 import { Entity } from '../../models/entity/entity.model';
 import { EntityStoreService } from '../entity-store.service';
 
+import { lerpEntity } from './helpers/lerp.helper';
+import { UserManagerService } from './user-manager.service';
+
 @Injectable({
   providedIn: 'root',
 })
 export class PetManagerService {
   private readonly petEntities: Record<string, Entity> = {};
 
-  constructor(private readonly entityStoreService: EntityStoreService) {}
+  private readonly pendingPetMoves: Map<string, PetClient> = new Map();
+
+  constructor(
+    private readonly entityStoreService: EntityStoreService,
+    private readonly userManagerService: UserManagerService,
+  ) {}
 
   createPetEntity(petClient: PetClient, userId: string) {
     console.log('llego una pet', petClient);
@@ -50,6 +58,7 @@ export class PetManagerService {
 
       this.entityStoreService.addEntity(entity);
       this.petEntities[petClient.userId] = entity;
+      console.log(this.petEntities);
     } catch (error) {
       console.log(error);
     }
@@ -80,5 +89,24 @@ export class PetManagerService {
       entity.sprite.x = petClient.x;
       entity.sprite.y = petClient.y;
     }
+  }
+
+  enqueuePetMove(petClient: PetClient, localUserId: string) {
+    if (petClient.userId === localUserId) return;
+    console.log(this.pendingPetMoves);
+    this.pendingPetMoves.set(petClient.userId, petClient);
+  }
+
+  /**
+   * Llamado cada frame desde el game loop
+   */
+  update(deltaTime: number) {
+    for (const [userId, petClient] of this.pendingPetMoves) {
+      const entity = this.petEntities[userId];
+      if (entity?.sprite) {
+        lerpEntity(entity, petClient.x, petClient.y, deltaTime);
+      }
+    }
+    this.pendingPetMoves.clear();
   }
 }

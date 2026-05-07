@@ -4,11 +4,15 @@ import { Cursor, User } from '../../models/player/player-data.model';
 import { Entity } from '../../models/entity/entity.model';
 import { EntityStoreService } from '../entity-store.service';
 
+import { lerpEntity } from './helpers/lerp.helper';
+
 @Injectable({
   providedIn: 'root',
 })
 export class CursorManagerService {
   private readonly cursorEntities: Record<string, Entity> = {};
+  private readonly pendingCursorMoves: Map<string, { user: User; localX: number; localY: number }> =
+    new Map();
 
   constructor(private readonly entityStoreService: EntityStoreService) {}
 
@@ -81,5 +85,24 @@ export class CursorManagerService {
         entity.sprite.y = cursor.y;
       }
     }
+  }
+
+  enqueueCursorMove(user: User, localX: number, localY: number) {
+    this.pendingCursorMoves.set(user.userId!, { user, localX, localY });
+  }
+
+  update(deltaTime: number) {
+    for (const [userId, { user, localX, localY }] of this.pendingCursorMoves) {
+      const entity = this.cursorEntities[userId];
+      if (!entity?.sprite) continue;
+
+      lerpEntity(entity, localX, localY, deltaTime);
+
+      if (user.cursor && entity.sprite.img.src !== user.cursor.src) {
+        entity.sprite.img = new Image();
+        entity.sprite.img.src = user.cursor.src;
+      }
+    }
+    this.pendingCursorMoves.clear();
   }
 }

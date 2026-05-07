@@ -125,7 +125,6 @@ export class PetService {
     if (this.pet.state === state) return;
     //console.log("Estado de la pet", this.pet.state)
     this.pet.state = state;
-    console.log(state);
   }
 
   /**

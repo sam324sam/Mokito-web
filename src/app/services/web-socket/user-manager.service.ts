@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Cursor, User } from '../../models/player/player-data.model';
+import { Canvas, Cursor, User } from '../../models/player/player-data.model';
 import { Entity } from '../../models/entity/entity.model';
 import { SpriteService } from '../sprites.service';
 import { CursorManagerService } from './cursor-manager.service';
@@ -67,6 +67,14 @@ export class UserManagerService {
     return this.users;
   }
 
+  getCanvasUser(userId: string): Canvas | undefined{
+    return this.users.get(userId)?.canvas;
+  }
+
+  getCursorEntity(userId: string): Entity{
+    return this.cursorManagerService.getCursorEntityByUserId(userId);
+  }
+
   addUser(user: User): Entity | null {
     if (!user.cursor || !user.userId) {
       console.warn('addUser: usuario sin cursor o userId', user);
@@ -87,5 +95,22 @@ export class UserManagerService {
 
   getCursorEntityByUserId(userId: string): Entity {
     return this.cursorManagerService.getCursorEntityByUserId(userId);
+  }
+
+  // Para actualizar un usuario concreto (llamado desde applyUserData)
+  updateUser(msg: User, localX: number, localY: number) {
+    const existing = this.users.get(msg.userId!);
+    if (!existing) return;
+
+    existing.cursor = msg.cursor;
+
+    if (msg.cursor) {
+      this.cursorManagerService.enqueueCursorMove(msg, localX, localY);
+    }
+  }
+
+  // Para el game loop (llamado cada frame)
+  update(deltaTime: number) {
+    this.cursorManagerService.update(deltaTime);
   }
 }

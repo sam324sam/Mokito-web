@@ -20,6 +20,7 @@ export class ServerConfig implements OnDestroy {
   isRefreshing = false;
   errorMsg = '';
   ping: number | null = null;
+  errorLocalServer: boolean = false;
 
   private pingInterval: ReturnType<typeof setInterval> | null = null;
 
@@ -39,7 +40,7 @@ export class ServerConfig implements OnDestroy {
     private readonly webSocketService: WebSocketService,
   ) {
     this.user = this.userManagerService.getClientUser();
-    this.url = this.webSocketService.getUrl();
+    this.url = this.webSocketService.httpUrl.replace(/^https?:\/\//, '');
   }
 
   setNameUser(name: string) {
@@ -49,7 +50,7 @@ export class ServerConfig implements OnDestroy {
 
   setUrl(url: string) {
     this.url = url;
-    this.webSocketService.setUrl(url);
+    this.webSocketService.SetUrl(url);
   }
 
   async connect() {
@@ -99,5 +100,10 @@ export class ServerConfig implements OnDestroy {
   // limpio lo del ping
   ngOnDestroy() {
     if (this.pingInterval) clearInterval(this.pingInterval);
+  }
+
+  async viewLocalServer() {
+    await this.webSocketService.detectServer();
+    this.url = this.webSocketService.httpUrl.replace(/^https?:\/\//, '');
   }
 }

@@ -30,6 +30,17 @@
       />
 
       <button
+        (click)="viewLocalServer()"
+        [disabled]="isLoading"
+        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 rounded text-white"
+      >
+        {{ isLoading ? 'Verificando...' : 'Ver Servidores locales' }}
+      </button>
+      @if (errorLocalServer) {
+        <p>No se a encontrado servidor local</p>
+      }
+
+      <button
         (click)="connect()"
         [disabled]="isLoading"
         class="px-4 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-50 rounded text-white"
