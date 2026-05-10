@@ -20,8 +20,6 @@ export class WebSocketService {
 
   runInLocalServer: boolean = false;
 
-  private imagePetSent = false;
-
   private readonly user: User = {
     name: 'Mokito Friend',
     userId: null,
@@ -67,6 +65,17 @@ export class WebSocketService {
         this.runInLocalServer = true;
       }
 
+      //Subir las imagenes
+      const body = await this.petManagerService.generateFormdata();
+      if (body) {
+        await fetch(`${this.httpUrl}/pet/${this.user.userId}/sprites`, {
+          method: 'POST',
+          body: body,
+        });
+        console.log('sprites subidos correctamente');
+      }
+
+      // Conectar a web socket
       this.ws = new WebSocket(`${this.wsUrl}/`);
 
       this.ws.onopen = () => {
@@ -92,6 +101,7 @@ export class WebSocketService {
 
           case 'user_remove':
             this.userManagerService.removeUser(msg.userId);
+            this.petManagerService.removePetEntity(msg.userId);
             break;
 
           case 'move_pet':
@@ -100,7 +110,15 @@ export class WebSocketService {
 
           case 'init_pet':
             if (msg.pet && msg.pet.userId !== this.user.userId) {
-              this.petManagerService.createPetEntity(msg.pet, this.user.userId);
+              this.petManagerService
+                .loadOtherPlayerSprites(msg.pet.userId)
+                .then((animationSprite) => {
+                  this.petManagerService.createPetEntity(
+                    msg.pet,
+                    this.user.userId,
+                    animationSprite,
+                  );
+                });
             }
             break;
         }
@@ -183,26 +201,10 @@ export class WebSocketService {
     const payload = {
       type: 'move_pet',
       payload: {
-        move_pet: { x: this.petUser.sprite.x, y: this.petUser.sprite.y, userId: user.userId },
+        move_pet: { x: this.petUser.sprite.x, y: this.petUser.sprite.y, userId: user.userId,currentAnimation: this.petUser.sprite.currentAnimation, },
       },
     };
     this.ws.send(JSON.stringify(payload));
-  }
-
-  /**
-   * Envia una notificacion de que se ha enviado la imagen de la mascota
-   */
-  sendUserImagePet() {
-    if (this.imagePetSent) return;
-
-    this.ws.send(
-      JSON.stringify({
-        type: 'user_pet_image',
-        payload: {},
-      }),
-    );
-
-    this.imagePetSent = true;
   }
 
   /**
@@ -245,40 +247,6 @@ export class WebSocketService {
     }
   }
 
-  /**
-   * Convierte un Blob en una Promise de HTMLImageElement
-   */
-  private blobToImage(blob: Blob): Promise<HTMLImageElement> {
-    return new Promise((resolve, reject) => {
-      const url = URL.createObjectURL(blob);
-      const img = new Image();
-
-      img.onload = () => {
-        URL.revokeObjectURL(url);
-        resolve(img);
-      };
-
-      img.onerror = reject;
-      img.src = url;
-    });
-  }
-
-  /**
-   * Convierte un HTMLImageElement en una Promise de Blob (PNG)
-   */
-  private imageToBlob(img: HTMLImageElement): Promise<Blob> {
-    return new Promise((resolve) => {
-      const canvas = document.createElement('canvas');
-      canvas.width = img.naturalWidth;
-      canvas.height = img.naturalHeight;
-
-      const ctx = canvas.getContext('2d')!;
-      ctx.drawImage(img, 0, 0);
-
-      canvas.toBlob((blob) => resolve(blob!), 'image/png');
-    });
-  }
-
   async detectServer(): Promise<boolean> {
     for (const base of this.candidates) {
       try {
@@ -314,6 +282,7 @@ export class WebSocketService {
     const { localX, localY } = ajustLocationCanvas(location, this.user.canvas, canvasMsg);
     petClient.x = localX;
     petClient.y = localY;
+    console.log(petClient.currentAnimation)
 
     this.petManagerService.enqueuePetMove(petClient, this.user.userId);
   }
