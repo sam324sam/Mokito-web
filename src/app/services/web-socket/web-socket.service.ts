@@ -137,22 +137,29 @@ export class WebSocketService {
    *  Devuelve la URL actual del servidor
    */
   get httpUrl(): string {
+    if (globalThis.location.protocol === 'https:' && this.baseUrl.startsWith('http:')) {
+      return this.baseUrl.replace('http:', 'https:');
+    }
     return this.baseUrl;
   }
 
   get wsUrl(): string {
-    if (this.runInLocalServer) {
-      return this.baseUrl.replace(/^http/, 'ws');
-    }
-    return this.baseUrl.replace(/^http/, 'wss');
+    return this.baseUrl.replace(/^https:/, 'wss:').replace(/^http:/, 'ws:');
   }
 
   SetUrl(url: string) {
-    if (url.startsWith('http')) {
+    if (url.startsWith('http://') || url.startsWith('https://')) {
       this.baseUrl = url;
-    } else {
-      this.baseUrl = `http://${url}`;
+      return;
     }
+
+    const isLocal =
+      url.includes('localhost') ||
+      url.includes('127.0.0.1') ||
+      url.startsWith('192.168.') ||
+      url.startsWith('10.');
+
+    this.baseUrl = isLocal ? `http://${url}` : `https://${url}`;
   }
 
   /**
@@ -201,7 +208,12 @@ export class WebSocketService {
     const payload = {
       type: 'move_pet',
       payload: {
-        move_pet: { x: this.petUser.sprite.x, y: this.petUser.sprite.y, userId: user.userId,currentAnimation: this.petUser.sprite.currentAnimation, },
+        move_pet: {
+          x: this.petUser.sprite.x,
+          y: this.petUser.sprite.y,
+          userId: user.userId,
+          currentAnimation: this.petUser.sprite.currentAnimation,
+        },
       },
     };
     this.ws.send(JSON.stringify(payload));
@@ -282,7 +294,7 @@ export class WebSocketService {
     const { localX, localY } = ajustLocationCanvas(location, this.user.canvas, canvasMsg);
     petClient.x = localX;
     petClient.y = localY;
-    console.log(petClient.currentAnimation)
+    console.log(petClient.currentAnimation);
 
     this.petManagerService.enqueuePetMove(petClient, this.user.userId);
   }
