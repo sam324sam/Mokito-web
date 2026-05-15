@@ -144,7 +144,13 @@ export class WebSocketService {
   }
 
   get wsUrl(): string {
-    return this.baseUrl.replace(/^https:/, 'wss:').replace(/^http:/, 'ws:');
+    if (this.baseUrl.startsWith('https://')) {
+      return this.baseUrl.replace('https://', 'wss://');
+    }
+    if (this.baseUrl.startsWith('http://')) {
+      return this.baseUrl.replace('http://', 'ws://');
+    }
+    throw new Error('Invalid baseUrl for WebSocket: ' + this.baseUrl);
   }
 
   SetUrl(url: string) {
