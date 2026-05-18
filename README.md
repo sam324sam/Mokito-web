@@ -21,6 +21,77 @@ Puedes probarlo [aquí](https://sam324sam.github.io/Mokito-web/)
 - **⚡ Sistema de Física** - Implementación propia de física para interacciones realistas
 - **🎨 Sprites Animados** - Sprites personalizados con animaciones suaves
 
+## 🎮 Cómo Jugar
+
+1. **Navega entre habitaciones** usando los botones inferiores
+2. **Observa las estadísticas** de Mokito en la cabecera
+3. **Usa el inventario** para darle comida, juguetes y más
+4. **Configura** la apariencia a tu gusto en el menú de configuración
+5. ¡Asegúrate de que Mokito esté siempre feliz, limpio y bien alimentado!
+
+## 📖 Tutorial
+
+### Alimentar a Mokito
+
+Dale de comer a tu mascota para mantener su hambre al día.
+![Dar comida](githubAssest/tutorial/Dar-comida.gif)
+
+### Bañar a Mokito
+
+Mantén a Mokito limpio usando el objeto de baño.
+![Dar baño](githubAssest/tutorial/Dar-baño.gif)
+
+### Aumentar la felicidad
+
+Juega con Mokito para aumentar su felicidad.
+![Dar felicidad](githubAssest/tutorial/Dar-felicidad.gif)
+
+### Mandar a dormir
+
+Manda a Mokito a dormir para recuperar su energía.
+![Mandar dormir](githubAssest/tutorial/Mandar-dormir.gif)
+
+### Personalizar la consola
+
+Accede a la configuración y personaliza la interfaz a tu gusto.
+![Personalizar consola](githubAssest/tutorial/Personalizar-consola.gif)
+
+### Subir animaciones
+
+Sube tus propias animaciones 32x32 para personalizar a tu mokito Mokito.
+![Subir animaciones](githubAssest/tutorial/Subir-animaciones.gif)
+Asset usado de [Mattz Art](https://xzany.itch.io/cat-2d-pixel-art)
+
+### Activar función multijugador
+
+Para jugar en modo multijugador es necesario instalar el ejecutable disponible en [Mokito-Web-Backend](https://github.com/sam324sam/Mokito-Web-Backend) y tener instalado **Java 17**, ya que el servidor se ejecuta mediante este programa.
+
+Si deseas jugar con personas que no estén conectadas a la misma red local, se recomienda utilizar [Cloudflare Tunnel](https://www.cloudflare.com/products/tunnel/) junto con la interfaz gráfica de [Port Killer](https://github.com/productdevbook/port-killer) para facilitar la exposición y administración del servidor. También puede ser necesario permitir el puerto correspondiente en el firewall.
+
+Para partidas dentro de la misma red local, únicamente será necesario permitir el puerto del servidor en el firewall.
+
+Una vez iniciado el servidor, para conectarte solo debes introducir la dirección proporcionada en el juego.
+
+Ejemplo:
+
+```text
+Dirección proporcionada:
+https://mi-servidor.trycloudflare.com
+
+Dirección a introducir:
+mi-servidor.trycloudflare.com
+```
+![Conectarse a un servidor](githubAssest/tutorial/Conectar-al-server.gif)
+
+Esta función se encuentra en fase de pruebas y algunas características pueden estar incompletas o presentar errores.
+
+## 🧩 Tecnologías
+
+- **Framework**: Angular 21+
+- **Estilos**: TailwindCSS 4.x + css
+- **Lenguaje**: TypeScript
+- **Despliegue**: GitHub Pages
+
 ## 🚀 Instalación
 
 ```bash
@@ -35,7 +106,7 @@ npm install
 
 # Iniciar el servidor de desarrollo
 ng serve --host 0.0.0.0
-```
+````
 
 ## 🏗️ Arquitectura del Proyecto
 
@@ -108,54 +179,6 @@ src/
 ├── main.ts
 └── styles.css                  # Estilos globales
 ```
-
-## 🎮 Cómo Jugar
-
-1. **Navega entre habitaciones** usando los botones inferiores
-2. **Observa las estadísticas** de Mokito en la cabecera
-3. **Usa el inventario** para darle comida, juguetes y más
-4. **Configura** la apariencia a tu gusto en el menú de configuración
-5. ¡Asegúrate de que Mokito esté siempre feliz, limpio y bien alimentado!
-
-## 📖 Tutorial
-
-### Alimentar a Mokito
-
-Dale de comer a tu mascota para mantener su hambre al día.
-![Dar comida](githubAssest/tutorial/Dar-comida.gif)
-
-### Bañar a Mokito
-
-Mantén a Mokito limpio usando el objeto de baño.
-![Dar baño](githubAssest/tutorial/Dar-baño.gif)
-
-### Aumentar la felicidad
-
-Juega con Mokito para aumentar su felicidad.
-![Dar felicidad](githubAssest/tutorial/Dar-felicidad.gif)
-
-### Mandar a dormir
-
-Manda a Mokito a dormir para recuperar su energía.
-![Mandar dormir](githubAssest/tutorial/Mandar-dormir.gif)
-
-### Personalizar la consola
-
-Accede a la configuración y personaliza la interfaz a tu gusto.
-![Personalizar consola](githubAssest/tutorial/Personalizar-consola.gif)
-
-### Subir animaciones
-
-Sube tus propias animaciones 32x32 para personalizar a tu mokito Mokito.
-![Subir animaciones](githubAssest/tutorial/Subir-animaciones.gif)
-Asset usado de [Mattz Art](https://xzany.itch.io/cat-2d-pixel-art)
-
-## 🧩 Tecnologías
-
-- **Framework**: Angular 21+
-- **Estilos**: TailwindCSS 4.x + css
-- **Lenguaje**: TypeScript
-- **Despliegue**: GitHub Pages
 
 ## Programas usados
 
